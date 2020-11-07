@@ -1,0 +1,14 @@
+.sms-content {
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.sms-content .bold {
+  font-weight: 700;
+}
+
+.sms-content .error {
+  font-weight: 700;
+  color: #ff0000;
+}
