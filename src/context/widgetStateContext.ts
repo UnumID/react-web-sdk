@@ -9,8 +9,10 @@ export const defaultWidgetContextState: WidgetContext = {
     deeplink: '',
     qrCode: '',
   },
-  isSameDevice: true,
-  canScan: true,
+  isSameDevice: false,
+  custContext: {
+    canScan: true,
+  },
   unAuthenticatedCtx: true,
 };
 

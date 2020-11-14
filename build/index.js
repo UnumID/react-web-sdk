@@ -256,21 +256,7 @@ var HttpHlpr = /** @class */ (function () {
 }());
 var httpHlpr = new HttpHlpr();
 
-var credentialRequests = [
-	{
-		type: "DummyCredential",
-		issuers: [
-			"did:unum:042b9089-9ee9-4217-844f-b01965cf569a"
-		]
-	}
-];
-var holderAppUuid = "a91a5574-e338-46bd-9405-3a72acbd1b6a";
-var presentationInput = {
-	credentialRequests: credentialRequests,
-	holderAppUuid: holderAppUuid
-};
-
-var getPresentation = function () { return __awaiter(void 0, void 0, void 0, function () {
+var getPresentation = function (presentationInput) { return __awaiter(void 0, void 0, void 0, function () {
     var response, deepLinkDtl;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -303,8 +289,10 @@ var defaultWidgetContextState = {
         deeplink: '',
         qrCode: '',
     },
-    isSameDevice: true,
-    canScan: true,
+    isSameDevice: false,
+    custContext: {
+        canScan: true,
+    },
     unAuthenticatedCtx: true,
 };
 var widgetStateContext = React.createContext(defaultWidgetContextState);
@@ -754,7 +742,7 @@ var QRCodeWidget = function () {
         React__default['default'].createElement(QRCode, { qrCode: widgetContext.deepLinkDtl.qrCode }),
         (widgetContext.unAuthenticatedCtx)
             && (React__default['default'].createElement(LinkButton, { onClick: handleLoginLinkClick }, "Log in with your email address for more authentication options")),
-        (widgetContext.phoneNo)
+        (widgetContext.custContext.phoneNo)
             && (React__default['default'].createElement(LinkButton, { onClick: handleSMSLinkClick }, "Get an SMS instead"))));
 };
 
@@ -810,7 +798,7 @@ var SMSWidget = function () {
                     switch (_b.label) {
                         case 0:
                             _a = setSMSResp;
-                            return [4 /*yield*/, sendSms(widgetContext.phoneNo || '', widgetContext.deepLinkDtl.deeplink)];
+                            return [4 /*yield*/, sendSms(widgetContext.custContext.phoneNo || '', widgetContext.deepLinkDtl.deeplink)];
                         case 1:
                             _a.apply(void 0, [_b.sent()]);
                             setSMSSent(true);
@@ -837,26 +825,17 @@ var SMSWidget = function () {
                 && (React__default['default'].createElement("div", null,
                     React__default['default'].createElement("div", null,
                         "We texted a link to ",
-                        widgetContext.phoneNo,
+                        widgetContext.custContext.phoneNo,
                         "."),
                     React__default['default'].createElement("div", { className: "bold" }, "Please click it to continue."))),
             !smsResp
                 && React__default['default'].createElement("div", { className: "error" },
                     "Error sending SMS to ",
-                    widgetContext.phoneNo,
+                    widgetContext.custContext.phoneNo,
                     "."),
-            widgetContext.emailId
+            widgetContext.custContext.emailId
                 && React__default['default'].createElement(LinkButton, { onClick: handleEmailLinkClick }, "Get an email instead"),
             React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, "Back to QR code")))));
-};
-
-var phoneNo = "+919962007065";
-var emailId = "";
-var canScan = true;
-var custContext = {
-	phoneNo: phoneNo,
-	emailId: emailId,
-	canScan: canScan
 };
 
 var WidgetHostAndController = /** @class */ (function (_super) {
@@ -875,34 +854,33 @@ var WidgetHostAndController = /** @class */ (function (_super) {
                     case 0:
                         _a = this.setState;
                         _b = {};
-                        return [4 /*yield*/, getPresentation()];
+                        return [4 /*yield*/, getPresentation(this.props.presentationRequest)];
                     case 1:
                         _a.apply(this, [(_b.deepLinkDtl = _c.sent(), _b)]);
                         this.setState({ isSameDevice: (!!/Mobi|Android|iPhone/i.test(navigator.userAgent)) });
-                        this.loadStateWithCustContext();
+                        this.populateCustContextInState();
                         console.log("Data is: " + JSON.stringify(this.state));
                         return [2 /*return*/];
                 }
             });
         });
     };
-    WidgetHostAndController.prototype.loadStateWithCustContext = function () {
-        if (custContext.phoneNo || custContext.emailId) {
-            console.log("Object is not empty: " + JSON.stringify(custContext));
+    WidgetHostAndController.prototype.populateCustContextInState = function () {
+        var newCustContext = this.props.custContext;
+        if (newCustContext.canScan === undefined) {
+            console.log("Can Scan is not passed: " + newCustContext.canScan);
+            newCustContext.canScan = !this.state.isSameDevice;
+        }
+        this.setState({ custContext: newCustContext });
+        this.setState({ currentWidget: 'QrCode' });
+        if (newCustContext.phoneNo || newCustContext.emailId) {
+            console.log("Object is not empty: " + JSON.stringify(newCustContext));
             this.setState({ unAuthenticatedCtx: false });
-            if (custContext.phoneNo) {
-                this.setState({ phoneNo: custContext.phoneNo });
-            }
-            if (custContext.emailId) {
-                this.setState({ emailId: custContext.emailId });
-            }
             console.log("New state is: " + JSON.stringify(this.state));
         }
         else {
             this.setState({ unAuthenticatedCtx: true });
-            this.setState({ canScan: custContext.canScan });
         }
-        this.setState({ currentWidget: 'QrCode' });
     };
     WidgetHostAndController.prototype.render = function () {
         var _this = this;

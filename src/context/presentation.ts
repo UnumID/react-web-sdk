@@ -1,12 +1,10 @@
 import { httpHlpr } from 'util/ruiHttpHlpr';
 import { objUtil } from 'util/ruiObjectUtils';
-import { DeeplinkObject } from 'types';
+import { PresentationRequest, DeeplinkObject } from 'types';
 
-import presentationInput from 'config/presentationInput.json';
-
-const getPresentation = async (): Promise<DeeplinkObject> => {
+const getPresentation = async (presentationInput: PresentationRequest): Promise<DeeplinkObject> => {
   const response: any = await httpHlpr.post(objUtil.getEnvValue('REACT_APP_PRESENTATION_END_POINT') as string,
-    presentationInput);
+    <Record<string, unknown>> (presentationInput as unknown));
 
   if (!response.presentationRequest) {
     return ({

@@ -28,7 +28,7 @@ const QRCodeWidget: FunctionComponent<{}> = () => {
             Log in with your email address for more authentication options
           </LinkButton>
       ) }
-      { (widgetContext.phoneNo)
+      { (widgetContext.custContext.phoneNo)
         && (
           <LinkButton onClick={handleSMSLinkClick}>
             Get an SMS instead

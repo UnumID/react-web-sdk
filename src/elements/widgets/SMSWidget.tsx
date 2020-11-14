@@ -16,7 +16,7 @@ const SMSWidget: FunctionComponent<{}> = () => {
 
   useEffect(() => {
     async function getSMS() {
-      setSMSResp(await sendSms(widgetContext.phoneNo || '', widgetContext.deepLinkDtl.deeplink));
+      setSMSResp(await sendSms(widgetContext.custContext.phoneNo || '', widgetContext.deepLinkDtl.deeplink));
       setSMSSent(true);
     }
 	
@@ -43,13 +43,13 @@ const SMSWidget: FunctionComponent<{}> = () => {
           {smsResp
             && (
             <div>
-              <div>We texted a link to {widgetContext.phoneNo}.</div>
+              <div>We texted a link to {widgetContext.custContext.phoneNo}.</div>
               <div className="bold">Please click it to continue.</div>
             </div>
             )}
           {!smsResp
-            && <div className="error">Error sending SMS to {widgetContext.phoneNo}.</div>}
-          { widgetContext.emailId
+            && <div className="error">Error sending SMS to {widgetContext.custContext.phoneNo}.</div>}
+          { widgetContext.custContext.emailId
             && <LinkButton onClick={handleEmailLinkClick}>Get an email instead</LinkButton> }
           <LinkButton onClick={backToQrCode}>Back to QR code</LinkButton>
         </div>
