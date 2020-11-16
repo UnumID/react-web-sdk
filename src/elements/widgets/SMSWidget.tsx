@@ -6,6 +6,7 @@ import { WidgetContext } from 'types';
 import { widgetStateContext } from 'context/widgetStateContext';
 import { sendSms } from 'context/sendSms';
 import LinkButton from 'elements/components/LinkButton';
+import { widgetTypes } from 'frwk/ruiFrwkConst';
 
 import './SMSWidget.css';
 
@@ -15,23 +16,23 @@ const SMSWidget: FunctionComponent<{}> = () => {
   const [smsSent, setSMSSent] = useState(false);
 
   useEffect(() => {
-    async function getSMS() {
+    async function sendSMSMsg() {
       setSMSResp(await sendSms(widgetContext.custContext.phoneNo || '', widgetContext.deepLinkDtl.deeplink));
       setSMSSent(true);
     }
 	
-	getSMS();
+	sendSMSMsg();
   }, [widgetContext]);
 
   const handleEmailLinkClick = (): void => {
     if (widgetContext.setWidgetState) {
-      widgetContext.setWidgetState({ currentWidget: 'Email' });
+      widgetContext.setWidgetState({ currentWidget: widgetTypes.EMAIL });
     }
   };
 
   const backToQrCode = (): void => {
     if (widgetContext.setWidgetState) {
-      widgetContext.setWidgetState({ currentWidget: 'QrCode' });
+      widgetContext.setWidgetState({ currentWidget: widgetTypes.QR_CODE });
     }
   };
 

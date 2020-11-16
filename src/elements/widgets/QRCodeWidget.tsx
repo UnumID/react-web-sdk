@@ -5,6 +5,7 @@ import { WidgetContext } from 'types';
 import { widgetStateContext } from 'context/widgetStateContext';
 import QRCode from 'elements/components/QRCode';
 import LinkButton from 'elements/components/LinkButton';
+import { widgetTypes } from 'frwk/ruiFrwkConst';
 
 const QRCodeWidget: FunctionComponent<{}> = () => {
   const widgetContext: WidgetContext = useContext(widgetStateContext);
@@ -15,7 +16,13 @@ const QRCodeWidget: FunctionComponent<{}> = () => {
 
   const handleSMSLinkClick = (): void => {
     if (widgetContext.setWidgetState) {
-      widgetContext.setWidgetState({ currentWidget: 'SMS' });
+      widgetContext.setWidgetState({ currentWidget: widgetTypes.SMS });
+    }
+  };
+
+  const handleEmailLinkClick = (): void => {
+    if (widgetContext.setWidgetState) {
+      widgetContext.setWidgetState({ currentWidget: widgetTypes.EMAIL });
     }
   };
 
@@ -32,6 +39,12 @@ const QRCodeWidget: FunctionComponent<{}> = () => {
         && (
           <LinkButton onClick={handleSMSLinkClick}>
             Get an SMS instead
+          </LinkButton>
+      ) }
+      { (!widgetContext.custContext.phoneNo && widgetContext.custContext.emailId)
+        && (
+          <LinkButton onClick={handleEmailLinkClick}>
+            Get an email instead
           </LinkButton>
       ) }
     </div>

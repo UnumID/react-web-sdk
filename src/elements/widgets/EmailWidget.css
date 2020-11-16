@@ -1,4 +1,4 @@
-.sms-content {
+.email-content {
   align-items: center;
   justify-content: center;
   padding: 40px;
@@ -6,11 +6,11 @@
   display: flex;
 }
 
-.sms-content .bold {
+.email-content .bold {
   font-weight: 700;
 }
 
-.sms-content .error {
+.email-content .error {
   font-weight: 700;
   color: #ff0000;
 }

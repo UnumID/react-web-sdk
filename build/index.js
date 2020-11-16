@@ -116,6 +116,11 @@ var reqResConst = {
     CONTENT_TYPE: 'application/json; charset=utf-8',
     ERROR_TEXT: 'errorText',
 };
+var widgetTypes = {
+    QR_CODE: 'QrCode',
+    EMAIL: 'Email',
+    SMS: 'SMS',
+};
 
 var ObjectUtil = /** @class */ (function () {
     function ObjectUtil() {
@@ -534,7 +539,7 @@ Card.Header = CardHeader;
 Card.Footer = CardFooter;
 Card.ImgOverlay = CardImgOverlay;
 
-var css_248z$1 = ".single-widget {\r\n  margin-left: 10%;\r\n  margin-right: 10%;\r\n  margin-top: 3%;\r\n}\r\n\r\n.content-box {\r\n  background-color: #ffffff;\r\n  padding: 15px;\r\n  border: 1px solid #dddddd;\r\n  box-shadow: 0 1px 2px 0 rgba(0,0,0,.08), 0 3px 2px 0 rgba(0,0,0,.05);\r\n  min-height: 256px;\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n@media screen and (max-width: 600px) {\r\n  .single-widget {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    margin-top: 2%;\r\n  }\r\n}\r\n\r\n@media screen and (max-width: 530px) {\r\n  .content-box {\r\n    width: unset;\r\n  }\r\n}\r\n";
+var css_248z$1 = ".single-widget {\r\n  margin-left: 10%;\r\n  margin-right: 10%;\r\n  margin-top: 3%;\r\n}\r\n\r\n.content-box {\r\n  background-color: #ffffff;\r\n  padding: 15px;\r\n  border: 1px solid #dddddd;\r\n  box-shadow: 0 1px 2px 0 rgba(0,0,0,.08), 0 3px 2px 0 rgba(0,0,0,.05);\r\n  min-height: 256px;\r\n}\r\n\r\n@media screen and (max-width: 600px) {\r\n  .single-widget {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    margin-top: 2%;\r\n  }\r\n}\r\n\r\n@media screen and (max-width: 530px) {\r\n  .content-box {\r\n    width: unset;\r\n  }\r\n}\r\n";
 styleInject(css_248z$1);
 
 var WidgetContainer = /** @class */ (function (_super) {
@@ -735,7 +740,12 @@ var QRCodeWidget = function () {
     };
     var handleSMSLinkClick = function () {
         if (widgetContext.setWidgetState) {
-            widgetContext.setWidgetState({ currentWidget: 'SMS' });
+            widgetContext.setWidgetState({ currentWidget: widgetTypes.SMS });
+        }
+    };
+    var handleEmailLinkClick = function () {
+        if (widgetContext.setWidgetState) {
+            widgetContext.setWidgetState({ currentWidget: widgetTypes.EMAIL });
         }
     };
     return (React__default['default'].createElement("div", null,
@@ -743,7 +753,9 @@ var QRCodeWidget = function () {
         (widgetContext.unAuthenticatedCtx)
             && (React__default['default'].createElement(LinkButton, { onClick: handleLoginLinkClick }, "Log in with your email address for more authentication options")),
         (widgetContext.custContext.phoneNo)
-            && (React__default['default'].createElement(LinkButton, { onClick: handleSMSLinkClick }, "Get an SMS instead"))));
+            && (React__default['default'].createElement(LinkButton, { onClick: handleSMSLinkClick }, "Get an SMS instead")),
+        (!widgetContext.custContext.phoneNo && widgetContext.custContext.emailId)
+            && (React__default['default'].createElement(LinkButton, { onClick: handleEmailLinkClick }, "Get an email instead"))));
 };
 
 var templateText = "Authentication Request: ACME website. Click here to complete: {{link}}";
@@ -783,7 +795,7 @@ var sendSms = function (phoneNo, deepLink) { return __awaiter(void 0, void 0, vo
     });
 }); };
 
-var css_248z$3 = ".sms-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 20px;\r\n}\r\n\r\n.sms-content .bold {\r\n  font-weight: 700;\r\n}\r\n\r\n.sms-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
+var css_248z$3 = ".sms-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 40px;\r\n  flex-direction: column;\r\n  display: flex;\r\n}\r\n\r\n.sms-content .bold {\r\n  font-weight: 700;\r\n}\r\n\r\n.sms-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
 styleInject(css_248z$3);
 
 var SMSWidget = function () {
@@ -791,7 +803,7 @@ var SMSWidget = function () {
     var _a = React.useState(false), smsResp = _a[0], setSMSResp = _a[1];
     var _b = React.useState(false), smsSent = _b[0], setSMSSent = _b[1];
     React.useEffect(function () {
-        function getSMS() {
+        function sendSMSMsg() {
             return __awaiter(this, void 0, void 0, function () {
                 var _a;
                 return __generator(this, function (_b) {
@@ -807,16 +819,16 @@ var SMSWidget = function () {
                 });
             });
         }
-        getSMS();
+        sendSMSMsg();
     }, [widgetContext]);
     var handleEmailLinkClick = function () {
         if (widgetContext.setWidgetState) {
-            widgetContext.setWidgetState({ currentWidget: 'Email' });
+            widgetContext.setWidgetState({ currentWidget: widgetTypes.EMAIL });
         }
     };
     var backToQrCode = function () {
         if (widgetContext.setWidgetState) {
-            widgetContext.setWidgetState({ currentWidget: 'QrCode' });
+            widgetContext.setWidgetState({ currentWidget: widgetTypes.QR_CODE });
         }
     };
     return (React__default['default'].createElement("div", null, smsSent
@@ -835,6 +847,101 @@ var SMSWidget = function () {
                     "."),
             widgetContext.custContext.emailId
                 && React__default['default'].createElement(LinkButton, { onClick: handleEmailLinkClick }, "Get an email instead"),
+            React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, "Back to QR code")))));
+};
+
+var subjectText = "Authentication Request: ACME website";
+var htmlTemplateText = "Click {{here}} to complete.";
+var template$1 = {
+	subjectText: subjectText,
+	htmlTemplateText: htmlTemplateText
+};
+
+var sendEmail = function (emailId, deepLink) { return __awaiter(void 0, void 0, void 0, function () {
+    var emailTmpl, emailBodyStr, linkStr, emailData, response, e_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                emailTmpl = template$1;
+                emailBodyStr = '';
+                if (emailTmpl.htmlTemplateText) {
+                    linkStr = (emailTmpl.htmlTemplateText.match(/\{\{\s*.*\s*\}\}/) || [''])[0];
+                    linkStr = linkStr.replace(/[\s{}]/g, '');
+                    emailBodyStr = emailTmpl.htmlTemplateText.replace(/\{\{\s*.*\s*\}\}/, "<a href='" + deepLink + "'>" + linkStr + "</a>");
+                    console.log("emailBodyStr: " + emailBodyStr);
+                }
+                else {
+                    emailBodyStr = "<a href='" + deepLink + "'>Click here</a>";
+                }
+                emailData = {
+                    to: emailId,
+                    subject: emailTmpl.subjectText,
+                    htmlBody: emailBodyStr,
+                };
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, httpHlpr.post(objUtil.getEnvValue('REACT_APP_EMAIL_END_POINT'), emailData)];
+            case 2:
+                response = _a.sent();
+                return [2 /*return*/, (response.success)];
+            case 3:
+                e_1 = _a.sent();
+                return [2 /*return*/, (false)];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+
+var css_248z$4 = ".email-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 40px;\r\n  flex-direction: column;\r\n  display: flex;\r\n}\r\n\r\n.email-content .bold {\r\n  font-weight: 700;\r\n}\r\n\r\n.email-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
+styleInject(css_248z$4);
+
+var EmailWidget = function () {
+    var widgetContext = React.useContext(widgetStateContext);
+    var _a = React.useState(false), emailResp = _a[0], setEmailResp = _a[1];
+    var _b = React.useState(false), emailSent = _b[0], setEmailSent = _b[1];
+    React.useEffect(function () {
+        function sendEmailData() {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _a = setEmailResp;
+                            return [4 /*yield*/, sendEmail(widgetContext.custContext.emailId || '', widgetContext.deepLinkDtl.deeplink)];
+                        case 1:
+                            _a.apply(void 0, [_b.sent()]);
+                            setEmailSent(true);
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        sendEmailData();
+    }, [widgetContext]);
+    var handleAnotherEmailLinkClick = function () {
+        window.location.href = objUtil.getEnvValue('REACT_APP_LOGIN_PAGE');
+    };
+    var backToQrCode = function () {
+        if (widgetContext.setWidgetState) {
+            widgetContext.setWidgetState({ currentWidget: widgetTypes.QR_CODE });
+        }
+    };
+    return (React__default['default'].createElement("div", null, emailSent
+        && (React__default['default'].createElement("div", { className: "email-content" },
+            emailResp
+                && (React__default['default'].createElement("div", null,
+                    React__default['default'].createElement("div", null,
+                        "We emailed a link to ",
+                        widgetContext.custContext.emailId,
+                        "."),
+                    React__default['default'].createElement("div", { className: "bold" }, "Please click it to continue."))),
+            !emailResp
+                && React__default['default'].createElement("div", { className: "error" },
+                    "Error sending Email to ",
+                    widgetContext.custContext.emailId,
+                    "."),
+            React__default['default'].createElement(LinkButton, { onClick: handleAnotherEmailLinkClick }, "Use a different email"),
             React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, "Back to QR code")))));
 };
 
@@ -872,7 +979,7 @@ var WidgetHostAndController = /** @class */ (function (_super) {
             newCustContext.canScan = !this.state.isSameDevice;
         }
         this.setState({ custContext: newCustContext });
-        this.setState({ currentWidget: 'QrCode' });
+        this.setState({ currentWidget: widgetTypes.QR_CODE });
         if (newCustContext.phoneNo || newCustContext.emailId) {
             console.log("Object is not empty: " + JSON.stringify(newCustContext));
             this.setState({ unAuthenticatedCtx: false });
@@ -889,8 +996,9 @@ var WidgetHostAndController = /** @class */ (function (_super) {
         var currentWidget = this.state.currentWidget;
         return (React__default['default'].createElement(widgetStateContext.Provider, { value: wState },
             React__default['default'].createElement(WidgetContainer, null,
-                (currentWidget === 'QrCode') && React__default['default'].createElement(QRCodeWidget, null),
-                (currentWidget === 'SMS') && React__default['default'].createElement(SMSWidget, null))));
+                (currentWidget === widgetTypes.QR_CODE) && React__default['default'].createElement(QRCodeWidget, null),
+                (currentWidget === widgetTypes.SMS) && React__default['default'].createElement(SMSWidget, null),
+                (currentWidget === widgetTypes.EMAIL) && React__default['default'].createElement(EmailWidget, null))));
     };
     return WidgetHostAndController;
 }(React.Component));

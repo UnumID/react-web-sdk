@@ -6,8 +6,10 @@ import { defaultWidgetContextState, widgetStateContext } from 'context/widgetSta
 import WidgetContainer from 'elements/containers/WidgetContainer';
 import QRCodeWidget from 'elements/widgets/QRCodeWidget';
 import SMSWidget from 'elements/widgets/SMSWidget';
+import EmailWidget from 'elements/widgets/EmailWidget';
 import { CustomerContext, WidgetContext, PresentationRequest } from 'types';
 import { objUtil } from 'util/ruiObjectUtils';
+import { widgetTypes } from 'frwk/ruiFrwkConst';
 
 class WidgetHostAndController extends Component<{ custContext: CustomerContext, presentationRequest: PresentationRequest}, 
     WidgetContext> {
@@ -31,7 +33,7 @@ class WidgetHostAndController extends Component<{ custContext: CustomerContext, 
       newCustContext.canScan = !this.state.isSameDevice;
 	}	
     this.setState({ custContext: newCustContext });
-    this.setState({ currentWidget: 'QrCode' });
+    this.setState({ currentWidget: widgetTypes.QR_CODE });
 
     if (newCustContext.phoneNo || newCustContext.emailId) {
       console.log(`Object is not empty: ${JSON.stringify(newCustContext)}`);
@@ -50,8 +52,9 @@ class WidgetHostAndController extends Component<{ custContext: CustomerContext, 
     return (
       <widgetStateContext.Provider value={wState}>
           <WidgetContainer>
-            { (currentWidget === 'QrCode') && <QRCodeWidget /> }
-            { (currentWidget === 'SMS') && <SMSWidget /> }
+            { (currentWidget === widgetTypes.QR_CODE) && <QRCodeWidget /> }
+            { (currentWidget === widgetTypes.SMS) && <SMSWidget /> }
+			{ (currentWidget === widgetTypes.EMAIL) && <EmailWidget /> }
           </WidgetContainer>			
       </widgetStateContext.Provider>
     );

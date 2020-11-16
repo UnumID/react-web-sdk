@@ -14,3 +14,8 @@ export declare const reqResConst: {
 export declare const jsonConst: {
     RESPONSE_ELEM: string;
 };
+export declare const widgetTypes: {
+    QR_CODE: string;
+    EMAIL: string;
+    SMS: string;
+};

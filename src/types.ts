@@ -42,3 +42,18 @@ export interface SmsResponse {
 export interface SmsTemplate {
   templateText?: string;
 }
+
+export interface EmailData {
+  to: string;
+  subject: string;
+  htmlBody: string;
+}
+
+export interface EmailResponse {
+  success: boolean;
+}
+
+export interface EmailTemplate {
+  subjectText: string;
+  htmlTemplateText?: string;
+}
