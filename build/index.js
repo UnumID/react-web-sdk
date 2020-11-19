@@ -732,6 +732,21 @@ var QRCode = function (_a) {
             React__default['default'].createElement("img", { alt: "qr code", src: qrCode }))));
 };
 
+var ActionButton = /** @class */ (function (_super) {
+    __extends(ActionButton, _super);
+    function ActionButton() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ActionButton.prototype.render = function () {
+        var _a = this.props, onClick = _a.onClick, type = _a.type, className = _a.className, target = _a.target, href = _a.href, children = _a.children;
+        return (React__default['default'].createElement(Button, { className: className, variant: type, onClick: onClick, href: href, target: target }, children));
+    };
+    return ActionButton;
+}(React.Component));
+
+var css_248z$3 = ".qrcode-widget-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 40px;\r\n  flex-direction: column;\r\n  display: flex;\r\n}\r\n\r\n.qrcode-widget-content .bold-label {\r\n  font-weight: 700;\r\n  background-color: #1f61cc\r\n}\r\n\r\n.qrcode-widget-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
+styleInject(css_248z$3);
+
 var QRCodeWidget = function () {
     var widgetContext = React.useContext(widgetStateContext);
     console.log(JSON.stringify(widgetContext));
@@ -748,8 +763,12 @@ var QRCodeWidget = function () {
             widgetContext.setWidgetState({ currentWidget: widgetTypes.EMAIL });
         }
     };
-    return (React__default['default'].createElement("div", null,
-        React__default['default'].createElement(QRCode, { qrCode: widgetContext.deepLinkDtl.qrCode }),
+    var btnLbl = "Continue with " + objUtil.getEnvValue('REACT_APP_APPLICATION_TITLE') + " App";
+    return (React__default['default'].createElement("div", { className: 'qrcode-widget-content' },
+        widgetContext.custContext.canScan &&
+            React__default['default'].createElement(QRCode, { qrCode: widgetContext.deepLinkDtl.qrCode }),
+        !widgetContext.custContext.canScan &&
+            React__default['default'].createElement(ActionButton, { className: 'bold-label', type: 'primary', target: '_blank', href: widgetContext.deepLinkDtl.deeplink }, btnLbl),
         (widgetContext.unAuthenticatedCtx)
             && (React__default['default'].createElement(LinkButton, { onClick: handleLoginLinkClick }, "Log in with your email address for more authentication options")),
         (widgetContext.custContext.phoneNo)
@@ -795,13 +814,14 @@ var sendSms = function (phoneNo, deepLink) { return __awaiter(void 0, void 0, vo
     });
 }); };
 
-var css_248z$3 = ".sms-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 40px;\r\n  flex-direction: column;\r\n  display: flex;\r\n}\r\n\r\n.sms-content .bold {\r\n  font-weight: 700;\r\n}\r\n\r\n.sms-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
-styleInject(css_248z$3);
+var css_248z$4 = ".sms-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 40px;\r\n  flex-direction: column;\r\n  display: flex;\r\n}\r\n\r\n.sms-content .bold {\r\n  font-weight: 700;\r\n}\r\n\r\n.sms-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
+styleInject(css_248z$4);
 
 var SMSWidget = function () {
     var widgetContext = React.useContext(widgetStateContext);
     var _a = React.useState(false), smsResp = _a[0], setSMSResp = _a[1];
     var _b = React.useState(false), smsSent = _b[0], setSMSSent = _b[1];
+    var backLinkLiteral = "Back to " + (widgetContext.custContext.canScan ? 'QR code' : 'Button');
     React.useEffect(function () {
         function sendSMSMsg() {
             return __awaiter(this, void 0, void 0, function () {
@@ -847,7 +867,7 @@ var SMSWidget = function () {
                     "."),
             widgetContext.custContext.emailId
                 && React__default['default'].createElement(LinkButton, { onClick: handleEmailLinkClick }, "Get an email instead"),
-            React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, "Back to QR code")))));
+            React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, backLinkLiteral)))));
 };
 
 var subjectText = "Authentication Request: ACME website";
@@ -893,13 +913,14 @@ var sendEmail = function (emailId, deepLink) { return __awaiter(void 0, void 0, 
     });
 }); };
 
-var css_248z$4 = ".email-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 40px;\r\n  flex-direction: column;\r\n  display: flex;\r\n}\r\n\r\n.email-content .bold {\r\n  font-weight: 700;\r\n}\r\n\r\n.email-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
-styleInject(css_248z$4);
+var css_248z$5 = ".email-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 40px;\r\n  flex-direction: column;\r\n  display: flex;\r\n}\r\n\r\n.email-content .bold {\r\n  font-weight: 700;\r\n}\r\n\r\n.email-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
+styleInject(css_248z$5);
 
 var EmailWidget = function () {
     var widgetContext = React.useContext(widgetStateContext);
     var _a = React.useState(false), emailResp = _a[0], setEmailResp = _a[1];
     var _b = React.useState(false), emailSent = _b[0], setEmailSent = _b[1];
+    var backLinkLiteral = "Back to " + (widgetContext.custContext.canScan ? 'QR code' : 'Button');
     React.useEffect(function () {
         function sendEmailData() {
             return __awaiter(this, void 0, void 0, function () {
@@ -942,7 +963,7 @@ var EmailWidget = function () {
                     widgetContext.custContext.emailId,
                     "."),
             React__default['default'].createElement(LinkButton, { onClick: handleAnotherEmailLinkClick }, "Use a different email"),
-            React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, "Back to QR code")))));
+            React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, backLinkLiteral)))));
 };
 
 var WidgetHostAndController = /** @class */ (function (_super) {

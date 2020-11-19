@@ -5,7 +5,10 @@ import { WidgetContext } from 'types';
 import { widgetStateContext } from 'context/widgetStateContext';
 import QRCode from 'elements/components/QRCode';
 import LinkButton from 'elements/components/LinkButton';
+import ActionButton from 'elements/components/ActionButton';
 import { widgetTypes } from 'frwk/ruiFrwkConst';
+
+import './QRCodeWidget.css';
 
 const QRCodeWidget: FunctionComponent<{}> = () => {
   const widgetContext: WidgetContext = useContext(widgetStateContext);
@@ -26,9 +29,16 @@ const QRCodeWidget: FunctionComponent<{}> = () => {
     }
   };
 
+  const btnLbl = `Continue with ${objUtil.getEnvValue('REACT_APP_APPLICATION_TITLE')} App`;
+  
   return (
-    <div>
-      <QRCode qrCode={widgetContext.deepLinkDtl.qrCode} />
+    <div className='qrcode-widget-content'>
+      { widgetContext.custContext.canScan && 
+        <QRCode qrCode={widgetContext.deepLinkDtl.qrCode} /> }
+      { !widgetContext.custContext.canScan && 
+        <ActionButton className='bold-label' type='primary' target='_blank' 
+          href={widgetContext.deepLinkDtl.deeplink}>
+        {btnLbl}</ActionButton> }
       { (widgetContext.unAuthenticatedCtx)
         && (
           <LinkButton onClick={handleLoginLinkClick}>

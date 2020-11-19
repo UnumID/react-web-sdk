@@ -15,6 +15,7 @@ const EmailWidget: FunctionComponent<{}> = () => {
   const widgetContext: WidgetContext = useContext(widgetStateContext);
   const [emailResp, setEmailResp] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const backLinkLiteral = `Back to ${widgetContext.custContext.canScan ? 'QR code' : 'Button'}`;
 
   useEffect(() => {
     async function sendEmailData() {
@@ -50,7 +51,9 @@ const EmailWidget: FunctionComponent<{}> = () => {
           {!emailResp
             && <div className="error">Error sending Email to {widgetContext.custContext.emailId}.</div>}
           <LinkButton onClick={handleAnotherEmailLinkClick}>Use a different email</LinkButton>
-          <LinkButton onClick={backToQrCode}>Back to QR code</LinkButton>
+          <LinkButton onClick={backToQrCode}>
+            {backLinkLiteral}
+          </LinkButton>
         </div>
       )
     }

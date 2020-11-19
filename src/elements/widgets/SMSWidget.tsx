@@ -14,7 +14,8 @@ const SMSWidget: FunctionComponent<{}> = () => {
   const widgetContext: WidgetContext = useContext(widgetStateContext);
   const [smsResp, setSMSResp] = useState(false);
   const [smsSent, setSMSSent] = useState(false);
-
+  const backLinkLiteral = `Back to ${widgetContext.custContext.canScan ? 'QR code' : 'Button'}`;
+  
   useEffect(() => {
     async function sendSMSMsg() {
       setSMSResp(await sendSms(widgetContext.custContext.phoneNo || '', widgetContext.deepLinkDtl.deeplink));
@@ -52,7 +53,9 @@ const SMSWidget: FunctionComponent<{}> = () => {
             && <div className="error">Error sending SMS to {widgetContext.custContext.phoneNo}.</div>}
           { widgetContext.custContext.emailId
             && <LinkButton onClick={handleEmailLinkClick}>Get an email instead</LinkButton> }
-          <LinkButton onClick={backToQrCode}>Back to QR code</LinkButton>
+          <LinkButton onClick={backToQrCode}>
+            {backLinkLiteral}
+          </LinkButton>
         </div>
       )
     }
