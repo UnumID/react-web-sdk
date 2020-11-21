@@ -6,12 +6,12 @@ const doXHRReq = (requestType: string, data: Record<string, unknown>, aSynchrono
   requestURL: string): Promise<Record<string, unknown>> => new Promise((resolve, reject) => {
   if (objUtil.isNullOrEmpty(data)) {
     frwkHlpr.logError('doXHRReq', 'there is no data to be sent to the server');
-    resolve(undefined);
+    throw new Error('Data is empty');
   }
 
   if (objUtil.isNullOrEmpty(requestURL)) {
     frwkHlpr.logError('doXHRReq', 'requestURL is empty');
-    resolve(undefined);
+    throw new Error('request URL is empty');
   }
 
   const xhrReq: XMLHttpRequest = new XMLHttpRequest();

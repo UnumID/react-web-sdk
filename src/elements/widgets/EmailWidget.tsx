@@ -11,7 +11,7 @@ import { objUtil } from 'util/ruiObjectUtils';
 
 import './EmailWidget.css';
 
-const EmailWidget: FunctionComponent<{}> = () => {
+const EmailWidget: FunctionComponent = () => {
   const widgetContext: WidgetContext = useContext(widgetStateContext);
   const [emailResp, setEmailResp] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -22,8 +22,8 @@ const EmailWidget: FunctionComponent<{}> = () => {
       setEmailResp(await sendEmail(widgetContext.custContext.emailId || '', widgetContext.deepLinkDtl.deeplink));
       setEmailSent(true);
     }
-	
-	sendEmailData();
+
+    sendEmailData();
   }, [widgetContext]);
 
   const handleAnotherEmailLinkClick = (): void => {
@@ -55,9 +55,8 @@ const EmailWidget: FunctionComponent<{}> = () => {
             {backLinkLiteral}
           </LinkButton>
         </div>
-      )
-    }
-	</div>
+        )}
+    </div>
   );
 };
 

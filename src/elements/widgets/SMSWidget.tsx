@@ -10,19 +10,19 @@ import { widgetTypes } from 'frwk/ruiFrwkConst';
 
 import './SMSWidget.css';
 
-const SMSWidget: FunctionComponent<{}> = () => {
+const SMSWidget: FunctionComponent = () => {
   const widgetContext: WidgetContext = useContext(widgetStateContext);
   const [smsResp, setSMSResp] = useState(false);
   const [smsSent, setSMSSent] = useState(false);
   const backLinkLiteral = `Back to ${widgetContext.custContext.canScan ? 'QR code' : 'Button'}`;
-  
+
   useEffect(() => {
     async function sendSMSMsg() {
       setSMSResp(await sendSms(widgetContext.custContext.phoneNo || '', widgetContext.deepLinkDtl.deeplink));
       setSMSSent(true);
     }
-	
-	sendSMSMsg();
+
+    sendSMSMsg();
   }, [widgetContext]);
 
   const handleEmailLinkClick = (): void => {
@@ -57,9 +57,8 @@ const SMSWidget: FunctionComponent<{}> = () => {
             {backLinkLiteral}
           </LinkButton>
         </div>
-      )
-    }
-	</div>
+        )}
+    </div>
   );
 };
 

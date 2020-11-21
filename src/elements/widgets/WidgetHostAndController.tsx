@@ -8,30 +8,32 @@ import QRCodeWidget from 'elements/widgets/QRCodeWidget';
 import SMSWidget from 'elements/widgets/SMSWidget';
 import EmailWidget from 'elements/widgets/EmailWidget';
 import { CustomerContext, WidgetContext, PresentationRequest } from 'types';
-import { objUtil } from 'util/ruiObjectUtils';
 import { widgetTypes } from 'frwk/ruiFrwkConst';
 
-class WidgetHostAndController extends Component<{ custContext: CustomerContext, presentationRequest: PresentationRequest}, 
-    WidgetContext> {
+class WidgetHostAndController extends Component<{ custContext: CustomerContext,
+    presentationRequest: PresentationRequest}, WidgetContext> {
   constructor(props: any) {
     super(props);
     this.state = defaultWidgetContextState;
   }
 
   async componentDidMount(): Promise<void> {
-    this.setState({ deepLinkDtl: await getPresentation(this.props.presentationRequest) });
+    const { presentationRequest } = this.props;
+    this.setState({ deepLinkDtl: await getPresentation(presentationRequest) });
     this.setState({ isSameDevice: (!!/Mobi|Android|iPhone/i.test(navigator.userAgent)) });
     this.populateCustContextInState();
     console.log(`Data is: ${JSON.stringify(this.state)}`);
   }
 
   populateCustContextInState(): void {
-    const newCustContext: CustomerContext = this.props.custContext;
-    
+    const { custContext } = this.props;
+    const newCustContext: CustomerContext = custContext;
+
     if (newCustContext.canScan === undefined) {
-      console.log("Can Scan is not passed: " + newCustContext.canScan);
-      newCustContext.canScan = !this.state.isSameDevice;
-	}	
+      console.log(`Can Scan is not passed: ${newCustContext.canScan}`);
+      const { isSameDevice } = this.state;
+      newCustContext.canScan = !isSameDevice;
+    }
     this.setState({ custContext: newCustContext });
     this.setState({ currentWidget: widgetTypes.QR_CODE });
 
@@ -51,11 +53,11 @@ class WidgetHostAndController extends Component<{ custContext: CustomerContext, 
     const { currentWidget } = this.state;
     return (
       <widgetStateContext.Provider value={wState}>
-          <WidgetContainer>
-            { (currentWidget === widgetTypes.QR_CODE) && <QRCodeWidget /> }
-            { (currentWidget === widgetTypes.SMS) && <SMSWidget /> }
-			{ (currentWidget === widgetTypes.EMAIL) && <EmailWidget /> }
-          </WidgetContainer>			
+        <WidgetContainer>
+          { (currentWidget === widgetTypes.QR_CODE) && <QRCodeWidget /> }
+          { (currentWidget === widgetTypes.SMS) && <SMSWidget /> }
+          { (currentWidget === widgetTypes.EMAIL) && <EmailWidget /> }
+        </WidgetContainer>
       </widgetStateContext.Provider>
     );
   }

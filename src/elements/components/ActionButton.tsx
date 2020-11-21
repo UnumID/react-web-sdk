@@ -13,10 +13,17 @@ interface Props {
 
 class ActionButton extends Component<Props> {
   render(): ReactNode {
-    const { onClick, type, className, target, href, children } = this.props;
+    const {
+      onClick, type, className, target, href, children,
+    } = this.props;
     return (
-      <Button className={className} variant={type} onClick={onClick} 
-        href={href} target={target}>
+      <Button
+        className={className}
+        variant={type}
+        onClick={onClick}
+        href={href}
+        target={target}
+      >
         { children }
       </Button>
     );
