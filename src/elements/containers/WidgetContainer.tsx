@@ -11,9 +11,11 @@ interface Props {
 
 class WidgetContainer extends Component<Props> {
   render(): ReactNode {
-    const { children } = this.props;
+    const { children, className } = this.props;
+    const newClass = `${className} single-widget content-box`;
+
     return (
-      <Card className="single-widget content-box">
+      <Card className={newClass}>
         { children }
       </Card>
     );

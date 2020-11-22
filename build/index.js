@@ -548,8 +548,9 @@ var WidgetContainer = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     WidgetContainer.prototype.render = function () {
-        var children = this.props.children;
-        return (React__default['default'].createElement(Card, { className: "single-widget content-box" }, children));
+        var _a = this.props, children = _a.children, className = _a.className;
+        var newClass = className + " single-widget content-box";
+        return (React__default['default'].createElement(Card, { className: newClass }, children));
     };
     return WidgetContainer;
 }(React.Component));
