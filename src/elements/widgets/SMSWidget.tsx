@@ -1,9 +1,9 @@
 import React, {
-  useContext, useState, useEffect, FunctionComponent,
+  useState, useEffect, FunctionComponent,
 } from 'react';
 
 import { WidgetContext } from 'types';
-import { widgetStateContext } from 'context/widgetStateContext';
+import { useWidgetStateContext } from 'context/widgetStateContext';
 import { sendSms } from 'context/sendSms';
 import LinkButton from 'elements/components/LinkButton';
 import { widgetTypes } from 'frwk/ruiFrwkConst';
@@ -11,7 +11,7 @@ import { widgetTypes } from 'frwk/ruiFrwkConst';
 import './SMSWidget.css';
 
 const SMSWidget: FunctionComponent = () => {
-  const widgetContext: WidgetContext = useContext(widgetStateContext);
+  const widgetContext: WidgetContext = useWidgetStateContext();
   const [smsResp, setSMSResp] = useState(false);
   const [smsSent, setSMSSent] = useState(false);
   const backLinkLiteral = `Back to ${widgetContext.custContext.canScan ? 'QR code' : 'Button'}`;

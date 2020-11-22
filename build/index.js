@@ -301,6 +301,7 @@ var defaultWidgetContextState = {
     unAuthenticatedCtx: true,
 };
 var widgetStateContext = React.createContext(defaultWidgetContextState);
+var useWidgetStateContext = function () { return React.useContext(widgetStateContext); };
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -749,7 +750,7 @@ var css_248z$3 = ".qrcode-widget-content {\r\n  align-items: center;\r\n  justif
 styleInject(css_248z$3);
 
 var QRCodeWidget = function () {
-    var widgetContext = React.useContext(widgetStateContext);
+    var widgetContext = useWidgetStateContext();
     console.log(JSON.stringify(widgetContext));
     var handleLoginLinkClick = function () {
         window.location.href = objUtil.getEnvValue('REACT_APP_LOGIN_PAGE');
@@ -772,9 +773,10 @@ var QRCodeWidget = function () {
             && (React__default['default'].createElement(ActionButton, { className: "bold-label", type: "primary", target: "_blank", href: widgetContext.deepLinkDtl.deeplink }, btnLbl)),
         (widgetContext.unAuthenticatedCtx)
             && (React__default['default'].createElement(LinkButton, { onClick: handleLoginLinkClick }, "Log in with your email address for more authentication options")),
-        (widgetContext.custContext.phoneNo)
+        (!widgetContext.unAuthenticatedCtx && widgetContext.custContext.phoneNo)
             && (React__default['default'].createElement(LinkButton, { onClick: handleSMSLinkClick }, "Get an SMS instead")),
-        (!widgetContext.custContext.phoneNo && widgetContext.custContext.emailId)
+        (!widgetContext.unAuthenticatedCtx)
+            && (!widgetContext.custContext.phoneNo && widgetContext.custContext.emailId)
             && (React__default['default'].createElement(LinkButton, { onClick: handleEmailLinkClick }, "Get an email instead"))));
 };
 
@@ -819,7 +821,7 @@ var css_248z$4 = ".sms-content {\r\n  align-items: center;\r\n  justify-content:
 styleInject(css_248z$4);
 
 var SMSWidget = function () {
-    var widgetContext = React.useContext(widgetStateContext);
+    var widgetContext = useWidgetStateContext();
     var _a = React.useState(false), smsResp = _a[0], setSMSResp = _a[1];
     var _b = React.useState(false), smsSent = _b[0], setSMSSent = _b[1];
     var backLinkLiteral = "Back to " + (widgetContext.custContext.canScan ? 'QR code' : 'Button');
@@ -918,7 +920,7 @@ var css_248z$5 = ".email-content {\r\n  align-items: center;\r\n  justify-conten
 styleInject(css_248z$5);
 
 var EmailWidget = function () {
-    var widgetContext = React.useContext(widgetStateContext);
+    var widgetContext = useWidgetStateContext();
     var _a = React.useState(false), emailResp = _a[0], setEmailResp = _a[1];
     var _b = React.useState(false), emailSent = _b[0], setEmailSent = _b[1];
     var backLinkLiteral = "Back to " + (widgetContext.custContext.canScan ? 'QR code' : 'Button');

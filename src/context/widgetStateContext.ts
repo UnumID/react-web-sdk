@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
 import { WidgetContext } from 'types';
 
@@ -17,3 +17,4 @@ export const defaultWidgetContextState: WidgetContext = {
 };
 
 export const widgetStateContext = createContext<WidgetContext>(defaultWidgetContextState);
+export const useWidgetStateContext = ():WidgetContext => useContext(widgetStateContext);
