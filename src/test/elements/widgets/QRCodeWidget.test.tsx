@@ -125,7 +125,7 @@ describe('QRCodeWidget', () => {
       renderQrCodeWidget(widgetCtx);
 
       qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).simulate('click');
-      expect(window.location.href).toBe('http://localhost/#login');
+      expect(window.location.href).toBe(`http://localhost/${process.env.REACT_APP_LOGIN_PAGE}`);
     });
 
     it('Check the onClick event of SMS LinkButton', () => {
