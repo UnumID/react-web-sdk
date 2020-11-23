@@ -30,6 +30,10 @@ describe('QRCodeWidget', () => {
       expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
       expect(qrCodeWidget.find('QRCode').length).toBe(1);
       expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(1);
+
+      expect(qrCodeWidget.find('ActionButton').length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
     });
 
     it('renders a ActionButton with unknown customer context', () => {
@@ -40,12 +44,17 @@ describe('QRCodeWidget', () => {
       expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
       expect(qrCodeWidget.find('ActionButton').length).toBe(1);
       expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(1);
+
+      expect(qrCodeWidget.find('QRCode').length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
     });
   });
 
   describe('render with customer context and canScan=true', () => {
     it('renders a QRCodeWidget with phone number', () => {
       widgetCtx.custContext.phoneNo = '12345';
+      widgetCtx.custContext.emailId = '';
       widgetCtx.unAuthenticatedCtx = false;
       widgetCtx.custContext.canScan = true;
       renderQrCodeWidget(widgetCtx);
@@ -53,6 +62,10 @@ describe('QRCodeWidget', () => {
       expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
       expect(qrCodeWidget.find('QRCode').length).toBe(1);
       expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(1);
+
+      expect(qrCodeWidget.find('ActionButton').length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
     });
 
     it('renders a QRCodeWidget with phone number and email id', () => {
@@ -65,6 +78,10 @@ describe('QRCodeWidget', () => {
       expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
       expect(qrCodeWidget.find('QRCode').length).toBe(1);
       expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(1);
+
+      expect(qrCodeWidget.find('ActionButton').length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
     });
 
     it('renders a QRCodeWidget with phone number', () => {
@@ -77,6 +94,10 @@ describe('QRCodeWidget', () => {
       expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
       expect(qrCodeWidget.find('QRCode').length).toBe(1);
       expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(1);
+
+      expect(qrCodeWidget.find('ActionButton').length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(0);
     });
   });
 
@@ -90,6 +111,10 @@ describe('QRCodeWidget', () => {
       expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
       expect(qrCodeWidget.find('ActionButton').length).toBe(1);
       expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(1);
+
+      expect(qrCodeWidget.find('QRCode').length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
     });
 
     it('renders a QRCodeWidget with phone number and email id', () => {
@@ -102,6 +127,10 @@ describe('QRCodeWidget', () => {
       expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
       expect(qrCodeWidget.find('ActionButton').length).toBe(1);
       expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(1);
+
+      expect(qrCodeWidget.find('QRCode').length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
     });
 
     it('renders a QRCodeWidget with phone number', () => {
@@ -114,6 +143,10 @@ describe('QRCodeWidget', () => {
       expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
       expect(qrCodeWidget.find('ActionButton').length).toBe(1);
       expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(1);
+
+      expect(qrCodeWidget.find('QRCode').length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
+      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(0);
     });
   });
 

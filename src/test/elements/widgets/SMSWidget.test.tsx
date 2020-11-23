@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
 import { WidgetContext } from 'types';
@@ -30,7 +30,7 @@ describe('SMSWidget', () => {
     beforeEach(async () => {
       widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
       widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = 'abc@test';
+      widgetCtx.custContext.emailId = 'abc@test.com';
       widgetCtx.custContext.canScan = true;
 
       await act(async () => {
@@ -88,7 +88,7 @@ describe('SMSWidget', () => {
     beforeEach(async () => {
       widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
       widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = 'abc@test';
+      widgetCtx.custContext.emailId = 'abc@test.com';
       widgetCtx.custContext.canScan = false;
 
       await act(async () => {
@@ -172,6 +172,32 @@ describe('SMSWidget', () => {
       it('renders a Back to Button link', () => {
         expect(smsWidget.getByText('Back to Button')).toBeDefined();
       });
+    });
+  });
+
+  describe('action for email link and back button link', () => {
+    beforeEach(async () => {
+      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
+      widgetCtx.custContext.phoneNo = '12345';
+      widgetCtx.custContext.emailId = 'abc@test.com';
+      widgetCtx.custContext.canScan = false;
+
+      await act(async () => {
+        mockSMSFunctions(widgetCtx, true);
+        await renderSMSWidget();
+      });
+    });
+
+    it('Check the onClick event of Email link', () => {
+      const emailLink = smsWidget.getByText('Get an email instead');
+      fireEvent.click(emailLink);
+      expect(widgetCtx.setWidgetState).toHaveBeenCalledTimes(1);
+    });
+
+    it('Check the onClick event of Back button', () => {
+      const backButton = smsWidget.getByText('Back to Button');
+      fireEvent.click(backButton);
+      expect(widgetCtx.setWidgetState).toHaveBeenCalledTimes(2);
     });
   });
 });
