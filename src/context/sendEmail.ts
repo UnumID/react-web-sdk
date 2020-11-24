@@ -1,5 +1,6 @@
 import { httpHlpr } from 'util/ruiHttpHlpr';
 import { objUtil } from 'util/ruiObjectUtils';
+import { frwkHlpr } from 'frwk/ruiFrwkHlpr';
 import { EmailData, EmailResponse, EmailTemplate } from 'types';
 import template from 'config/templates/emailTemplate.json';
 
@@ -11,7 +12,7 @@ const sendEmail = async (emailId: string, deepLink: string): Promise<boolean> =>
     let linkStr: string = (emailTmpl.htmlTemplateText.match(/\{\{\s*.*\s*\}\}/) || [''])[0];
     linkStr = linkStr.replace(/[\s{}]/g, '');
     emailBodyStr = emailTmpl.htmlTemplateText.replace(/\{\{\s*.*\s*\}\}/, `<a href='${deepLink}'>${linkStr}</a>`);
-    console.log(`emailBodyStr: ${emailBodyStr}`);
+    frwkHlpr.logInfo('sendEmail', `emailBodyStr: ${emailBodyStr}`);
   } else {
     emailBodyStr = `<a href='${deepLink}'>Click here</a>`;
   }

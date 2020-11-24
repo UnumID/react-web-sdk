@@ -121,6 +121,54 @@ var widgetTypes = {
     EMAIL: 'Email',
     SMS: 'SMS',
 };
+var consoleTypes = {
+    LOG: 1,
+    INFO: 2,
+    WARN: 3,
+    ERROR: 4,
+};
+
+var writeLog = function (type, fName, msg) {
+    if (process.env.REACT_APP_ENABLE_LOG !== 'true')
+        return;
+    var log = fName + frwkConst.LOG_DELIMETER + msg;
+    switch (type) {
+        case consoleTypes.WARN:
+            console.warn(log);
+            break;
+        case consoleTypes.INFO:
+            console.info(log);
+            break;
+        case consoleTypes.ERROR:
+            console.error(log);
+            break;
+        case consoleTypes.LOG:
+        default:
+            console.log(log);
+            break;
+    }
+};
+var FrwkHlpr = /** @class */ (function () {
+    function FrwkHlpr() {
+    }
+    FrwkHlpr.prototype.logNote = function (fName, str) {
+        writeLog(consoleTypes.LOG, fName, str);
+    };
+    FrwkHlpr.prototype.logError = function (fName, str) {
+        writeLog(consoleTypes.ERROR, fName, str);
+    };
+    FrwkHlpr.prototype.logInfo = function (fName, str) {
+        writeLog(consoleTypes.INFO, fName, str);
+    };
+    FrwkHlpr.prototype.logWarn = function (fName, str) {
+        writeLog(consoleTypes.WARN, fName, str);
+    };
+    FrwkHlpr.prototype.showAlert = function (msg) {
+        alert(msg);
+    };
+    return FrwkHlpr;
+}());
+var frwkHlpr = new FrwkHlpr();
 
 var ObjectUtil = /** @class */ (function () {
     function ObjectUtil() {
@@ -153,7 +201,7 @@ var ObjectUtil = /** @class */ (function () {
                 }
                 break;
             default:
-                console.log('default switch case');
+                frwkHlpr.logInfo('ObjectUtil::isNullOrEmpty', 'default switch case');
                 break;
         }
         return (retVal);
@@ -170,28 +218,6 @@ var ObjectUtil = /** @class */ (function () {
     return ObjectUtil;
 }());
 var objUtil = new ObjectUtil();
-
-var FrwkHlpr = /** @class */ (function () {
-    function FrwkHlpr() {
-    }
-    FrwkHlpr.prototype.logNote = function (fName, str) {
-        console.log(fName + frwkConst.LOG_DELIMETER + str);
-    };
-    FrwkHlpr.prototype.logError = function (fName, str) {
-        console.error(fName + frwkConst.LOG_DELIMETER + str);
-    };
-    FrwkHlpr.prototype.logInfo = function (fName, str) {
-        console.info(fName + frwkConst.LOG_DELIMETER + str);
-    };
-    FrwkHlpr.prototype.logWarn = function (fName, str) {
-        console.warn(fName + frwkConst.LOG_DELIMETER + str);
-    };
-    FrwkHlpr.prototype.showAlert = function (msg) {
-        alert(msg);
-    };
-    return FrwkHlpr;
-}());
-var frwkHlpr = new FrwkHlpr();
 
 var doXHRReq = function (requestType, data, aSynchronous, requestURL) { return new Promise(function (resolve, reject) {
     if (objUtil.isNullOrEmpty(data)) {
@@ -550,7 +576,8 @@ var WidgetContainer = /** @class */ (function (_super) {
     }
     WidgetContainer.prototype.render = function () {
         var _a = this.props, children = _a.children, className = _a.className;
-        var newClass = className + " single-widget content-box";
+        var newClass = 'single-widget content-box';
+        newClass = (className ? className + " " + newClass : newClass);
         return (React__default['default'].createElement(Card, { className: newClass }, children));
     };
     return WidgetContainer;
@@ -751,7 +778,7 @@ styleInject(css_248z$3);
 
 var QRCodeWidget = function () {
     var widgetContext = useWidgetStateContext();
-    console.log(JSON.stringify(widgetContext));
+    frwkHlpr.logInfo('QRCodeWidget', JSON.stringify(widgetContext));
     var handleLoginLinkClick = function () {
         window.location.href = objUtil.getEnvValue('REACT_APP_LOGIN_PAGE');
     };
@@ -891,7 +918,7 @@ var sendEmail = function (emailId, deepLink) { return __awaiter(void 0, void 0, 
                     linkStr = (emailTmpl.htmlTemplateText.match(/\{\{\s*.*\s*\}\}/) || [''])[0];
                     linkStr = linkStr.replace(/[\s{}]/g, '');
                     emailBodyStr = emailTmpl.htmlTemplateText.replace(/\{\{\s*.*\s*\}\}/, "<a href='" + deepLink + "'>" + linkStr + "</a>");
-                    console.log("emailBodyStr: " + emailBodyStr);
+                    frwkHlpr.logInfo('sendEmail', "emailBodyStr: " + emailBodyStr);
                 }
                 else {
                     emailBodyStr = "<a href='" + deepLink + "'>Click here</a>";
@@ -991,7 +1018,7 @@ var WidgetHostAndController = /** @class */ (function (_super) {
                         _a.apply(this, [(_b.deepLinkDtl = _c.sent(), _b)]);
                         this.setState({ isSameDevice: (!!/Mobi|Android|iPhone/i.test(navigator.userAgent)) });
                         this.populateCustContextInState();
-                        console.log("Data is: " + JSON.stringify(this.state));
+                        frwkHlpr.logInfo('WidgetHostAndController::componentDidMount', "Data is: " + JSON.stringify(this.state));
                         return [2 /*return*/];
                 }
             });
@@ -1001,16 +1028,16 @@ var WidgetHostAndController = /** @class */ (function (_super) {
         var custContext = this.props.custContext;
         var newCustContext = custContext;
         if (newCustContext.canScan === undefined) {
-            console.log("Can Scan is not passed: " + newCustContext.canScan);
+            frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', "Can Scan is not passed: " + newCustContext.canScan);
             var isSameDevice = this.state.isSameDevice;
             newCustContext.canScan = !isSameDevice;
         }
         this.setState({ custContext: newCustContext });
         this.setState({ currentWidget: widgetTypes.QR_CODE });
         if (newCustContext.phoneNo || newCustContext.emailId) {
-            console.log("Object is not empty: " + JSON.stringify(newCustContext));
+            frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', "Object is not empty: " + JSON.stringify(newCustContext));
             this.setState({ unAuthenticatedCtx: false });
-            console.log("New state is: " + JSON.stringify(this.state));
+            frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', "New state is: " + JSON.stringify(this.state));
         }
         else {
             this.setState({ unAuthenticatedCtx: true });

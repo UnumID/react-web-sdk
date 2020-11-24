@@ -1,4 +1,5 @@
 import { frwkConst } from 'frwk/ruiFrwkConst';
+import { frwkHlpr } from 'frwk/ruiFrwkHlpr';
 
 class ObjectUtil {
   isNullOrEmpty(obj: any): boolean {
@@ -27,7 +28,7 @@ class ObjectUtil {
         }
         break;
       default:
-        console.log('default switch case');
+        frwkHlpr.logInfo('ObjectUtil::isNullOrEmpty', 'default switch case');
         break;
     }
 

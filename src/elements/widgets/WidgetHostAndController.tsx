@@ -9,10 +9,15 @@ import SMSWidget from 'elements/widgets/SMSWidget';
 import EmailWidget from 'elements/widgets/EmailWidget';
 import { CustomerContext, WidgetContext, PresentationRequest } from 'types';
 import { widgetTypes } from 'frwk/ruiFrwkConst';
+import { frwkHlpr } from 'frwk/ruiFrwkHlpr';
 
-class WidgetHostAndController extends Component<{ custContext: CustomerContext,
-    presentationRequest: PresentationRequest}, WidgetContext> {
-  constructor(props: any) {
+interface Props {
+  custContext: CustomerContext;
+  presentationRequest: PresentationRequest;
+}
+
+class WidgetHostAndController extends Component<Props, WidgetContext> {
+  constructor(props: Props) {
     super(props);
     this.state = defaultWidgetContextState;
   }
@@ -22,7 +27,7 @@ class WidgetHostAndController extends Component<{ custContext: CustomerContext,
     this.setState({ deepLinkDtl: await getPresentation(presentationRequest) });
     this.setState({ isSameDevice: (!!/Mobi|Android|iPhone/i.test(navigator.userAgent)) });
     this.populateCustContextInState();
-    console.log(`Data is: ${JSON.stringify(this.state)}`);
+    frwkHlpr.logInfo('WidgetHostAndController::componentDidMount', `Data is: ${JSON.stringify(this.state)}`);
   }
 
   populateCustContextInState(): void {
@@ -30,7 +35,7 @@ class WidgetHostAndController extends Component<{ custContext: CustomerContext,
     const newCustContext: CustomerContext = custContext;
 
     if (newCustContext.canScan === undefined) {
-      console.log(`Can Scan is not passed: ${newCustContext.canScan}`);
+      frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', `Can Scan is not passed: ${newCustContext.canScan}`);
       const { isSameDevice } = this.state;
       newCustContext.canScan = !isSameDevice;
     }
@@ -38,9 +43,9 @@ class WidgetHostAndController extends Component<{ custContext: CustomerContext,
     this.setState({ currentWidget: widgetTypes.QR_CODE });
 
     if (newCustContext.phoneNo || newCustContext.emailId) {
-      console.log(`Object is not empty: ${JSON.stringify(newCustContext)}`);
+      frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', `Object is not empty: ${JSON.stringify(newCustContext)}`);
       this.setState({ unAuthenticatedCtx: false });
-      console.log(`New state is: ${JSON.stringify(this.state)}`);
+      frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', `New state is: ${JSON.stringify(this.state)}`);
     } else {
       this.setState({ unAuthenticatedCtx: true });
     }

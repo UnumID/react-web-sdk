@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
+import { ShallowWrapper } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 
 import { WidgetContext } from 'types';

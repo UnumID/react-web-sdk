@@ -19,3 +19,9 @@ export declare const widgetTypes: {
     EMAIL: string;
     SMS: string;
 };
+export declare const consoleTypes: {
+    LOG: number;
+    INFO: number;
+    WARN: number;
+    ERROR: number;
+};

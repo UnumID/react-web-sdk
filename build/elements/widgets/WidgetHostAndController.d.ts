@@ -1,11 +1,12 @@
 import { Component, ReactNode } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { CustomerContext, WidgetContext, PresentationRequest } from 'types';
-declare class WidgetHostAndController extends Component<{
+interface Props {
     custContext: CustomerContext;
     presentationRequest: PresentationRequest;
-}, WidgetContext> {
-    constructor(props: any);
+}
+declare class WidgetHostAndController extends Component<Props, WidgetContext> {
+    constructor(props: Props);
     componentDidMount(): Promise<void>;
     populateCustContextInState(): void;
     render(): ReactNode;

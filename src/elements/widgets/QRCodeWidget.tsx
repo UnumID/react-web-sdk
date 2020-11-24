@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 
 import { objUtil } from 'util/ruiObjectUtils';
+import { frwkHlpr } from 'frwk/ruiFrwkHlpr';
 import { WidgetContext } from 'types';
 import { useWidgetStateContext } from 'context/widgetStateContext';
 import QRCode from 'elements/components/QRCode';
@@ -12,7 +13,9 @@ import './QRCodeWidget.css';
 
 const QRCodeWidget: FunctionComponent = () => {
   const widgetContext: WidgetContext = useWidgetStateContext();
-  console.log(JSON.stringify(widgetContext));
+
+  frwkHlpr.logInfo('QRCodeWidget', JSON.stringify(widgetContext));
+
   const handleLoginLinkClick = (): void => {
     window.location.href = objUtil.getEnvValue('REACT_APP_LOGIN_PAGE') as string;
   };

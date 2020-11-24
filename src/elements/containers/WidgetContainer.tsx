@@ -12,7 +12,8 @@ interface Props {
 class WidgetContainer extends Component<Props> {
   render(): ReactNode {
     const { children, className } = this.props;
-    const newClass = `${className} single-widget content-box`;
+    let newClass = 'single-widget content-box';
+    newClass = (className ? `${className} ${newClass}` : newClass);
 
     return (
       <Card className={newClass}>
