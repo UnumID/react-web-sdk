@@ -43,9 +43,11 @@ The SDK has a dependency with 3 REST end points which are expected to be impleme
 **Server reference application** is available at Git and can be cloned using 
 `git clone https://github.com/UnumID/Verifier-Client-SDK-Server-Reference-App.git`. 
 
-* **/api/requestPresentation`** - To get deeplink, QR code details from the Verifier Application
-* **/api/sendSMS** - To send SMS to the customer mobile number registered
-* **/api/sendEmail** - To send Email to the email id registered 
+REST End Point | Description
+-------------- | -----------
+**/api/requestPresentation** | To get deeplink, QR code details from the Verifier Application
+**/api/sendSMS** | To send SMS to the customer mobile number registered
+**/api/sendEmail** | To send Email to the email id registered 
 
 #### Usage
 ```typescript
@@ -88,8 +90,9 @@ export default App;
 #### Templates for sending SMS and Email
 
 Library has a provision to modify the templates used for sending SMS and Email.  Templates are available at **src/config/templates**.
-These are availabe as json files and can be modified based on the need.  Any changes in these templates would require a re-build of this
-library.
+These are availabe as json files and can be modified based on the need.  
+
+**Please note any changes in these templates would require a re-build of this library.**
 
 To re-build this library run `yarn build`.
 
@@ -104,8 +107,8 @@ JSON Format
 }
 ```
 
-**templateText** element value: `Authentication Request: ACME website. Click here to complete: {{link}}`.
-Library formats the text as `Authentication Request: ACME website. Click here to complete: http://unumid.org`.
+**templateText** element value: **Authentication Request: ACME website. Click here to complete: {{link}}.**
+Library formats the text as **Authentication Request: ACME website. Click here to complete: http://unumid.org.**
 
 ###### Email Template
 
@@ -119,8 +122,8 @@ JSON Format
 }
 ```
 
-**htmlTemplateText** element value: `Click {{here}} to complete.`
-Library formats the text as `Click [here](http://unumid.org) to complete.`
+**htmlTemplateText** element value: **Click {{here}} to complete.**
+Library formats the text as **Click [here](http://unumid.org) to complete.**
 
 
 ## Environment Variables
