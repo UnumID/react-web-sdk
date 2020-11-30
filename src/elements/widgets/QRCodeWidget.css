@@ -1,0 +1,17 @@
+.qrcode-widget-content {
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  flex-direction: column;
+  display: flex;
+}
+
+.qrcode-widget-content .bold-label {
+  font-weight: 700;
+  background-color: #1f61cc
+}
+
+.qrcode-widget-content .error {
+  font-weight: 700;
+  color: #ff0000;
+}
