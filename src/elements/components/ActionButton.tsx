@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { FC } from 'react';
 
 import Button from 'react-bootstrap/Button';
 
@@ -11,23 +11,23 @@ interface Props {
   children: string;
 }
 
-class ActionButton extends Component<Props> {
-  render(): ReactNode {
-    const {
-      onClick, type, className, target, href, children,
-    } = this.props;
-    return (
-      <Button
-        className={className}
-        variant={type}
-        onClick={onClick}
-        href={href}
-        target={target}
-      >
-        { children }
-      </Button>
-    );
-  }
-}
+const ActionButton: FC<Props> = ({
+  onClick,
+  type,
+  className,
+  target,
+  href,
+  children,
+}) => (
+  <Button
+    className={className}
+    variant={type}
+    onClick={onClick}
+    href={href}
+    target={target}
+  >
+    {children}
+  </Button>
+);
 
 export default ActionButton;

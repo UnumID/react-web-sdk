@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getPresentation } from 'context/presentation';
@@ -7,7 +7,7 @@ import WidgetContainer from 'elements/containers/WidgetContainer';
 import QRCodeWidget from 'elements/widgets/QRCodeWidget';
 import SMSWidget from 'elements/widgets/SMSWidget';
 import EmailWidget from 'elements/widgets/EmailWidget';
-import { CustomerContext, WidgetContext, PresentationRequest } from 'types';
+import { CustomerContext, PresentationRequest, WidgetContext } from 'types';
 import { widgetTypes } from 'frwk/ruiFrwkConst';
 import { frwkHlpr } from 'frwk/ruiFrwkHlpr';
 
@@ -16,56 +16,55 @@ interface Props {
   presentationRequest: PresentationRequest;
 }
 
-class WidgetHostAndController extends Component<Props, WidgetContext> {
-  constructor(props: Props) {
-    super(props);
-    this.state = defaultWidgetContextState;
-  }
+const WidgetHostAndController: FC<Props> = (props: Props) => {
+  const [widgetState, setWidgetState] = useState(defaultWidgetContextState);
 
-  async componentDidMount(): Promise<void> {
-    const { presentationRequest } = this.props;
-    this.setState({ deepLinkDtl: await getPresentation(presentationRequest) });
-    this.setState({ isSameDevice: (!!/Mobi|Android|iPhone/i.test(navigator.userAgent)) });
-    this.populateCustContextInState();
-    frwkHlpr.logInfo('WidgetHostAndController::componentDidMount', `Data is: ${JSON.stringify(this.state)}`);
-  }
+  useEffect(() => {
+    (async () => {
+      const { presentationRequest, custContext } = props;
+      const deepLinkDtl = await getPresentation(presentationRequest);
+      const isSameDevice = !!/Mobi|Android|iPhone/i.test(navigator.userAgent);
 
-  populateCustContextInState(): void {
-    const { custContext } = this.props;
-    const newCustContext: CustomerContext = custContext;
+      const newCustContext = { ...custContext };
 
-    if (newCustContext.canScan === undefined) {
-      frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', `Can Scan is not passed: ${newCustContext.canScan}`);
-      const { isSameDevice } = this.state;
-      newCustContext.canScan = !isSameDevice;
-    }
-    this.setState({ custContext: newCustContext });
-    this.setState({ currentWidget: widgetTypes.QR_CODE });
+      if (newCustContext.canScan === undefined) {
+        frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', `Can Scan is not passed: ${custContext.canScan}`);
+        newCustContext.canScan = !isSameDevice;
+      }
 
-    if (newCustContext.phoneNo || newCustContext.emailId) {
-      frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', `Object is not empty: ${JSON.stringify(newCustContext)}`);
-      this.setState({ unAuthenticatedCtx: false });
-      frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', `New state is: ${JSON.stringify(this.state)}`);
-    } else {
-      this.setState({ unAuthenticatedCtx: true });
-    }
-  }
+      let unAuthenticatedCtx: boolean;
 
-  render(): ReactNode {
-    const wState: WidgetContext = this.state;
-    wState.setWidgetState = (value: any): void => { this.setState(value); };
+      if (newCustContext.phoneNo || newCustContext.emailId) {
+        frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', `Object is not empty: ${JSON.stringify(newCustContext)}`);
+        unAuthenticatedCtx = false;
+      } else {
+        unAuthenticatedCtx = true;
+      }
 
-    const { currentWidget } = this.state;
-    return (
-      <widgetStateContext.Provider value={wState}>
-        <WidgetContainer>
-          { (currentWidget === widgetTypes.QR_CODE) && <QRCodeWidget /> }
-          { (currentWidget === widgetTypes.SMS) && <SMSWidget /> }
-          { (currentWidget === widgetTypes.EMAIL) && <EmailWidget /> }
-        </WidgetContainer>
-      </widgetStateContext.Provider>
-    );
-  }
-}
+      setWidgetState((oldState) => ({
+        ...oldState,
+        isSameDevice,
+        deepLinkDtl,
+        custContext: newCustContext,
+        currentWidget: widgetTypes.QR_CODE,
+        unAuthenticatedCtx,
+        setWidgetState: (values: Partial<WidgetContext>) => {
+          setWidgetState((w) => ({ ...w, ...values }));
+        },
+      }));
+    })();
+  }, [props]);
+
+  const { currentWidget } = widgetState;
+  return (
+    <widgetStateContext.Provider value={widgetState}>
+      <WidgetContainer>
+        { (currentWidget === widgetTypes.QR_CODE) && <QRCodeWidget /> }
+        { (currentWidget === widgetTypes.SMS) && <SMSWidget /> }
+        { (currentWidget === widgetTypes.EMAIL) && <EmailWidget /> }
+      </WidgetContainer>
+    </widgetStateContext.Provider>
+  );
+};
 
 export default WidgetHostAndController;

@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { FC } from 'react';
 
 import Button from 'react-bootstrap/Button';
 
@@ -8,15 +8,10 @@ interface Props {
   children: string;
 }
 
-class LinkButton extends Component<Props> {
-  render(): ReactNode {
-    const { onClick, href, children } = this.props;
-    return (
-      <Button href={href} variant="link" onClick={onClick}>
-        { children }
-      </Button>
-    );
-  }
-}
+const LinkButton: FC<Props> = ({ onClick, href, children }) => (
+  <Button href={href} variant="link" onClick={onClick}>
+    {children}
+  </Button>
+);
 
 export default LinkButton;

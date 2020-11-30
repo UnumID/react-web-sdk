@@ -5,5 +5,5 @@ interface Props {
     custContext: CustomerContext;
     presentationRequest: PresentationRequest;
 }
-declare const WidgetHostAndController: FC<Props>;
-export default WidgetHostAndController;
+declare const Widget: FC<Props>;
+export default Widget;

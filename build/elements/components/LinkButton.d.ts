@@ -1,10 +1,8 @@
-import React, { Component, ReactNode } from 'react';
+import React, { FC } from 'react';
 interface Props {
     onClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void);
     href?: string;
     children: string;
 }
-declare class LinkButton extends Component<Props> {
-    render(): ReactNode;
-}
+declare const LinkButton: FC<Props>;
 export default LinkButton;

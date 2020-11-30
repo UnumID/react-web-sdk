@@ -1,10 +1,8 @@
-import { Component, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import './WidgetContainer.css';
 interface Props {
     children: ReactNode;
     className?: string;
 }
-declare class WidgetContainer extends Component<Props> {
-    render(): ReactNode;
-}
+declare const WidgetContainer: FC<Props>;
 export default WidgetContainer;

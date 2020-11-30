@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 import Card from 'react-bootstrap/Card';
 
@@ -9,18 +9,15 @@ interface Props {
   className?: string;
 }
 
-class WidgetContainer extends Component<Props> {
-  render(): ReactNode {
-    const { children, className } = this.props;
-    let newClass = 'single-widget content-box';
-    newClass = (className ? `${className} ${newClass}` : newClass);
+const WidgetContainer: FC<Props> = ({ children, className }) => {
+  let newClass = 'single-widget content-box';
+  newClass = className ? `${className} ${newClass}` : newClass;
 
-    return (
-      <Card className={newClass}>
-        { children }
-      </Card>
-    );
-  }
-}
+  return (
+    <Card className={newClass}>
+      {children}
+    </Card>
+  );
+};
 
 export default WidgetContainer;

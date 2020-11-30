@@ -20,20 +20,17 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise */
 
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return extendStatics(d, b);
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
-
-function __extends(d, b) {
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
 
 function __awaiter(thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -566,22 +563,15 @@ Card.Header = CardHeader;
 Card.Footer = CardFooter;
 Card.ImgOverlay = CardImgOverlay;
 
-var css_248z$1 = ".single-widget {\r\n  margin-left: 10%;\r\n  margin-right: 10%;\r\n  margin-top: 3%;\r\n}\r\n\r\n.content-box {\r\n  background-color: #ffffff;\r\n  padding: 15px;\r\n  border: 1px solid #dddddd;\r\n  box-shadow: 0 1px 2px 0 rgba(0,0,0,.08), 0 3px 2px 0 rgba(0,0,0,.05);\r\n  min-height: 256px;\r\n}\r\n\r\n@media screen and (max-width: 600px) {\r\n  .single-widget {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    margin-top: 2%;\r\n  }\r\n}\r\n\r\n@media screen and (max-width: 530px) {\r\n  .content-box {\r\n    width: unset;\r\n  }\r\n}\r\n";
+var css_248z$1 = ".single-widget {\n  margin-left: 10%;\n  margin-right: 10%;\n  margin-top: 3%;\n}\n\n.content-box {\n  background-color: #ffffff;\n  padding: 15px;\n  border: 1px solid #dddddd;\n  box-shadow: 0 1px 2px 0 rgba(0,0,0,.08), 0 3px 2px 0 rgba(0,0,0,.05);\n  min-height: 256px;\n}\n\n@media screen and (max-width: 600px) {\n  .single-widget {\n    margin-left: auto;\n    margin-right: auto;\n    margin-top: 2%;\n  }\n}\n\n@media screen and (max-width: 530px) {\n  .content-box {\n    width: unset;\n  }\n}\n";
 styleInject(css_248z$1);
 
-var WidgetContainer = /** @class */ (function (_super) {
-    __extends(WidgetContainer, _super);
-    function WidgetContainer() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    WidgetContainer.prototype.render = function () {
-        var _a = this.props, children = _a.children, className = _a.className;
-        var newClass = 'single-widget content-box';
-        newClass = (className ? className + " " + newClass : newClass);
-        return (React__default['default'].createElement(Card, { className: newClass }, children));
-    };
-    return WidgetContainer;
-}(React.Component));
+var WidgetContainer = function (_a) {
+    var children = _a.children, className = _a.className;
+    var newClass = 'single-widget content-box';
+    newClass = className ? className + " " + newClass : newClass;
+    return (React__default['default'].createElement(Card, { className: newClass }, children));
+};
 
 /**
  * Safe chained function
@@ -728,19 +718,12 @@ var Button = React__default['default'].forwardRef(function (_ref, ref) {
 Button.displayName = 'Button';
 Button.defaultProps = defaultProps$2;
 
-var LinkButton = /** @class */ (function (_super) {
-    __extends(LinkButton, _super);
-    function LinkButton() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    LinkButton.prototype.render = function () {
-        var _a = this.props, onClick = _a.onClick, href = _a.href, children = _a.children;
-        return (React__default['default'].createElement(Button, { href: href, variant: "link", onClick: onClick }, children));
-    };
-    return LinkButton;
-}(React.Component));
+var LinkButton = function (_a) {
+    var onClick = _a.onClick, href = _a.href, children = _a.children;
+    return (React__default['default'].createElement(Button, { href: href, variant: "link", onClick: onClick }, children));
+};
 
-var css_248z$2 = ".qr-code {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  padding: 20px;\r\n}\r\n\r\n.qr-code .help-item {\r\n  text-align: left;\r\n  font-size: 12px;\r\n}\r\n\r\n.qrcode-img-wrapper {\r\n  height: 196px;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n}\r\n\r\n.qr-code .bold {\r\n  font-weight: 700;\r\n}\r\n\r\n.qr-code .btn.focus, .btn:focus {\r\n  box-shadow: none;\r\n}\r\n\r\n@media screen and (max-width: 600px) {\r\n  .qrcode-content {\r\n    flex-direction: column;\r\n    align-items: center;\r\n  }\r\n\r\n  .description {\r\n    margin-left: 0;\r\n    margin-top: 24px;\r\n  }\r\n}\r\n";
+var css_248z$2 = ".qr-code {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 20px;\n}\n\n.qr-code .help-item {\n  text-align: left;\n  font-size: 12px;\n}\n\n.qrcode-img-wrapper {\n  height: 196px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.qr-code .bold {\n  font-weight: 700;\n}\n\n.qr-code .btn.focus, .btn:focus {\n  box-shadow: none;\n}\n\n@media screen and (max-width: 600px) {\n  .qrcode-content {\n    flex-direction: column;\n    align-items: center;\n  }\n\n  .description {\n    margin-left: 0;\n    margin-top: 24px;\n  }\n}\n";
 styleInject(css_248z$2);
 
 var QRCode = function (_a) {
@@ -761,19 +744,12 @@ var QRCode = function (_a) {
             React__default['default'].createElement("img", { alt: "qr code", src: qrCode }))));
 };
 
-var ActionButton = /** @class */ (function (_super) {
-    __extends(ActionButton, _super);
-    function ActionButton() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    ActionButton.prototype.render = function () {
-        var _a = this.props, onClick = _a.onClick, type = _a.type, className = _a.className, target = _a.target, href = _a.href, children = _a.children;
-        return (React__default['default'].createElement(Button, { className: className, variant: type, onClick: onClick, href: href, target: target }, children));
-    };
-    return ActionButton;
-}(React.Component));
+var ActionButton = function (_a) {
+    var onClick = _a.onClick, type = _a.type, className = _a.className, target = _a.target, href = _a.href, children = _a.children;
+    return (React__default['default'].createElement(Button, { className: className, variant: type, onClick: onClick, href: href, target: target }, children));
+};
 
-var css_248z$3 = ".qrcode-widget-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 40px;\r\n  flex-direction: column;\r\n  display: flex;\r\n}\r\n\r\n.qrcode-widget-content .bold-label {\r\n  font-weight: 700;\r\n  background-color: #1f61cc\r\n}\r\n\r\n.qrcode-widget-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
+var css_248z$3 = ".qrcode-widget-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.qrcode-widget-content .bold-label {\n  font-weight: 700;\n  background-color: #1f61cc\n}\n\n.qrcode-widget-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
 styleInject(css_248z$3);
 
 var QRCodeWidget = function () {
@@ -844,7 +820,7 @@ var sendSms = function (phoneNo, deepLink) { return __awaiter(void 0, void 0, vo
     });
 }); };
 
-var css_248z$4 = ".sms-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 40px;\r\n  flex-direction: column;\r\n  display: flex;\r\n}\r\n\r\n.sms-content .bold {\r\n  font-weight: 700;\r\n}\r\n\r\n.sms-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
+var css_248z$4 = ".sms-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.sms-content .bold {\n  font-weight: 700;\n}\n\n.sms-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
 styleInject(css_248z$4);
 
 var SMSWidget = function () {
@@ -943,7 +919,7 @@ var sendEmail = function (emailId, deepLink) { return __awaiter(void 0, void 0, 
     });
 }); };
 
-var css_248z$5 = ".email-content {\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 40px;\r\n  flex-direction: column;\r\n  display: flex;\r\n}\r\n\r\n.email-content .bold {\r\n  font-weight: 700;\r\n}\r\n\r\n.email-content .error {\r\n  font-weight: 700;\r\n  color: #ff0000;\r\n}\r\n";
+var css_248z$5 = ".email-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.email-content .bold {\n  font-weight: 700;\n}\n\n.email-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
 styleInject(css_248z$5);
 
 var EmailWidget = function () {
@@ -996,66 +972,47 @@ var EmailWidget = function () {
             React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, backLinkLiteral)))));
 };
 
-var WidgetHostAndController = /** @class */ (function (_super) {
-    __extends(WidgetHostAndController, _super);
-    function WidgetHostAndController(props) {
-        var _this = _super.call(this, props) || this;
-        _this.state = defaultWidgetContextState;
-        return _this;
-    }
-    WidgetHostAndController.prototype.componentDidMount = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var presentationRequest, _a;
-            var _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+var WidgetHostAndController = function (props) {
+    var _a = React.useState(defaultWidgetContextState), widgetState = _a[0], setWidgetState = _a[1];
+    React.useEffect(function () {
+        (function () { return __awaiter(void 0, void 0, void 0, function () {
+            var presentationRequest, custContext, deepLinkDtl, isSameDevice, newCustContext, unAuthenticatedCtx;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        presentationRequest = this.props.presentationRequest;
-                        _a = this.setState;
-                        _b = {};
+                        presentationRequest = props.presentationRequest, custContext = props.custContext;
                         return [4 /*yield*/, getPresentation(presentationRequest)];
                     case 1:
-                        _a.apply(this, [(_b.deepLinkDtl = _c.sent(), _b)]);
-                        this.setState({ isSameDevice: (!!/Mobi|Android|iPhone/i.test(navigator.userAgent)) });
-                        this.populateCustContextInState();
-                        frwkHlpr.logInfo('WidgetHostAndController::componentDidMount', "Data is: " + JSON.stringify(this.state));
+                        deepLinkDtl = _a.sent();
+                        isSameDevice = !!/Mobi|Android|iPhone/i.test(navigator.userAgent);
+                        newCustContext = __assign({}, custContext);
+                        if (newCustContext.canScan === undefined) {
+                            frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', "Can Scan is not passed: " + custContext.canScan);
+                            newCustContext.canScan = !isSameDevice;
+                        }
+                        if (newCustContext.phoneNo || newCustContext.emailId) {
+                            frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', "Object is not empty: " + JSON.stringify(newCustContext));
+                            unAuthenticatedCtx = false;
+                        }
+                        else {
+                            unAuthenticatedCtx = true;
+                        }
+                        setWidgetState(function (oldState) { return (__assign(__assign({}, oldState), { isSameDevice: isSameDevice,
+                            deepLinkDtl: deepLinkDtl, custContext: newCustContext, currentWidget: widgetTypes.QR_CODE, unAuthenticatedCtx: unAuthenticatedCtx, setWidgetState: function (values) {
+                                setWidgetState(function (w) { return (__assign(__assign({}, w), values)); });
+                            } })); });
                         return [2 /*return*/];
                 }
             });
-        });
-    };
-    WidgetHostAndController.prototype.populateCustContextInState = function () {
-        var custContext = this.props.custContext;
-        var newCustContext = custContext;
-        if (newCustContext.canScan === undefined) {
-            frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', "Can Scan is not passed: " + newCustContext.canScan);
-            var isSameDevice = this.state.isSameDevice;
-            newCustContext.canScan = !isSameDevice;
-        }
-        this.setState({ custContext: newCustContext });
-        this.setState({ currentWidget: widgetTypes.QR_CODE });
-        if (newCustContext.phoneNo || newCustContext.emailId) {
-            frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', "Object is not empty: " + JSON.stringify(newCustContext));
-            this.setState({ unAuthenticatedCtx: false });
-            frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', "New state is: " + JSON.stringify(this.state));
-        }
-        else {
-            this.setState({ unAuthenticatedCtx: true });
-        }
-    };
-    WidgetHostAndController.prototype.render = function () {
-        var _this = this;
-        var wState = this.state;
-        wState.setWidgetState = function (value) { _this.setState(value); };
-        var currentWidget = this.state.currentWidget;
-        return (React__default['default'].createElement(widgetStateContext.Provider, { value: wState },
-            React__default['default'].createElement(WidgetContainer, null,
-                (currentWidget === widgetTypes.QR_CODE) && React__default['default'].createElement(QRCodeWidget, null),
-                (currentWidget === widgetTypes.SMS) && React__default['default'].createElement(SMSWidget, null),
-                (currentWidget === widgetTypes.EMAIL) && React__default['default'].createElement(EmailWidget, null))));
-    };
-    return WidgetHostAndController;
-}(React.Component));
+        }); })();
+    }, [props]);
+    var currentWidget = widgetState.currentWidget;
+    return (React__default['default'].createElement(widgetStateContext.Provider, { value: widgetState },
+        React__default['default'].createElement(WidgetContainer, null,
+            (currentWidget === widgetTypes.QR_CODE) && React__default['default'].createElement(QRCodeWidget, null),
+            (currentWidget === widgetTypes.SMS) && React__default['default'].createElement(SMSWidget, null),
+            (currentWidget === widgetTypes.EMAIL) && React__default['default'].createElement(EmailWidget, null))));
+};
 
 module.exports = WidgetHostAndController;
 //# sourceMappingURL=index.js.map
