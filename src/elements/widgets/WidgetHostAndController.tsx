@@ -13,7 +13,7 @@ import {
   SmsResponse,
   UserInfo,
 } from 'types';
-import { widgetTypes } from 'frwk/ruiFrwkConst';
+import { widgetTypes } from 'constants/widgetTypes';
 
 export interface Props {
   applicationTitle: string;

@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { widgetTypes } from '../../../frwk/ruiFrwkConst';
+import { widgetTypes } from '../../../constants/widgetTypes';
 import EmailWidget, { Props } from '../../../elements/widgets/EmailWidget';
 
 describe('EmailWidget', () => {

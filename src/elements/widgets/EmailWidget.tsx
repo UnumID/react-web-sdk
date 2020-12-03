@@ -4,7 +4,7 @@ import React, {
 
 import { EmailData, EmailResponse } from 'types';
 import LinkButton from 'elements/components/LinkButton';
-import { widgetTypes } from 'frwk/ruiFrwkConst';
+import { widgetTypes } from 'constants/widgetTypes';
 
 import './EmailWidget.css';
 

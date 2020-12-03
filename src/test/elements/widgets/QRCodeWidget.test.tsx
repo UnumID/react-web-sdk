@@ -1,10 +1,9 @@
 import React from 'react';
 
 import { WidgetContext } from '../../../types';
-import * as widgetStateContext from '../../../context/widgetStateContext';
 import QRCodeWidget, { Props } from '../../../elements/widgets/QRCodeWidget';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { widgetTypes } from '../../../frwk/ruiFrwkConst';
+import { widgetTypes } from '../../../constants/widgetTypes';
 
 describe('QRCodeWidget', () => {
   const mockSetCurrentWidget = jest.fn();

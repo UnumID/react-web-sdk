@@ -4,7 +4,7 @@ import React, {
 
 import { SmsData, SmsResponse, UserInfo } from 'types';
 import LinkButton from 'elements/components/LinkButton';
-import { widgetTypes } from 'frwk/ruiFrwkConst';
+import { widgetTypes } from 'constants/widgetTypes';
 
 import './SMSWidget.css';
 

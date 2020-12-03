@@ -1,11 +1,10 @@
 import React, { FunctionComponent } from 'react';
 
-import { objUtil } from 'util/ruiObjectUtils';
 import { UserInfo } from 'types';
 import QRCode from 'elements/components/QRCode';
 import LinkButton from 'elements/components/LinkButton';
 import ActionButton from 'elements/components/ActionButton';
-import { widgetTypes } from 'frwk/ruiFrwkConst';
+import { widgetTypes } from 'constants/widgetTypes';
 
 import './QRCodeWidget.css';
 

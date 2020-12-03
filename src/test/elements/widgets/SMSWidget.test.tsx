@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
 import SMSWidget, { Props } from '../../../elements/widgets/SMSWidget';
-import { widgetTypes } from '../../../frwk/ruiFrwkConst';
+import { widgetTypes } from '../../../constants/widgetTypes';
 
 describe('SMSWidget', () => {
   const dummyUserInfo = { email: 'test@test.com', phone: 'KL5-5555' };
