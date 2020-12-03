@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 
 import { EmailData, EmailResponse } from 'types';
-import LinkButton from 'elements/components/LinkButton';
+import LinkButton from 'components/LinkButton';
 import { widgetTypes } from 'constants/widgetTypes';
 
 import './EmailWidget.css';

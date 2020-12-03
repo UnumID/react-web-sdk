@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import WidgetContainer from '../../../elements/containers/WidgetContainer';
+import WidgetContainer from '../../components/WidgetContainer';
 
 describe('WidgetContainer', () => {
   describe('render()', () => {

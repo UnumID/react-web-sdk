@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, RenderResult, fireEvent } from '@testing-library/react'
 
-import QRCode from '../../../elements/components/QRCode';
+import QRCode from '../../components/QRCode';
 
 describe('QRCode', () => {
   const sampleQrCode = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';

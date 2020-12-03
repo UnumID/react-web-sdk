@@ -1,10 +1,10 @@
 import React, { FC, useState, useEffect } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import WidgetContainer from 'elements/containers/WidgetContainer';
-import QRCodeWidget from 'elements/widgets/QRCodeWidget';
-import SMSWidget from 'elements/widgets/SMSWidget';
-import EmailWidget from 'elements/widgets/EmailWidget';
+import WidgetContainer from 'components/WidgetContainer';
+import QRCodeWidget from 'components/QRCodeWidget';
+import SMSWidget from 'components/SMSWidget';
+import EmailWidget from 'components/EmailWidget';
 import {
   EmailData,
   EmailResponse,

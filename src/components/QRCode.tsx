@@ -1,6 +1,6 @@
 import React, { useState, FunctionComponent } from 'react';
 
-import LinkButton from 'elements/components/LinkButton';
+import LinkButton from 'components/LinkButton';
 
 import './QRCode.css';
 

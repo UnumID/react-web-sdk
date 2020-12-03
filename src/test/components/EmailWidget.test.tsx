@@ -2,8 +2,8 @@ import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { widgetTypes } from '../../../constants/widgetTypes';
-import EmailWidget, { Props } from '../../../elements/widgets/EmailWidget';
+import { widgetTypes } from '../../constants/widgetTypes';
+import EmailWidget, { Props } from '../../components/EmailWidget';
 
 describe('EmailWidget', () => {
   const dummyEmail = 'test@test.com';

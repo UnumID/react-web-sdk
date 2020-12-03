@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 
 import { SmsData, SmsResponse, UserInfo } from 'types';
-import LinkButton from 'elements/components/LinkButton';
+import LinkButton from 'components/LinkButton';
 import { widgetTypes } from 'constants/widgetTypes';
 
 import './SMSWidget.css';

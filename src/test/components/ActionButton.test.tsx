@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import ActionButton from '../../../elements/components/ActionButton';
+import ActionButton from '../../components/ActionButton';
 
 describe('ActionButton', () => {
   describe('render primary link button', () => {

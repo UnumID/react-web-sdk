@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from 'react';
 
 import { UserInfo } from 'types';
-import QRCode from 'elements/components/QRCode';
-import LinkButton from 'elements/components/LinkButton';
-import ActionButton from 'elements/components/ActionButton';
+import QRCode from 'components/QRCode';
+import LinkButton from 'components/LinkButton';
+import ActionButton from 'components/ActionButton';
 import { widgetTypes } from 'constants/widgetTypes';
 
 import './QRCodeWidget.css';

@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { clear as clearMockUserAgent, mockUserAgent } from 'jest-useragent-mock';
 
-import WidgetHostAndController, { Props } from '../../../elements/widgets/WidgetHostAndController';
+import WidgetHostAndController, { Props } from '../../components/WidgetHostAndController';
 
 describe('WidgetHostAndController', () => {
   const dummyApplicationTitle = 'Dummy Application Title';
