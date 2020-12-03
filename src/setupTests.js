@@ -3,11 +3,7 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 // import '@testing-library/jest-dom/extend-expect';
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import '@testing-library/jest-dom';
-
-configure({ adapter: new Adapter() });
 
 process.env.REACT_APP_PRESENTATION_END_POINT='http://localhost:8082/api/requestPresentation'
 process.env.REACT_APP_SMS_END_POINT='http://localhost:8082/api/sendSMS'
