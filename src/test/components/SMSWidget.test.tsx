@@ -17,12 +17,12 @@ describe('SMSWidget', () => {
     deeplink: dummyDeeplink,
     canScan: true,
     sendSms: mockSendSms,
-    setCurrentWidget: mockSetCurrentWidget
+    setCurrentWidget: mockSetCurrentWidget,
   };
 
   const renderWidget = (props: Props = defaultProps) => {
     render(<SMSWidget {...props} />);
-  }
+  };
 
   it('tries to send an sms on load', async () => {
     renderWidget();

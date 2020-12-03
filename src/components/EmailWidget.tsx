@@ -45,7 +45,6 @@ const EmailWidget: FunctionComponent<Props> = ({
         setEmailResp(false);
         setEmailSent(true);
       }
-
     }
 
     sendEmailData();

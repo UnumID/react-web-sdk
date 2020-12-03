@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, RenderResult, fireEvent } from '@testing-library/react'
+import { render, RenderResult, fireEvent } from '@testing-library/react';
 
 import QRCode from '../../components/QRCode';
 
@@ -7,8 +7,8 @@ describe('QRCode', () => {
   const sampleQrCode = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
   let component: RenderResult;
   beforeEach(() => {
-    component = render(<QRCode qrCode={sampleQrCode} />)
-  })
+    component = render(<QRCode qrCode={sampleQrCode} />);
+  });
 
   describe('render', () => {
     it('renders a QRCode component with its contents', () => {
@@ -35,5 +35,5 @@ describe('QRCode', () => {
     const image = component.getByAltText('qr code');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', sampleQrCode);
-  })
+  });
 });

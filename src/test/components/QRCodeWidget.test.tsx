@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { WidgetContext } from '../../types';
+import {
+  fireEvent, render, screen, waitFor,
+} from '@testing-library/react';
 import QRCodeWidget, { Props } from '../../components/QRCodeWidget';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { widgetTypes } from '../../constants/widgetTypes';
 
 describe('QRCodeWidget', () => {
@@ -21,12 +22,12 @@ describe('QRCodeWidget', () => {
     deeplink: dummyDeeplink,
     setCurrentWidget: mockSetCurrentWidget,
     qrCode: dummyQrCode,
-    goToLogin: mockGoToLogin
+    goToLogin: mockGoToLogin,
   };
 
   const renderWidget = (props: Props = defaultProps) => {
     render(<QRCodeWidget {...props} />);
-  }
+  };
 
   it('renders a qr code if canScan is true', async () => {
     renderWidget();
@@ -71,7 +72,7 @@ describe('QRCodeWidget', () => {
 
   it('renders email fallback link if there is a logged in user without a phone number', async () => {
     renderWidget({ ...defaultProps, isLoggedIn: true, userInfo: { email: 'test@test.com' } });
-    const link  = await screen.findByText('Get an email instead');
+    const link = await screen.findByText('Get an email instead');
     expect(link).toBeInTheDocument();
 
     fireEvent.click(link);

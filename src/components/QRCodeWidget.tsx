@@ -27,7 +27,7 @@ const QRCodeWidget: FunctionComponent<Props> = ({
   deeplink,
   isLoggedIn,
   userInfo,
-  goToLogin
+  goToLogin,
 }) => {
   const handleSMSLinkClick = (): void => {
     setCurrentWidget(widgetTypes.SMS);

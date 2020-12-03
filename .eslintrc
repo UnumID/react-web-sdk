@@ -33,6 +33,6 @@
     "react/jsx-boolean-value": "off",
     "react/prefer-stateless-function": "off",
     "no-use-before-define": "off",
-    "import/extensions": ["always", { "js": "never", "ts": "never", "tsx": "never" }]
+    "import/extensions": [2, { "js": "never", "ts": "never", "tsx": "never" }]
   }
 }
