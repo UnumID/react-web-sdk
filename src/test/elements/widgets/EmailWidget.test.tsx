@@ -1,146 +1,83 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { ShallowWrapper } from 'enzyme';
+import { render, fireEvent, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { WidgetContext } from 'types';
-import * as widgetStateContext from 'context/widgetStateContext';
-import * as emailSrv from 'context/sendEmail';
-import EmailWidget from 'elements/widgets/EmailWidget';
+import { widgetTypes } from '../../../frwk/ruiFrwkConst';
+import EmailWidget, { Props } from '../../../elements/widgets/EmailWidget';
 
 describe('EmailWidget', () => {
-  let emailWidget: ShallowWrapper<Record<string, unknown>>;
-  const widgetCtx: WidgetContext = widgetStateContext.defaultWidgetContextState;
-  widgetCtx.setWidgetState = jest.fn();
+  const dummyEmail = 'test@test.com';
+  const dummyDeeplink = 'https://unumid.org/unumid/presentationRequest/574e1509-6f3e-49c5-9a8b-c49450c17d45';
+  const dummyEmailSuccessResponse = Promise.resolve({ success: true });
+  const mockSendEmail = jest.fn().mockResolvedValue(dummyEmailSuccessResponse);
+  const mockGoToLogin = jest.fn();
+  const mockSetCurrentWidget = jest.fn();
 
-  const renderEmailWidget = (): void => {
-    emailWidget = render(<EmailWidget />);
+  const defaultProps: Props = {
+    email: dummyEmail,
+    deeplink: dummyDeeplink,
+    canScan: true,
+    sendEmail: mockSendEmail,
+    goToLogin: mockGoToLogin,
+    setCurrentWidget: mockSetCurrentWidget,
   };
 
-  const mockEmailFunctions = (pWidgetCtx: WidgetContext, emailResp: boolean): void => {
-    jest
-      .spyOn(widgetStateContext, 'useWidgetStateContext')
-      .mockImplementation(() => pWidgetCtx);
-
-    jest
-      .spyOn(emailSrv, 'sendEmail')
-      .mockImplementation(() => emailResp);
+  const renderWidget = (props: Props = defaultProps) => {
+    render(<EmailWidget {...props} />);
   };
 
-  describe('EmailWidget with canScan=true', () => {
-    beforeEach(async () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = 'abc@test.com';
-      widgetCtx.custContext.canScan = true;
-
-      await act(async () => {
-        mockEmailFunctions(widgetCtx, true);
-        await renderEmailWidget();
-      });
-    });
-
-    describe('render when email service call success', () => {
-      it('renders EmailWidget with the success text', () => {
-        expect(emailWidget.getByText(`We emailed a link to ${widgetCtx.custContext.emailId}.`)).toBeDefined();
-        expect(emailWidget.getByText('Please click it to continue.')).toBeDefined();
-      });
-
-      it('renders Email alternate link', () => {
-        expect(emailWidget.getByText('Use a different email')).toBeDefined();
-      });
-
-      it('renders a Back to Qr Code link', () => {
-        expect(emailWidget.getByText('Back to QR code')).toBeDefined();
-      });
-    });
+  it('tries to send an email on load', async () => {
+    renderWidget();
+    await act(() => dummyEmailSuccessResponse);
+    expect(mockSendEmail).toBeCalled();
   });
 
-  describe('EmailWidget with canScan=false', () => {
-    beforeEach(async () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = 'abc@test.com';
-      widgetCtx.custContext.canScan = false;
-
-      await act(async () => {
-        mockEmailFunctions(widgetCtx, true);
-        await renderEmailWidget();
-      });
-    });
-
-    describe('render when email service call success', () => {
-      it('renders EmailWidget with the success text', () => {
-        expect(emailWidget.getByText(`We emailed a link to ${widgetCtx.custContext.emailId}.`)).toBeDefined();
-        expect(emailWidget.getByText('Please click it to continue.')).toBeDefined();
-      });
-
-      it('renders Email alternate link', () => {
-        expect(emailWidget.getByText('Use a different email')).toBeDefined();
-      });
-
-      it('renders a Back to Button link', () => {
-        expect(emailWidget.getByText('Back to Button')).toBeDefined();
-      });
-    });
+  it('renders success text when sending email succeeds', async () => {
+    renderWidget();
+    expect(await screen.findByText(`We emailed a link to ${dummyEmail}.`)).toBeDefined();
   });
 
-  describe('EmailWidget - Error scenario - canScan=false', () => {
-    beforeEach(async () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = '';
-      widgetCtx.custContext.canScan = false;
-
-      await act(async () => {
-        mockEmailFunctions(widgetCtx, false);
-        await renderEmailWidget();
-      });
-    });
-
-    describe('render when email service call is failure', () => {
-      it('renders EmailWidget without the success text', () => {
-        expect(emailWidget.queryByText(`We emailed a link to ${widgetCtx.custContext.emailId}.`)).toBeNull();
-        expect(emailWidget.queryByText('Please click it to continue.')).toBeNull();
-      });
-
-      it('renders EmailWidget with failure message', () => {
-        expect(emailWidget.getByText(`Error sending Email to ${widgetCtx.custContext.emailId}.`)).toBeDefined();
-      });
-
-      it('renders Email alternate link', () => {
-        expect(emailWidget.getByText('Use a different email')).toBeDefined();
-      });
-
-      it('renders a Back to Button link', () => {
-        expect(emailWidget.getByText('Back to Button')).toBeDefined();
-      });
-    });
+  it('renders a use a different email link', async () => {
+    renderWidget();
+    expect(await screen.findByText('Use a different email')).toBeDefined();
   });
 
-  describe('action for alternate email link and back button link', () => {
-    beforeEach(async () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = 'abc@test.com';
-      widgetCtx.custContext.canScan = false;
+  it('navigates to login when the use a different email link is clicked', async () => {
+    renderWidget();
+    const link = await screen.findByText('Use a different email');
+    fireEvent.click(link);
+    expect(mockGoToLogin).toBeCalled();
+  });
 
-      await act(async () => {
-        mockEmailFunctions(widgetCtx, true);
-        await renderEmailWidget();
-      });
-    });
+  it('renders a Back to QR Code link if canScan is true', async () => {
+    renderWidget();
+    expect(await screen.findByText('Back to QR code')).toBeDefined();
+  });
 
-    it('Check the onClick event of Alternate Email link', () => {
-      const altEmailLink = emailWidget.getByText('Use a different email');
-      fireEvent.click(altEmailLink);
-      expect(window.location.href).toBe(`http://localhost/${process.env.REACT_APP_LOGIN_PAGE}`);
-    });
+  it('sets the QR code widget when the back link is clicked', async () => {
+    renderWidget();
+    const link = await screen.findByText('Back to QR code');
+    fireEvent.click(link);
+    expect(mockSetCurrentWidget).toBeCalledWith(widgetTypes.QR_CODE);
+  });
 
-    it('Check the onClick event of Back button', () => {
-      const backButton = emailWidget.getByText('Back to Button');
-      fireEvent.click(backButton);
-      expect(widgetCtx.setWidgetState).toHaveBeenCalledTimes(1);
-    });
+  it('renders a Back to Button link when canScan is false', async () => {
+    const props = { ...defaultProps, canScan: false };
+    renderWidget(props);
+    expect(await screen.findByText('Back to Button')).toBeDefined();
+  });
+
+  it('sets the QR code widget when the back link is clicked', async () => {
+    const props = { ...defaultProps, canScan: false };
+    renderWidget(props);
+    const link = await screen.findByText('Back to Button');
+    fireEvent.click(link);
+    expect(mockSetCurrentWidget).toBeCalledWith(widgetTypes.QR_CODE);
+  });
+
+  it('renders an error message when sending email fails', async () => {
+    mockSendEmail.mockRejectedValueOnce(false);
+    renderWidget();
+    expect(await screen.findByText(`Error sending Email to ${dummyEmail}.`)).toBeDefined();
   });
 });

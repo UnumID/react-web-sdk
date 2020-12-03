@@ -1,57 +1,39 @@
 import React from 'react';
-import { shallow, ShallowWrapper } from 'enzyme';
+import { render, RenderResult, fireEvent } from '@testing-library/react'
 
-import QRCode from 'elements/components/QRCode';
+import QRCode from '../../../elements/components/QRCode';
 
 describe('QRCode', () => {
   const sampleQrCode = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-  let qrCodeComp: ShallowWrapper<Record<string, unknown>>;
-
-  beforeAll(() => {
-    qrCodeComp = shallow(<QRCode qrCode={sampleQrCode} />);
-  });
-
-  afterAll(() => {
-    qrCodeComp.unmount();
-  });
+  let component: RenderResult;
+  beforeEach(() => {
+    component = render(<QRCode qrCode={sampleQrCode} />)
+  })
 
   describe('render', () => {
     it('renders a QRCode component with its contents', () => {
-      expect(qrCodeComp.find('div.qr-code').length).toBe(1);
-      expect(qrCodeComp.find('div.bold').length).toBe(1);
-      expect(qrCodeComp.find({ children: 'with your phone camera or ACME app:' }).length).toBe(1);
-      expect(qrCodeComp.find({ children: 'Need help scanning?' }).length).toBe(1);
-      expect(qrCodeComp.find('div.qrcode-img-wrapper').length).toBe(1);
+      expect(component.getByText('To continue, scan this QR code')).toBeInTheDocument();
+      expect(component.getByText('with your phone camera or ACME app:')).toBeInTheDocument();
+      expect(component.getByText('Need help scanning?')).toBeInTheDocument();
     });
   });
 
-  describe('renders with help content hidden', () => {
-    it('renders a QRCode component without help content initially', () => {
-      expect(qrCodeComp.find('div.help').length).toBe(0);
-    });
+  it('hides the help content initially', () => {
+    expect(component.queryByText('1. Install the ACME app from the app store.')).not.toBeInTheDocument();
   });
 
-  describe('renders img', () => {
-    it('renders a QRCode component with the qrCode passed', () => {
-      expect(qrCodeComp.find({ src: `${sampleQrCode}` }).length).toBe(1);
-    });
+  it('shows the help content when the user clicks need help', () => {
+    const helpButton = component.getByText('Need help scanning?');
+
+    fireEvent.click(helpButton);
+    expect(component.getByText('1. Install the ACME app from the app store.')).toBeInTheDocument();
+    expect(component.getByText('2. Open the ACME app and click "Scan a QR code".')).toBeInTheDocument();
+    expect(component.getByText('3. Hover over the QR code.')).toBeInTheDocument();
   });
 
-  describe('LinkButton action', () => {
-    it('Click the LinkButton', () => {
-      let lnkBtn = qrCodeComp.find({ children: 'Need help scanning?' });
-      expect(lnkBtn.length).toBe(1);
-      lnkBtn.simulate('click');
-
-      expect(qrCodeComp.find('div.help').length).toBe(1);
-      expect(qrCodeComp.find('div.help-item').length).toBe(3);
-
-      lnkBtn = qrCodeComp.find({ children: 'Need help scanning?' });
-      expect(lnkBtn.length).toBe(1);
-      lnkBtn.simulate('click');
-
-      expect(qrCodeComp.find('div.help').length).toBe(0);
-      expect(qrCodeComp.find('div.help-item').length).toBe(0);
-    });
-  });
+  it('renders the qr code image', () => {
+    const image = component.getByAltText('qr code');
+    expect(image).toBeInTheDocument();
+    expect(image).toHaveAttribute('src', sampleQrCode);
+  })
 });

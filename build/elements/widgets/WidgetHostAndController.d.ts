@@ -1,9 +1,13 @@
 import { FC } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { CustomerContext, PresentationRequest } from 'types';
+import { EmailData, EmailResponse, PresentationRequestResponse, SmsData, SmsResponse, UserInfo } from 'types';
 interface Props {
-    custContext: CustomerContext;
-    presentationRequest: PresentationRequest;
+    applicationTitle: string;
+    createPresentationRequest: () => Promise<PresentationRequestResponse>;
+    sendEmail: (options: EmailData) => Promise<EmailResponse>;
+    sendSms: (options: SmsData) => Promise<SmsResponse>;
+    goToLogin: () => void;
+    userInfo: UserInfo;
 }
 declare const WidgetHostAndController: FC<Props>;
 export default WidgetHostAndController;

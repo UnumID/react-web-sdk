@@ -1,204 +1,67 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { ShallowWrapper } from 'enzyme';
+import { render, fireEvent, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { WidgetContext } from 'types';
-import * as widgetStateContext from 'context/widgetStateContext';
-import * as smsSrv from 'context/sendSms';
-import SMSWidget from 'elements/widgets/SMSWidget';
+import SMSWidget, { Props } from '../../../elements/widgets/SMSWidget';
+import { widgetTypes } from '../../../frwk/ruiFrwkConst';
 
 describe('SMSWidget', () => {
-  let smsWidget: ShallowWrapper<Record<string, unknown>>;
-  const widgetCtx: WidgetContext = widgetStateContext.defaultWidgetContextState;
-  widgetCtx.setWidgetState = jest.fn();
+  const dummyUserInfo = { email: 'test@test.com', phone: 'KL5-5555' };
+  const dummyDeeplink = 'https://unumid.org/unumid/presentationRequest/574e1509-6f3e-49c5-9a8b-c49450c17d45';
+  const dummySmsSuccessResponse = Promise.resolve({ success: true });
+  const mockSendSms = jest.fn().mockResolvedValue(dummySmsSuccessResponse);
+  const mockSetCurrentWidget = jest.fn();
 
-  const renderSMSWidget = (): void => {
-    smsWidget = render(<SMSWidget />);
+  const defaultProps: Props = {
+    userInfo: dummyUserInfo,
+    deeplink: dummyDeeplink,
+    canScan: true,
+    sendSms: mockSendSms,
+    setCurrentWidget: mockSetCurrentWidget
   };
 
-  const mockSMSFunctions = (pWidgetCtx: WidgetContext, smsResp: boolean): void => {
-    jest
-      .spyOn(widgetStateContext, 'useWidgetStateContext')
-      .mockImplementation(() => pWidgetCtx);
+  const renderWidget = (props: Props = defaultProps) => {
+    render(<SMSWidget {...props} />);
+  }
 
-    jest
-      .spyOn(smsSrv, 'sendSms')
-      .mockImplementation(() => smsResp);
-  };
-
-  describe('SMSWidget with emailId and canScan=true', () => {
-    beforeEach(async () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = 'abc@test.com';
-      widgetCtx.custContext.canScan = true;
-
-      await act(async () => {
-        mockSMSFunctions(widgetCtx, true);
-        await renderSMSWidget();
-      });
-    });
-
-    describe('render when sms service call success', () => {
-      it('renders SMSWidget with the success text', () => {
-        expect(smsWidget.getByText(`We texted a link to ${widgetCtx.custContext.phoneNo}.`)).toBeDefined();
-        expect(smsWidget.getByText('Please click it to continue.')).toBeDefined();
-      });
-
-      it('renders Email link', () => {
-        expect(smsWidget.getByText('Get an email instead')).toBeDefined();
-      });
-
-      it('renders a Back to Qr Code link', () => {
-        expect(smsWidget.getByText('Back to QR code')).toBeDefined();
-      });
-    });
+  it('tries to send an sms on load', async () => {
+    renderWidget();
+    await act(() => dummySmsSuccessResponse);
+    expect(mockSendSms).toBeCalled();
   });
 
-  describe('SMSWidget without emailId and canScan=true', () => {
-    beforeEach(async () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = '';
-      widgetCtx.custContext.canScan = true;
-
-      await act(async () => {
-        mockSMSFunctions(widgetCtx, true);
-        await renderSMSWidget();
-      });
-    });
-
-    describe('render when sms service call success', () => {
-      it('renders SMSWidget with the success text', () => {
-        expect(smsWidget.getByText(`We texted a link to ${widgetCtx.custContext.phoneNo}.`)).toBeDefined();
-        expect(smsWidget.getByText('Please click it to continue.')).toBeDefined();
-      });
-
-      it('should not render Email link', () => {
-        expect(smsWidget.queryByText('Get an email instead')).toBeNull();
-      });
-
-      it('renders a Back to Qr Code link', () => {
-        expect(smsWidget.getByText('Back to QR code')).toBeDefined();
-      });
-    });
+  it('renders success test when sending email succeeds', async () => {
+    renderWidget();
+    expect(await screen.findByText(`We texted a link to ${dummyUserInfo.phone}.`)).toBeInTheDocument();
   });
 
-  describe('SMSWidget with emailId and canScan=false', () => {
-    beforeEach(async () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = 'abc@test.com';
-      widgetCtx.custContext.canScan = false;
-
-      await act(async () => {
-        mockSMSFunctions(widgetCtx, true);
-        await renderSMSWidget();
-      });
-    });
-
-    describe('render when sms service call success', () => {
-      it('renders SMSWidget with the success text', () => {
-        expect(smsWidget.getByText(`We texted a link to ${widgetCtx.custContext.phoneNo}.`)).toBeDefined();
-        expect(smsWidget.getByText('Please click it to continue.')).toBeDefined();
-      });
-
-      it('should not render Email link', () => {
-        expect(smsWidget.queryByText('Get an email instead')).toBeDefined();
-      });
-
-      it('renders a Back to Button link', () => {
-        expect(smsWidget.getByText('Back to Button')).toBeDefined();
-      });
-    });
+  it('renders get email instead link', async () => {
+    renderWidget();
+    const link = await screen.findByText('Get an email instead');
+    expect(link).toBeInTheDocument();
+    fireEvent.click(link);
+    expect(mockSetCurrentWidget).toBeCalledWith(widgetTypes.EMAIL);
   });
 
-  describe('SMSWidget without emailId and canScan=false', () => {
-    beforeEach(async () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = '';
-      widgetCtx.custContext.canScan = false;
-
-      await act(async () => {
-        mockSMSFunctions(widgetCtx, true);
-        await renderSMSWidget();
-      });
-    });
-
-    describe('render when sms service call success', () => {
-      it('renders SMSWidget with the success text', () => {
-        expect(smsWidget.getByText(`We texted a link to ${widgetCtx.custContext.phoneNo}.`)).toBeDefined();
-        expect(smsWidget.getByText('Please click it to continue.')).toBeDefined();
-      });
-
-      it('should not render Email link', () => {
-        expect(smsWidget.queryByText('Get an email instead')).toBeNull();
-      });
-
-      it('renders a Back to Button link', () => {
-        expect(smsWidget.getByText('Back to Button')).toBeDefined();
-      });
-    });
+  it('renders a back to QR code link if canScan is true', async () => {
+    renderWidget();
+    const link = await screen.findByText('Back to QR code');
+    expect(link).toBeInTheDocument();
+    fireEvent.click(link);
+    expect(mockSetCurrentWidget).toBeCalledWith(widgetTypes.QR_CODE);
   });
 
-  describe('SMSWidget - Error scenario - without emailId and canScan=false', () => {
-    beforeEach(async () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = '';
-      widgetCtx.custContext.canScan = false;
-
-      await act(async () => {
-        mockSMSFunctions(widgetCtx, false);
-        await renderSMSWidget();
-      });
-    });
-
-    describe('render when sms service call is failure', () => {
-      it('renders SMSWidget without the success text', () => {
-        expect(smsWidget.queryByText(`We texted a link to ${widgetCtx.custContext.phoneNo}.`)).toBeNull();
-        expect(smsWidget.queryByText('Please click it to continue.')).toBeNull();
-      });
-
-      it('renders SMSWidget with failure message', () => {
-        expect(smsWidget.getByText(`Error sending SMS to ${widgetCtx.custContext.phoneNo}.`)).toBeDefined();
-      });
-
-      it('should not render Email link', () => {
-        expect(smsWidget.queryByText('Get an email instead')).toBeNull();
-      });
-
-      it('renders a Back to Button link', () => {
-        expect(smsWidget.getByText('Back to Button')).toBeDefined();
-      });
-    });
+  it('renders a Back to Button link if canScan is false', async () => {
+    renderWidget({ ...defaultProps, canScan: false });
+    const link = await screen.findByText('Back to Button');
+    expect(link).toBeInTheDocument();
+    fireEvent.click(link);
+    expect(mockSetCurrentWidget).toBeCalledWith(widgetTypes.QR_CODE);
   });
 
-  describe('action for email link and back button link', () => {
-    beforeEach(async () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = 'abc@test.com';
-      widgetCtx.custContext.canScan = false;
-
-      await act(async () => {
-        mockSMSFunctions(widgetCtx, true);
-        await renderSMSWidget();
-      });
-    });
-
-    it('Check the onClick event of Email link', () => {
-      const emailLink = smsWidget.getByText('Get an email instead');
-      fireEvent.click(emailLink);
-      expect(widgetCtx.setWidgetState).toHaveBeenCalledTimes(1);
-    });
-
-    it('Check the onClick event of Back button', () => {
-      const backButton = smsWidget.getByText('Back to Button');
-      fireEvent.click(backButton);
-      expect(widgetCtx.setWidgetState).toHaveBeenCalledTimes(2);
-    });
+  it('renders an error message when sending sms fails', async () => {
+    mockSendSms.mockRejectedValueOnce(false);
+    renderWidget();
+    expect(await screen.findByText(`Error sending SMS to ${dummyUserInfo.phone}.`));
   });
 });

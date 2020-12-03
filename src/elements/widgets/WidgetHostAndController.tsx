@@ -1,69 +1,93 @@
 import React, { FC, useState, useEffect } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getPresentation } from 'context/presentation';
-import { defaultWidgetContextState, widgetStateContext } from 'context/widgetStateContext';
 import WidgetContainer from 'elements/containers/WidgetContainer';
 import QRCodeWidget from 'elements/widgets/QRCodeWidget';
 import SMSWidget from 'elements/widgets/SMSWidget';
 import EmailWidget from 'elements/widgets/EmailWidget';
-import { CustomerContext, PresentationRequest, WidgetContext } from 'types';
+import {
+  EmailData,
+  EmailResponse,
+  PresentationRequestResponse,
+  SmsData,
+  SmsResponse,
+  UserInfo,
+} from 'types';
 import { widgetTypes } from 'frwk/ruiFrwkConst';
-import { frwkHlpr } from 'frwk/ruiFrwkHlpr';
 
-interface Props {
-  custContext: CustomerContext;
-  presentationRequest: PresentationRequest;
+export interface Props {
+  applicationTitle: string;
+  createPresentationRequest: () => Promise<PresentationRequestResponse>;
+  sendEmail: (options: EmailData) => Promise<EmailResponse>;
+  sendSms: (options: SmsData) => Promise<SmsResponse>;
+  goToLogin: () => void;
+  userInfo: UserInfo;
 }
 
 const WidgetHostAndController: FC<Props> = (props: Props) => {
-  const [widgetState, setWidgetState] = useState(defaultWidgetContextState);
+  const [deeplink, setDeeplink] = useState('');
+  const [qrCode, setQrCode] = useState('');
+  const [isSameDevice, setIsSameDevice] = useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent));
+  const [canScan, setCanScan] = useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent));
+  const [currentWidget, setCurrentWidget] = useState(widgetTypes.QR_CODE);
+  // eslint-disable-next-line react/destructuring-assignment
+  const [isLoggedIn] = useState(!!props.userInfo);
 
   useEffect(() => {
     (async () => {
-      const { presentationRequest, custContext } = props;
-      const deepLinkDtl = await getPresentation(presentationRequest);
-      const isSameDevice = !!/Mobi|Android|iPhone/i.test(navigator.userAgent);
+      const { createPresentationRequest } = props;
 
-      const newCustContext = { ...custContext };
-
-      if (newCustContext.canScan === undefined) {
-        frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', `Can Scan is not passed: ${custContext.canScan}`);
-        newCustContext.canScan = !isSameDevice;
-      }
-
-      let unAuthenticatedCtx: boolean;
-
-      if (newCustContext.phoneNo || newCustContext.emailId) {
-        frwkHlpr.logInfo('WidgetHostAndController::populateCustContextInState', `Object is not empty: ${JSON.stringify(newCustContext)}`);
-        unAuthenticatedCtx = false;
-      } else {
-        unAuthenticatedCtx = true;
-      }
-
-      setWidgetState((oldState) => ({
-        ...oldState,
-        isSameDevice,
-        deepLinkDtl,
-        custContext: newCustContext,
-        currentWidget: widgetTypes.QR_CODE,
-        unAuthenticatedCtx,
-        setWidgetState: (values: Partial<WidgetContext>) => {
-          setWidgetState((w) => ({ ...w, ...values }));
-        },
-      }));
+      // create + send PresentationRequest and save resulting deeplink and qrCode in state
+      const presentationRequestResponse = await createPresentationRequest();
+      setDeeplink(presentationRequestResponse.deeplink);
+      setQrCode(presentationRequestResponse.qrCode);
     })();
   }, [props]);
 
-  const { currentWidget } = widgetState;
+  const {
+    applicationTitle,
+    userInfo,
+    sendEmail,
+    goToLogin,
+    sendSms,
+  } = props;
   return (
-    <widgetStateContext.Provider value={widgetState}>
-      <WidgetContainer>
-        { (currentWidget === widgetTypes.QR_CODE) && <QRCodeWidget /> }
-        { (currentWidget === widgetTypes.SMS) && <SMSWidget /> }
-        { (currentWidget === widgetTypes.EMAIL) && <EmailWidget /> }
-      </WidgetContainer>
-    </widgetStateContext.Provider>
+    <WidgetContainer>
+      {
+      (currentWidget === widgetTypes.QR_CODE) && (
+        <QRCodeWidget
+          qrCode={qrCode}
+          setCurrentWidget={setCurrentWidget}
+          applicationTitle={applicationTitle}
+          canScan={canScan}
+          deeplink={deeplink}
+          isLoggedIn={isLoggedIn}
+          userInfo={userInfo}
+          goToLogin={goToLogin}
+        />
+      )
+      }
+      { (currentWidget === widgetTypes.SMS) && (
+        <SMSWidget
+          userInfo={userInfo}
+          sendSms={sendSms}
+          canScan={canScan}
+          setCurrentWidget={setCurrentWidget}
+          deeplink={deeplink}
+        />
+      )}
+      { (currentWidget === widgetTypes.EMAIL) && (
+        <EmailWidget
+          email={userInfo.email}
+          sendEmail={sendEmail}
+          canScan={canScan}
+          goToLogin={goToLogin}
+          deeplink={deeplink}
+          setCurrentWidget={setCurrentWidget}
+        />
+      )}
+
+    </WidgetContainer>
   );
 };
 

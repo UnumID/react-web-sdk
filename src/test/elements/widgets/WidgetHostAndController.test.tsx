@@ -1,352 +1,107 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-
+import { render, fireEvent, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import { clear as clearMockUserAgent, mockUserAgent } from 'jest-useragent-mock';
 
-import {
-  DeeplinkObject, CustomerContext, PresentationRequest,
-} from 'types';
-import WidgetHostAndController from 'elements/widgets/WidgetHostAndController';
-import * as presentation from 'context/presentation';
-import * as emailSrv from 'context/sendEmail';
-import * as smsSrv from 'context/sendSms';
-
-let widgetHost: ShallowWrapper<Record<string, unknown>>;
-
-const renderWidgetHost = (custCtx: CustomerContext, input: PresentationRequest): void => {
-  widgetHost = render(<WidgetHostAndController
-    custContext={custCtx}
-    presentationRequest={input}
-  />);
-};
-
-const mockPresentationRequest = (): void => {
-  jest
-    .spyOn(presentation, 'getPresentation')
-    .mockImplementation((): DeeplinkObject => ({
-      uuid: '99bfd603-00c1-4bdc-9951-f2d8cc3fd07a',
-      verifier: 'did:unum:43c27ff5-f622-4d14-9a57-da250187a267',
-      deeplink: 'http://www.unumid.org/e0a9f115-b9c8-4799-b775-8f96aafcd1d9',
-      qrCode: 'https://s3-us-west-1.amazonaws.com/lobqrcodes/324ea164-9be0-4e88-ac78-1e6acfc1a54e',
-    }));
-};
-
-const mockSendEmail = (emailResp): void => {
-  jest
-    .spyOn(emailSrv, 'sendEmail')
-    .mockImplementation(() => emailResp);
-};
-
-const mockSendSMS = (smsResp): void => {
-  jest
-    .spyOn(smsSrv, 'sendSms')
-    .mockImplementation(() => smsResp);
-};
+import WidgetHostAndController, { Props } from '../../../elements/widgets/WidgetHostAndController';
 
 describe('WidgetHostAndController', () => {
-  const btnLbl = `Continue with ${process.env.REACT_APP_APPLICATION_TITLE} App`;
-  const custContext: CustomerContext = {
-    emailId: '',
-    phoneNo: '',
-  };
-
-  const presentationInput: PresentationRequest = {
-    credentialRequests: [
-      {
-        type: 'DummyCredential',
-        issuers: [
-          'did:unum:042b9089-9ee9-4217-844f-b01965cf569a',
-        ],
+  const dummyApplicationTitle = 'Dummy Application Title';
+  const dummyUserInfo = { email: 'test@test.com', phone: 'KL5-5555' };
+  const dummyPresentationRequestResponse = {
+    presentationRequest: {
+      uuid: 'a930334e-9046-43f3-b668-e8b8beaefba2',
+      createdAt: new Date('2020-12-02T23:01:30.164Z'),
+      updatedAt: new Date('2020-12-02T23:01:30.164Z'),
+      expiresAt: new Date('2020-12-02T23:11:30.164Z'),
+      verifier: 'did:unum:a40e162e-3297-4834-a1a3-a15e96554fac',
+      credentialRequests: [
+          {
+            type: 'DummyCredential',
+            issuers: [
+                'did:unum:c1dc61eb-6a6a-43c5-8a85-f7e03ded890d'
+            ],
+            required: true
+        }
+      ],
+      proof: {
+        signatureValue: 'iKx1CJMMrpAHb9Qtv3rB5ugiqZv7URG8P8WYrUvrAgWTbKAhihMjNSegtAYv6kHa8dnypZHbfEfjAbruvy54Co47bhC3iWHyg4',
+        created: '2020-08-21T00:58:58.140Z',
+        type: 'secp256r1Signature2020',
+        verificationMethod: 'did:unum:66e030cf-96b5-4a40-84c8-7bbbd442b81f#9a0e0366-cd38-4f3c-9030-f413802ad7ca',
+        proofPurpose: 'assertionMethod'
       },
-    ],
-    holderAppUuid: 'a91a5574-e338-46bd-9405-3a72acbd1b6a',
+      metadata: {},
+      holderAppUuid: '20cdb5bd-e263-4d22-aa0a-0606818d1ab8'
+    },
+    verifier: {
+      name: 'ACME, Inc. Verifier',
+      did: 'did:unum:a40e162e-3297-4834-a1a3-a15e96554fac',
+      url: 'https://customer-api.dev-unumid.org/presentationRequest'
+    },
+    issuers: {
+      'did:unum:c1dc61eb-6a6a-43c5-8a85-f7e03ded890d': {
+        name: 'Witting, Simonis and Hane Issuer',
+        did: 'did:unum:c1dc61eb-6a6a-43c5-8a85-f7e03ded890d'
+      }
+    },
+    deeplink: 'https://unumid.org/unumid/presentationRequest/a930334e-9046-43f3-b668-e8b8beaefba2',
+    qrCode: 'data:image/png;base64,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'
   };
 
-  beforeAll(() => {
-    mockPresentationRequest();
+  const dummyCreatePresentationRequestResponse = Promise.resolve(dummyPresentationRequestResponse);
+  const mockCreatePresentationRequest = jest.fn().mockResolvedValue(dummyCreatePresentationRequestResponse);
+  const mockSendEmail = jest.fn();
+  const mockSendSms = jest.fn();
+  const mockGoToLogin = jest.fn();
+
+  const defaultProps: Props = {
+    applicationTitle: dummyApplicationTitle,
+    userInfo: dummyUserInfo,
+    createPresentationRequest: mockCreatePresentationRequest,
+    goToLogin: mockGoToLogin,
+    sendEmail: mockSendEmail,
+    sendSms: mockSendSms
+  };
+
+  const renderWidget = (props: Props = defaultProps) => {
+    render(<WidgetHostAndController {...props} />)
+  };
+
+  it('creates a PresentationRequest on load', async () => {
+    renderWidget();
+    await act(() => dummyCreatePresentationRequestResponse);
+    expect(mockCreatePresentationRequest).toBeCalled();
   });
 
-  describe('render without customer context', () => {
-    it('renders QRCodeWidget with QRCode component - canScan not defined', async () => {
-      await act(async () => {
-        await renderWidgetHost(custContext, presentationInput);
-      });
-
-      expect(widgetHost.getByText('To continue, scan this QR code')).toBeDefined();
-      expect(widgetHost.getByText('Log in with your email address for more authentication options')).toBeDefined();
-
-      expect(widgetHost.queryByText(btnLbl)).toBeNull();
-      expect(widgetHost.queryByText('Get an SMS instead')).toBeNull();
-      expect(widgetHost.queryByText('Get an email instead')).toBeNull();
-
-      const loginLnk = widgetHost.getByText('Log in with your email address for more authentication options');
-      fireEvent.click(loginLnk);
-      expect(window.location.href).toBe(`http://localhost/${process.env.REACT_APP_LOGIN_PAGE}`);
-    });
-
-    it('renders QRCodeWidget with QRCode component - canScan=true', async () => {
-      custContext.canScan = true;
-      await act(async () => {
-        await renderWidgetHost(custContext, presentationInput);
-      });
-
-      expect(widgetHost.getByText('To continue, scan this QR code')).toBeDefined();
-      expect(widgetHost.getByText('Log in with your email address for more authentication options')).toBeDefined();
-
-      expect(widgetHost.queryByText(btnLbl)).toBeNull();
-      expect(widgetHost.queryByText('Get an SMS instead')).toBeNull();
-      expect(widgetHost.queryByText('Get an email instead')).toBeNull();
-
-      const loginLnk = widgetHost.getByText('Log in with your email address for more authentication options');
-      fireEvent.click(loginLnk);
-      expect(window.location.href).toBe(`http://localhost/${process.env.REACT_APP_LOGIN_PAGE}`);
-    });
-
-    it('renders QRCodeWidget with Button - canScan=false', async () => {
-      custContext.canScan = false;
-      await act(async () => {
-        await renderWidgetHost(custContext, presentationInput);
-      });
-
-      expect(widgetHost.getByText(btnLbl)).toBeDefined();
-      expect(widgetHost.getByText('Log in with your email address for more authentication options')).toBeDefined();
-
-      expect(widgetHost.queryByText('To continue, scan this QR code')).toBeNull();
-      expect(widgetHost.queryByText('Get an SMS instead')).toBeNull();
-      expect(widgetHost.queryByText('Get an email instead')).toBeNull();
-
-      const loginLnk = widgetHost.getByText('Log in with your email address for more authentication options');
-      fireEvent.click(loginLnk);
-      expect(window.location.href).toBe(`http://localhost/${process.env.REACT_APP_LOGIN_PAGE}`);
-
-      expect(widgetHost.getByText(btnLbl).href).toBe('http://www.unumid.org/e0a9f115-b9c8-4799-b775-8f96aafcd1d9');
-    });
+  it('renders a qr code on desktop', async () => {
+    renderWidget();
+    const qrCode = await screen.findByAltText('qr code');
+    expect(qrCode).toBeInTheDocument();
   });
 
-  describe('render with customer context - email id and canScan=true', () => {
-    it('renders QRCodeWidget with QRCode component', async () => {
-      custContext.canScan = true;
-      custContext.emailId = 'abc@test.com';
-      await act(async () => {
-        await renderWidgetHost(custContext, presentationInput);
-      });
+  it('renders a deeplink button on mobile', async () => {
+    mockUserAgent('iPhone');
+    renderWidget();
+    const button = await screen.findByText(`Continue with ${dummyApplicationTitle} App`);
 
-      expect(widgetHost.getByText('To continue, scan this QR code')).toBeDefined();
-      expect(widgetHost.getByText('Get an email instead')).toBeDefined();
-
-      expect(widgetHost.queryByText(btnLbl)).toBeNull();
-      expect(widgetHost.queryByText('Log in with your email address for more authentication options')).toBeNull();
-      expect(widgetHost.queryByText('Get an SMS instead')).toBeNull();
-
-      // Renders Email Widget
-      const emailLnk = widgetHost.getByText('Get an email instead');
-      await act(async () => {
-        mockSendEmail(true);
-        await fireEvent.click(emailLnk);
-      });
-
-      expect(widgetHost.getByText(`We emailed a link to ${custContext.emailId}.`)).toBeDefined();
-      expect(widgetHost.getByText('Please click it to continue.')).toBeDefined();
-      expect(widgetHost.getByText('Use a different email')).toBeDefined();
-      expect(widgetHost.getByText('Back to QR code')).toBeDefined();
-
-      // Test case for the click event of Use different email
-      const altEmailLink = widgetHost.getByText('Use a different email');
-      fireEvent.click(altEmailLink);
-      expect(window.location.href).toBe(`http://localhost/${process.env.REACT_APP_LOGIN_PAGE}`);
-
-      // Test case for the click event of Back to QR code
-      const backBtnLnk = widgetHost.getByText('Back to QR code');
-      fireEvent.click(backBtnLnk);
-
-      // QRCodeWidget should have been rendered again.
-      expect(widgetHost.getByText('To continue, scan this QR code')).toBeDefined();
-      expect(widgetHost.getByText('Get an email instead')).toBeDefined();
-
-      expect(widgetHost.queryByText(btnLbl)).toBeNull();
-      expect(widgetHost.queryByText('Log in with your email address for more authentication options')).toBeNull();
-      expect(widgetHost.queryByText('Get an SMS instead')).toBeNull();
-    });
+    expect(button).toBeDefined();
+    clearMockUserAgent();
   });
 
-  describe('render with customer context - both email and phone# and canScan=true', () => {
-    it('renders QRCodeWidget with QRCode component', async () => {
-      custContext.canScan = true;
-      custContext.emailId = 'abc@test.com';
-      custContext.phoneNo = '12345';
-      await act(async () => {
-        await renderWidgetHost(custContext, presentationInput);
-      });
+  it('renders the sms widget when appropriate', async () => {
+    renderWidget();
+    const smsButton = await screen.findByText('Get an SMS instead');
 
-      expect(widgetHost.getByText('To continue, scan this QR code')).toBeDefined();
-      expect(widgetHost.getByText('Get an SMS instead')).toBeDefined();
-
-      expect(widgetHost.queryByText(btnLbl)).toBeNull();
-      expect(widgetHost.queryByText('Log in with your email address for more authentication options')).toBeNull();
-      expect(widgetHost.queryByText('Get an email instead')).toBeNull();
-
-      // Renders SMS Widget
-      const smsLnk = widgetHost.getByText('Get an SMS instead');
-      await act(async () => {
-        mockSendSMS(true);
-        await fireEvent.click(smsLnk);
-      });
-
-      expect(widgetHost.getByText(`We texted a link to ${custContext.phoneNo}.`)).toBeDefined();
-      expect(widgetHost.getByText('Please click it to continue.')).toBeDefined();
-      expect(widgetHost.getByText('Get an email instead')).toBeDefined();
-      expect(widgetHost.getByText('Back to QR code')).toBeDefined();
-
-      // Renders Email Widget
-      const emailLnk = widgetHost.getByText('Get an email instead');
-      await act(async () => {
-        mockSendEmail(true);
-        await fireEvent.click(emailLnk);
-      });
-
-      expect(widgetHost.getByText(`We emailed a link to ${custContext.emailId}.`)).toBeDefined();
-      expect(widgetHost.getByText('Please click it to continue.')).toBeDefined();
-      expect(widgetHost.getByText('Use a different email')).toBeDefined();
-      expect(widgetHost.getByText('Back to QR code')).toBeDefined();
-
-      // Test case for the click event of Use different email
-      const altEmailLink = widgetHost.getByText('Use a different email');
-      fireEvent.click(altEmailLink);
-      expect(window.location.href).toBe(`http://localhost/${process.env.REACT_APP_LOGIN_PAGE}`);
-
-      // Test case for the click event of Back to QR code
-      const backBtnLnk = widgetHost.getByText('Back to QR code');
-      fireEvent.click(backBtnLnk);
-
-      // QRCodeWidget should have been rendered again.
-      expect(widgetHost.getByText('To continue, scan this QR code')).toBeDefined();
-      expect(widgetHost.getByText('Get an SMS instead')).toBeDefined();
-
-      expect(widgetHost.queryByText(btnLbl)).toBeNull();
-      expect(widgetHost.queryByText('Log in with your email address for more authentication options')).toBeNull();
-      expect(widgetHost.queryByText('Get an email instead')).toBeNull();
-    });
+    fireEvent.click(smsButton);
+    expect(await screen.findByText(`We texted a link to ${dummyUserInfo.phone}.`)).toBeInTheDocument();
   });
 
-  describe('render with customer context - both email and phone# and canScan=false', () => {
-    it('renders QRCodeWidget with Button component', async () => {
-      custContext.canScan = false;
-      custContext.emailId = 'abc@test.com';
-      custContext.phoneNo = '12345';
-      await act(async () => {
-        await renderWidgetHost(custContext, presentationInput);
-      });
+  it('renders the email widget when appropriate', async () => {
+    renderWidget({ ...defaultProps, userInfo: { email: dummyUserInfo.email } });
+    const emailButton = await screen.findByText('Get an email instead');
 
-      expect(widgetHost.getByText(btnLbl)).toBeDefined();
-      expect(widgetHost.getByText('Get an SMS instead')).toBeDefined();
-
-      expect(widgetHost.queryByText('To continue, scan this QR code')).toBeNull();
-      expect(widgetHost.queryByText('Log in with your email address for more authentication options')).toBeNull();
-      expect(widgetHost.queryByText('Get an email instead')).toBeNull();
-
-      // Renders SMS Widget
-      const smsLnk = widgetHost.getByText('Get an SMS instead');
-      await act(async () => {
-        mockSendSMS(true);
-        await fireEvent.click(smsLnk);
-      });
-
-      expect(widgetHost.getByText(`We texted a link to ${custContext.phoneNo}.`)).toBeDefined();
-      expect(widgetHost.getByText('Please click it to continue.')).toBeDefined();
-      expect(widgetHost.getByText('Get an email instead')).toBeDefined();
-      expect(widgetHost.getByText('Back to Button')).toBeDefined();
-
-      // Renders Email Widget
-      const emailLnk = widgetHost.getByText('Get an email instead');
-      await act(async () => {
-        mockSendEmail(true);
-        await fireEvent.click(emailLnk);
-      });
-
-      expect(widgetHost.getByText(`We emailed a link to ${custContext.emailId}.`)).toBeDefined();
-      expect(widgetHost.getByText('Please click it to continue.')).toBeDefined();
-      expect(widgetHost.getByText('Use a different email')).toBeDefined();
-      expect(widgetHost.getByText('Back to Button')).toBeDefined();
-
-      // Test case for the click event of Use different email
-      const altEmailLink = widgetHost.getByText('Use a different email');
-      fireEvent.click(altEmailLink);
-      expect(window.location.href).toBe(`http://localhost/${process.env.REACT_APP_LOGIN_PAGE}`);
-
-      // Test case for the click event of Back to QR code
-      const backBtnLnk = widgetHost.getByText('Back to Button');
-      fireEvent.click(backBtnLnk);
-
-      // QRCodeWidget should have been rendered again with Button.
-      expect(widgetHost.getByText(btnLbl)).toBeDefined();
-      expect(widgetHost.getByText('Get an SMS instead')).toBeDefined();
-
-      expect(widgetHost.queryByText('To continue, scan this QR code')).toBeNull();
-      expect(widgetHost.queryByText('Log in with your email address for more authentication options')).toBeNull();
-      expect(widgetHost.queryByText('Get an email instead')).toBeNull();
-    });
-  });
-
-  describe('render with customer context - both email and phone# and canScan=false - failure scenarios', () => {
-    it('renders QRCodeWidget with Button component', async () => {
-      custContext.canScan = false;
-      custContext.emailId = 'abc@test.com';
-      custContext.phoneNo = '12345';
-      await act(async () => {
-        await renderWidgetHost(custContext, presentationInput);
-      });
-
-      expect(widgetHost.getByText(btnLbl)).toBeDefined();
-      expect(widgetHost.getByText('Get an SMS instead')).toBeDefined();
-
-      expect(widgetHost.queryByText('To continue, scan this QR code')).toBeNull();
-      expect(widgetHost.queryByText('Log in with your email address for more authentication options')).toBeNull();
-      expect(widgetHost.queryByText('Get an email instead')).toBeNull();
-
-      // Renders SMS Widget with error message when SMS service call is not successful
-      const smsLnk = widgetHost.getByText('Get an SMS instead');
-      await act(async () => {
-        mockSendSMS(false);
-        await fireEvent.click(smsLnk);
-      });
-
-      expect(widgetHost.getByText(`Error sending SMS to ${custContext.phoneNo}.`)).toBeDefined();
-      expect(widgetHost.getByText('Get an email instead')).toBeDefined();
-      expect(widgetHost.getByText('Back to Button')).toBeDefined();
-
-      expect(widgetHost.queryByText(`We texted a link to ${custContext.phoneNo}.`)).toBeNull();
-      expect(widgetHost.queryByText('Please click it to continue.')).toBeNull();
-
-      // Renders Email Widget with error message when Email service call is not successful
-      const emailLnk = widgetHost.getByText('Get an email instead');
-      await act(async () => {
-        mockSendEmail(false);
-        await fireEvent.click(emailLnk);
-      });
-
-      expect(widgetHost.getByText(`Error sending Email to ${custContext.emailId}.`)).toBeDefined();
-      expect(widgetHost.getByText('Use a different email')).toBeDefined();
-      expect(widgetHost.getByText('Back to Button')).toBeDefined();
-
-      expect(widgetHost.queryByText(`We emailed a link to ${custContext.emailId}.`)).toBeNull();
-      expect(widgetHost.queryByText('Please click it to continue.')).toBeNull();
-
-      // Test case for the click event of Use different email
-      const altEmailLink = widgetHost.getByText('Use a different email');
-      fireEvent.click(altEmailLink);
-      expect(window.location.href).toBe(`http://localhost/${process.env.REACT_APP_LOGIN_PAGE}`);
-
-      // Test case for the click event of Back to QR code
-      const backBtnLnk = widgetHost.getByText('Back to Button');
-      fireEvent.click(backBtnLnk);
-
-      // QRCodeWidget should have been rendered again with Button.
-      expect(widgetHost.getByText(btnLbl)).toBeDefined();
-      expect(widgetHost.getByText('Get an SMS instead')).toBeDefined();
-
-      expect(widgetHost.queryByText('To continue, scan this QR code')).toBeNull();
-      expect(widgetHost.queryByText('Log in with your email address for more authentication options')).toBeNull();
-      expect(widgetHost.queryByText('Get an email instead')).toBeNull();
-    });
+    fireEvent.click(emailButton);
+    expect(await screen.findByText(`We emailed a link to ${dummyUserInfo.email}.`)).toBeInTheDocument();
   });
 });

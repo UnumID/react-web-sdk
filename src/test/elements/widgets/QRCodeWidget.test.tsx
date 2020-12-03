@@ -1,197 +1,90 @@
 import React from 'react';
-import { shallow, ShallowWrapper } from 'enzyme';
 
-import { WidgetContext } from 'types';
-import * as widgetStateContext from 'context/widgetStateContext';
-import QRCodeWidget from 'elements/widgets/QRCodeWidget';
-
-let qrCodeWidget: ShallowWrapper<Record<string, unknown>>;
-
-const renderQrCodeWidget = (widgetCtx): void => {
-  jest
-    .spyOn(widgetStateContext, 'useWidgetStateContext')
-    .mockImplementation(() => widgetCtx);
-  qrCodeWidget = shallow(<QRCodeWidget />);
-};
+import { WidgetContext } from '../../../types';
+import * as widgetStateContext from '../../../context/widgetStateContext';
+import QRCodeWidget, { Props } from '../../../elements/widgets/QRCodeWidget';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { widgetTypes } from '../../../frwk/ruiFrwkConst';
 
 describe('QRCodeWidget', () => {
-  const widgetCtx: WidgetContext = widgetStateContext.defaultWidgetContextState;
-  widgetCtx.setWidgetState = jest.fn();
+  const mockSetCurrentWidget = jest.fn();
+  const mockGoToLogin = jest.fn();
+  const dummyQrCode = 'dummy qr code';
+  const dummyApplicationTitle = 'Dummy Application Title';
+  const dummyUserInfo = { email: 'test@test.com', phone: 'KL5-5555' };
+  const dummyDeeplink = 'https://unumid.org/unumid/presentationRequest/574e1509-6f3e-49c5-9a8b-c49450c17d45';
 
-  afterEach(() => {
-    qrCodeWidget.unmount();
+  const defaultProps: Props = {
+    applicationTitle: dummyApplicationTitle,
+    canScan: true,
+    isLoggedIn: false,
+    userInfo: {},
+    deeplink: dummyDeeplink,
+    setCurrentWidget: mockSetCurrentWidget,
+    qrCode: dummyQrCode,
+    goToLogin: mockGoToLogin
+  };
+
+  const renderWidget = (props: Props = defaultProps) => {
+    render(<QRCodeWidget {...props} />);
+  }
+
+  it('renders a qr code if canScan is true', async () => {
+    renderWidget();
+    const qrCode = await screen.findByAltText('qr code');
+    expect(qrCode).toBeInTheDocument();
+    expect(qrCode).toHaveAttribute('src', dummyQrCode);
   });
 
-  describe('render without customer context', () => {
-    it('renders a QRCodeWidget with unknown customer context', () => {
-      widgetCtx.deepLinkDtl.qrCode = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      renderQrCodeWidget(widgetCtx);
+  it('renders a deeplink button if canScan is false', async () => {
+    renderWidget({ ...defaultProps, canScan: false });
+    const button = await screen.findByText(`Continue with ${dummyApplicationTitle} App`);
+    expect(button).toBeInTheDocument();
 
-      expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
-      expect(qrCodeWidget.find('QRCode').length).toBe(1);
-      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(1);
-
-      expect(qrCodeWidget.find('ActionButton').length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
-    });
-
-    it('renders a ActionButton with unknown customer context', () => {
-      widgetCtx.deepLinkDtl.deeplink = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
-      widgetCtx.custContext.canScan = false;
-      renderQrCodeWidget(widgetCtx);
-
-      expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
-      expect(qrCodeWidget.find('ActionButton').length).toBe(1);
-      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(1);
-
-      expect(qrCodeWidget.find('QRCode').length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
-    });
+    fireEvent.click(button);
+    expect(button).toHaveAttribute('href', dummyDeeplink);
+    expect(button).toHaveAttribute('target', '_blank');
   });
 
-  describe('render with customer context and canScan=true', () => {
-    it('renders a QRCodeWidget with phone number', () => {
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = '';
-      widgetCtx.unAuthenticatedCtx = false;
-      widgetCtx.custContext.canScan = true;
-      renderQrCodeWidget(widgetCtx);
+  it('renders a login link if there is no logged in user', async () => {
+    renderWidget();
+    const link = await screen.findByText('Log in with your email address for more authentication options');
+    expect(link).toBeInTheDocument();
 
-      expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
-      expect(qrCodeWidget.find('QRCode').length).toBe(1);
-      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(1);
-
-      expect(qrCodeWidget.find('ActionButton').length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
-    });
-
-    it('renders a QRCodeWidget with phone number and email id', () => {
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = 'abc@test';
-      widgetCtx.unAuthenticatedCtx = false;
-      widgetCtx.custContext.canScan = true;
-      renderQrCodeWidget(widgetCtx);
-
-      expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
-      expect(qrCodeWidget.find('QRCode').length).toBe(1);
-      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(1);
-
-      expect(qrCodeWidget.find('ActionButton').length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
-    });
-
-    it('renders a QRCodeWidget with phone number', () => {
-      widgetCtx.custContext.phoneNo = '';
-      widgetCtx.custContext.emailId = 'abc@test';
-      widgetCtx.unAuthenticatedCtx = false;
-      widgetCtx.custContext.canScan = true;
-      renderQrCodeWidget(widgetCtx);
-
-      expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
-      expect(qrCodeWidget.find('QRCode').length).toBe(1);
-      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(1);
-
-      expect(qrCodeWidget.find('ActionButton').length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(0);
-    });
+    fireEvent.click(link);
+    expect(mockGoToLogin).toBeCalled();
   });
 
-  describe('render with customer context and canScan=false', () => {
-    it('renders a QRCodeWidget with phone number', () => {
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.unAuthenticatedCtx = false;
-      widgetCtx.custContext.canScan = false;
-      renderQrCodeWidget(widgetCtx);
-
-      expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
-      expect(qrCodeWidget.find('ActionButton').length).toBe(1);
-      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(1);
-
-      expect(qrCodeWidget.find('QRCode').length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
-    });
-
-    it('renders a QRCodeWidget with phone number and email id', () => {
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.custContext.emailId = 'abc@test';
-      widgetCtx.unAuthenticatedCtx = false;
-      widgetCtx.custContext.canScan = false;
-      renderQrCodeWidget(widgetCtx);
-
-      expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
-      expect(qrCodeWidget.find('ActionButton').length).toBe(1);
-      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(1);
-
-      expect(qrCodeWidget.find('QRCode').length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(0);
-    });
-
-    it('renders a QRCodeWidget with phone number', () => {
-      widgetCtx.custContext.phoneNo = '';
-      widgetCtx.custContext.emailId = 'abc@test';
-      widgetCtx.unAuthenticatedCtx = false;
-      widgetCtx.custContext.canScan = false;
-      renderQrCodeWidget(widgetCtx);
-
-      expect(qrCodeWidget.find('div.qrcode-widget-content').length).toBe(1);
-      expect(qrCodeWidget.find('ActionButton').length).toBe(1);
-      expect(qrCodeWidget.find({ children: 'Get an email instead' }).length).toBe(1);
-
-      expect(qrCodeWidget.find('QRCode').length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).length).toBe(0);
-      expect(qrCodeWidget.find({ children: 'Get an SMS instead' }).length).toBe(0);
-    });
+  it('does not render a login link if there is a logged in user', async () => {
+    renderWidget({ ...defaultProps, isLoggedIn: true, userInfo: dummyUserInfo });
+    const link = await waitFor(() => screen.queryByText('Log in with your email address for more authentication options'));
+    expect(link).not.toBeInTheDocument();
   });
 
-  describe('action for sms link and email link', () => {
-    it('Check the onClick event of Log in link', () => {
-      widgetCtx.custContext.phoneNo = '';
-      widgetCtx.unAuthenticatedCtx = true;
-      widgetCtx.custContext.canScan = false;
-      renderQrCodeWidget(widgetCtx);
+  it('renders sms fallback link if there is a logged in user with a phone nubmer', async () => {
+    renderWidget({ ...defaultProps, isLoggedIn: true, userInfo: dummyUserInfo });
+    const link = await screen.findByText('Get an SMS instead');
+    expect(link).toBeInTheDocument();
 
-      qrCodeWidget.find({ children: 'Log in with your email address for more authentication options' }).simulate('click');
-      expect(window.location.href).toBe(`http://localhost/${process.env.REACT_APP_LOGIN_PAGE}`);
-    });
-
-    it('Check the onClick event of SMS LinkButton', () => {
-      widgetCtx.custContext.phoneNo = '12345';
-      widgetCtx.unAuthenticatedCtx = false;
-      widgetCtx.custContext.canScan = false;
-      renderQrCodeWidget(widgetCtx);
-
-      qrCodeWidget.find({ children: 'Get an SMS instead' }).simulate('click');
-      expect(widgetCtx.setWidgetState).toHaveBeenCalledTimes(1);
-    });
-
-    it('Check the onClick event of Email LinkButton', () => {
-      widgetCtx.custContext.phoneNo = '';
-      widgetCtx.custContext.emailId = 'abc@test';
-      widgetCtx.unAuthenticatedCtx = false;
-      widgetCtx.custContext.canScan = false;
-      renderQrCodeWidget(widgetCtx);
-
-      qrCodeWidget.find({ children: 'Get an email instead' }).simulate('click');
-      expect(widgetCtx.setWidgetState).toHaveBeenCalledTimes(2);
-    });
+    fireEvent.click(link);
+    expect(mockSetCurrentWidget).toBeCalledWith(widgetTypes.SMS);
   });
 
-  describe('attributes for ActionButton when canScan=false', () => {
-    it('Check the href attribute value', () => {
-      widgetCtx.custContext.phoneNo = '';
-      widgetCtx.unAuthenticatedCtx = true;
-      widgetCtx.custContext.canScan = false;
-      renderQrCodeWidget(widgetCtx);
+  it('renders email fallback link if there is a logged in user without a phone number', async () => {
+    renderWidget({ ...defaultProps, isLoggedIn: true, userInfo: { email: 'test@test.com' } });
+    const link  = await screen.findByText('Get an email instead');
+    expect(link).toBeInTheDocument();
 
-      const btnLbl = `Continue with ${process.env.REACT_APP_APPLICATION_TITLE} App`;
-      expect(qrCodeWidget.find({ children: btnLbl }).prop('href')).toBe(widgetCtx.deepLinkDtl.deeplink);
-    });
+    fireEvent.click(link);
+    expect(mockSetCurrentWidget).toBeCalledWith(widgetTypes.EMAIL);
+  });
+
+  it('does not render email or sms options if there is no logged in user', async () => {
+    renderWidget();
+    const emailLink = await waitFor(() => screen.queryByText('Get an email instead'));
+    const smsLink = await waitFor(() => screen.queryByText('Get an SMS instead'));
+
+    expect(emailLink).not.toBeInTheDocument();
+    expect(smsLink).not.toBeInTheDocument();
   });
 });

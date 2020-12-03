@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import LinkButton from 'elements/components/LinkButton';
+import LinkButton from '../../../elements/components/LinkButton';
 
 describe('LinkButton', () => {
   describe('render()', () => {
@@ -23,7 +23,7 @@ describe('LinkButton', () => {
       const { getByText } = render(<LinkButton href="test">I am a link</LinkButton>);
       const linkBtn = getByText('I am a link');
 
-      expect(linkBtn.href).toBe('http://localhost/test');
+      expect(linkBtn).toHaveAttribute('href', 'test');
     });
   });
 

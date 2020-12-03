@@ -22,18 +22,6 @@ export interface CredentialRequest {
     issuers: string[];
     required?: boolean;
 }
-export interface VerifierInfo {
-    name: string;
-    did: string;
-    url: string;
-}
-export interface IssuerInfo {
-    name: string;
-    did: string;
-}
-export interface IssuerInfoMap {
-    [did: string]: IssuerInfo;
-}
 export interface Proof {
     created: string;
     signatureValue: string;
@@ -47,17 +35,30 @@ export interface PresentationRequest {
     updatedAt: Date;
     expiresAt: Date;
     verifier: string;
-    holderAppUuid: string;
     credentialRequests: CredentialRequest[];
+    holderAppUuid: string;
     proof: Proof;
     metadata?: Record<string, unknown>;
 }
 export interface PresentationRequestResponse {
     presentationRequest: PresentationRequest;
-    verifier: VerifierInfo;
-    issuers: IssuerInfoMap;
+    verifier: {
+        name: string;
+        did: string;
+        url: string;
+    };
+    issuers: {
+        [did: string]: {
+            name: string;
+            did: string;
+        };
+    };
     deeplink: string;
     qrCode: string;
+}
+export interface UserInfo {
+    email: string;
+    phone: string;
 }
 export interface SmsData {
     to: string;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import ActionButton from 'elements/components/ActionButton';
+import ActionButton from '../../../elements/components/ActionButton';
 
 describe('ActionButton', () => {
   describe('render primary link button', () => {
@@ -80,7 +80,7 @@ describe('ActionButton', () => {
       const { getByText } = render(<ActionButton href="test" type="primary">I am a button</ActionButton>);
       const anchorBtn = getByText('I am a button');
 
-      expect(anchorBtn.href).toBe('http://localhost/test');
+      expect(anchorBtn).toHaveAttribute('href', 'test');
     });
   });
 
