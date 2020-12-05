@@ -24,33 +24,32 @@ export interface Props {
   userInfo: UserInfo;
 }
 
-const WidgetHostAndController: FC<Props> = (props: Props) => {
+const WidgetHostAndController: FC<Props> = ({
+  applicationTitle,
+  createPresentationRequest,
+  sendEmail,
+  sendSms,
+  goToLogin,
+  userInfo,
+}: Props) => {
   const [deeplink, setDeeplink] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [isSameDevice, setIsSameDevice] = useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent));
   const [canScan, setCanScan] = useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent));
   const [currentWidget, setCurrentWidget] = useState(widgetTypes.QR_CODE);
   // eslint-disable-next-line react/destructuring-assignment
-  const [isLoggedIn] = useState(!!props.userInfo);
+  const [isLoggedIn] = useState(!!userInfo);
 
   useEffect(() => {
     (async () => {
-      const { createPresentationRequest } = props;
-
       // create + send PresentationRequest and save resulting deeplink and qrCode in state
       const presentationRequestResponse = await createPresentationRequest();
+
       setDeeplink(presentationRequestResponse.deeplink);
       setQrCode(presentationRequestResponse.qrCode);
     })();
-  }, [props]);
+  }, [createPresentationRequest]);
 
-  const {
-    applicationTitle,
-    userInfo,
-    sendEmail,
-    goToLogin,
-    sendSms,
-  } = props;
   return (
     <WidgetContainer>
       {

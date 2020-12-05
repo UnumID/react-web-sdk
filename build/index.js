@@ -336,115 +336,6 @@ var WidgetContainer = function (_a) {
     return (React__default['default'].createElement(Card, { className: newClass }, children));
 };
 
-var frwkConst = {
-    UNDEFINED: 'undefined',
-    STRING: 'string',
-    OBJECT: 'object',
-    LOG_DELIMETER: ' :: ',
-};
-var widgetTypes = {
-    QR_CODE: 'QrCode',
-    EMAIL: 'Email',
-    SMS: 'SMS',
-};
-var consoleTypes = {
-    LOG: 1,
-    INFO: 2,
-    WARN: 3,
-    ERROR: 4,
-};
-
-var writeLog = function (type, fName, msg) {
-    if (process.env.REACT_APP_ENABLE_LOG !== 'true')
-        return;
-    var log = fName + frwkConst.LOG_DELIMETER + msg;
-    switch (type) {
-        case consoleTypes.WARN:
-            console.warn(log);
-            break;
-        case consoleTypes.INFO:
-            console.info(log);
-            break;
-        case consoleTypes.ERROR:
-            console.error(log);
-            break;
-        case consoleTypes.LOG:
-        default:
-            console.log(log);
-            break;
-    }
-};
-var FrwkHlpr = /** @class */ (function () {
-    function FrwkHlpr() {
-    }
-    FrwkHlpr.prototype.logNote = function (fName, str) {
-        writeLog(consoleTypes.LOG, fName, str);
-    };
-    FrwkHlpr.prototype.logError = function (fName, str) {
-        writeLog(consoleTypes.ERROR, fName, str);
-    };
-    FrwkHlpr.prototype.logInfo = function (fName, str) {
-        writeLog(consoleTypes.INFO, fName, str);
-    };
-    FrwkHlpr.prototype.logWarn = function (fName, str) {
-        writeLog(consoleTypes.WARN, fName, str);
-    };
-    FrwkHlpr.prototype.showAlert = function (msg) {
-        alert(msg);
-    };
-    return FrwkHlpr;
-}());
-var frwkHlpr = new FrwkHlpr();
-
-var ObjectUtil = /** @class */ (function () {
-    function ObjectUtil() {
-    }
-    ObjectUtil.prototype.isNullOrEmpty = function (obj) {
-        var retVal = false;
-        switch (typeof obj) {
-            case frwkConst.UNDEFINED:
-                retVal = true;
-                break;
-            case frwkConst.STRING:
-                if (obj === '') {
-                    retVal = true;
-                }
-                break;
-            case frwkConst.OBJECT:
-                if (obj === null) {
-                    retVal = true;
-                }
-                else if (obj.toUTCString) {
-                    if (obj.toUTCString() === '') {
-                        retVal = true;
-                    }
-                }
-                else if (Array.isArray(obj) && obj.length === 0) {
-                    retVal = true;
-                }
-                else if (Object.keys(obj).length === 0) {
-                    retVal = true;
-                }
-                break;
-            default:
-                frwkHlpr.logInfo('ObjectUtil::isNullOrEmpty', 'default switch case');
-                break;
-        }
-        return (retVal);
-    };
-    ObjectUtil.prototype.isNull = function (obj) {
-        return (obj === undefined || obj === null);
-    };
-    ObjectUtil.prototype.getEnvValue = function (envName) {
-        if (process.env[envName]) {
-            return (process.env[envName]);
-        }
-        return ('');
-    };
-    return ObjectUtil;
-}());
-var objUtil = new ObjectUtil();
-
 /**
  * Safe chained function
  *
@@ -621,14 +512,17 @@ var ActionButton = function (_a) {
     return (React__default['default'].createElement(Button, { className: className, variant: type, onClick: onClick, href: href, target: target }, children));
 };
 
+var widgetTypes = {
+    QR_CODE: 'QR_CODE',
+    EMAIL: 'EMAIL',
+    SMS: 'SMS',
+};
+
 var css_248z$3 = ".qrcode-widget-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.qrcode-widget-content .bold-label {\n  font-weight: 700;\n  background-color: #1f61cc\n}\n\n.qrcode-widget-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
 styleInject(css_248z$3);
 
 var QRCodeWidget = function (_a) {
-    var qrCode = _a.qrCode, setCurrentWidget = _a.setCurrentWidget, applicationTitle = _a.applicationTitle, canScan = _a.canScan, deeplink = _a.deeplink, isLoggedIn = _a.isLoggedIn, userInfo = _a.userInfo;
-    var handleLoginLinkClick = function () {
-        window.location.href = objUtil.getEnvValue('REACT_APP_LOGIN_PAGE');
-    };
+    var qrCode = _a.qrCode, setCurrentWidget = _a.setCurrentWidget, applicationTitle = _a.applicationTitle, canScan = _a.canScan, deeplink = _a.deeplink, isLoggedIn = _a.isLoggedIn, userInfo = _a.userInfo, goToLogin = _a.goToLogin;
     var handleSMSLinkClick = function () {
         setCurrentWidget(widgetTypes.SMS);
     };
@@ -638,7 +532,7 @@ var QRCodeWidget = function (_a) {
     var btnLbl = "Continue with " + applicationTitle + " App";
     var renderQrCode = function () { return React__default['default'].createElement(QRCode, { qrCode: qrCode }); };
     var renderDeeplinkButton = function () { return (React__default['default'].createElement(ActionButton, { className: "bold-label", type: "primary", target: "_blank", href: deeplink }, btnLbl)); };
-    var renderLoginButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: handleLoginLinkClick }, "Log in with your email address for more authentication options")); };
+    var renderLoginButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: goToLogin }, "Log in with your email address for more authentication options")); };
     var renderSmsButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: handleSMSLinkClick }, "Get an SMS instead")); };
     var renderEmailButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: handleEmailLinkClick }, "Get an email instead")); };
     return (React__default['default'].createElement("div", { className: "qrcode-widget-content" },
@@ -660,7 +554,7 @@ var SMSWidget = function (_a) {
     React.useEffect(function () {
         function sendSMSMsg() {
             return __awaiter(this, void 0, void 0, function () {
-                var options;
+                var options, e_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -668,12 +562,20 @@ var SMSWidget = function (_a) {
                                 to: userInfo.phone,
                                 msg: "Authentication Request: ACME website. Click here to complete: " + deeplink,
                             };
-                            return [4 /*yield*/, sendSms(options)];
+                            _a.label = 1;
                         case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, sendSms(options)];
+                        case 2:
                             _a.sent();
                             setSMSResp(true);
                             setSMSSent(true);
-                            return [2 /*return*/];
+                            return [3 /*break*/, 4];
+                        case 3:
+                            e_1 = _a.sent();
+                            setSMSSent(true);
+                            return [3 /*break*/, 4];
+                        case 4: return [2 /*return*/];
                     }
                 });
             });
@@ -710,14 +612,13 @@ styleInject(css_248z$5);
 
 var EmailWidget = function (_a) {
     var email = _a.email, sendEmail = _a.sendEmail, canScan = _a.canScan, goToLogin = _a.goToLogin, deeplink = _a.deeplink, setCurrentWidget = _a.setCurrentWidget;
-    // const widgetContext: WidgetContext = useWidgetStateContext();
     var _b = React.useState(false), emailResp = _b[0], setEmailResp = _b[1];
     var _c = React.useState(false), emailSent = _c[0], setEmailSent = _c[1];
     var backLinkLiteral = "Back to " + (canScan ? 'QR code' : 'Button');
     React.useEffect(function () {
         function sendEmailData() {
             return __awaiter(this, void 0, void 0, function () {
-                var options, response;
+                var options, e_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -726,21 +627,27 @@ var EmailWidget = function (_a) {
                                 subject: 'Authentication Request: ACME website',
                                 htmlBody: "<div>Click <a href=" + deeplink + ">here</a> to complete",
                             };
-                            return [4 /*yield*/, sendEmail(options)];
+                            _a.label = 1;
                         case 1:
-                            response = _a.sent();
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, sendEmail(options)];
+                        case 2:
+                            _a.sent();
                             setEmailResp(true);
                             setEmailSent(true);
-                            return [2 /*return*/];
+                            return [3 /*break*/, 4];
+                        case 3:
+                            e_1 = _a.sent();
+                            setEmailResp(false);
+                            setEmailSent(true);
+                            return [3 /*break*/, 4];
+                        case 4: return [2 /*return*/];
                     }
                 });
             });
         }
         sendEmailData();
     }, [email, deeplink, sendEmail]);
-    // const handleAnotherEmailLinkClick = (): void => {
-    //   window.location.href = objUtil.getEnvValue('REACT_APP_LOGIN_PAGE') as string;
-    // };
     var backToQrCode = function () {
         setCurrentWidget(widgetTypes.QR_CODE);
     };
@@ -762,22 +669,21 @@ var EmailWidget = function (_a) {
             React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, backLinkLiteral)))));
 };
 
-var WidgetHostAndController = function (props) {
-    var _a = React.useState(''), deeplink = _a[0], setDeeplink = _a[1];
-    var _b = React.useState(''), qrCode = _b[0], setQrCode = _b[1];
-    var _c = React.useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent)), isSameDevice = _c[0], setIsSameDevice = _c[1];
-    var _d = React.useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent)), canScan = _d[0], setCanScan = _d[1];
-    var _e = React.useState(widgetTypes.QR_CODE), currentWidget = _e[0], setCurrentWidget = _e[1];
+var WidgetHostAndController = function (_a) {
+    var applicationTitle = _a.applicationTitle, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo;
+    var _b = React.useState(''), deeplink = _b[0], setDeeplink = _b[1];
+    var _c = React.useState(''), qrCode = _c[0], setQrCode = _c[1];
+    var _d = React.useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent)), isSameDevice = _d[0], setIsSameDevice = _d[1];
+    var _e = React.useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent)), canScan = _e[0], setCanScan = _e[1];
+    var _f = React.useState(widgetTypes.QR_CODE), currentWidget = _f[0], setCurrentWidget = _f[1];
     // eslint-disable-next-line react/destructuring-assignment
-    var isLoggedIn = React.useState(!!props.userInfo)[0];
+    var isLoggedIn = React.useState(!!userInfo)[0];
     React.useEffect(function () {
         (function () { return __awaiter(void 0, void 0, void 0, function () {
-            var createPresentationRequest, presentationRequestResponse;
+            var presentationRequestResponse;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        createPresentationRequest = props.createPresentationRequest;
-                        return [4 /*yield*/, createPresentationRequest()];
+                    case 0: return [4 /*yield*/, createPresentationRequest()];
                     case 1:
                         presentationRequestResponse = _a.sent();
                         setDeeplink(presentationRequestResponse.deeplink);
@@ -786,10 +692,9 @@ var WidgetHostAndController = function (props) {
                 }
             });
         }); })();
-    }, [props]);
-    var applicationTitle = props.applicationTitle, userInfo = props.userInfo, sendEmail = props.sendEmail, goToLogin = props.goToLogin, sendSms = props.sendSms;
+    }, [createPresentationRequest]);
     return (React__default['default'].createElement(WidgetContainer, null,
-        (currentWidget === widgetTypes.QR_CODE) && (React__default['default'].createElement(QRCodeWidget, { qrCode: qrCode, setCurrentWidget: setCurrentWidget, applicationTitle: applicationTitle, canScan: canScan, deeplink: deeplink, isLoggedIn: isLoggedIn, userInfo: userInfo })),
+        (currentWidget === widgetTypes.QR_CODE) && (React__default['default'].createElement(QRCodeWidget, { qrCode: qrCode, setCurrentWidget: setCurrentWidget, applicationTitle: applicationTitle, canScan: canScan, deeplink: deeplink, isLoggedIn: isLoggedIn, userInfo: userInfo, goToLogin: goToLogin })),
         (currentWidget === widgetTypes.SMS) && (React__default['default'].createElement(SMSWidget, { userInfo: userInfo, sendSms: sendSms, canScan: canScan, setCurrentWidget: setCurrentWidget, deeplink: deeplink })),
         (currentWidget === widgetTypes.EMAIL) && (React__default['default'].createElement(EmailWidget, { email: userInfo.email, sendEmail: sendEmail, canScan: canScan, goToLogin: goToLogin, deeplink: deeplink, setCurrentWidget: setCurrentWidget }))));
 };

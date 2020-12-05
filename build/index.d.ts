@@ -1,2 +1,2 @@
-import WidgetHostAndController from 'elements/widgets/WidgetHostAndController';
+import WidgetHostAndController from 'components/WidgetHostAndController';
 export default WidgetHostAndController;
