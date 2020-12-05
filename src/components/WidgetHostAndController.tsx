@@ -37,18 +37,18 @@ const WidgetHostAndController: FC<Props> = ({
   const [isSameDevice, setIsSameDevice] = useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent));
   const [canScan, setCanScan] = useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent));
   const [currentWidget, setCurrentWidget] = useState(widgetTypes.QR_CODE);
-  // eslint-disable-next-line react/destructuring-assignment
+
   const [isLoggedIn] = useState(!!userInfo);
 
   useEffect(() => {
     (async () => {
       // create + send PresentationRequest and save resulting deeplink and qrCode in state
-      const presentationRequestResponse = await createPresentationRequest();
-
-      setDeeplink(presentationRequestResponse.deeplink);
-      setQrCode(presentationRequestResponse.qrCode);
+      const response = await createPresentationRequest();
+      setDeeplink(response.deeplink);
+      setQrCode(response.qrCode);
     })();
-  }, [createPresentationRequest]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <WidgetContainer>

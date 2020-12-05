@@ -676,23 +676,23 @@ var WidgetHostAndController = function (_a) {
     var _d = React.useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent)), isSameDevice = _d[0], setIsSameDevice = _d[1];
     var _e = React.useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent)), canScan = _e[0], setCanScan = _e[1];
     var _f = React.useState(widgetTypes.QR_CODE), currentWidget = _f[0], setCurrentWidget = _f[1];
-    // eslint-disable-next-line react/destructuring-assignment
     var isLoggedIn = React.useState(!!userInfo)[0];
     React.useEffect(function () {
         (function () { return __awaiter(void 0, void 0, void 0, function () {
-            var presentationRequestResponse;
+            var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, createPresentationRequest()];
                     case 1:
-                        presentationRequestResponse = _a.sent();
-                        setDeeplink(presentationRequestResponse.deeplink);
-                        setQrCode(presentationRequestResponse.qrCode);
+                        response = _a.sent();
+                        setDeeplink(response.deeplink);
+                        setQrCode(response.qrCode);
                         return [2 /*return*/];
                 }
             });
         }); })();
-    }, [createPresentationRequest]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     return (React__default['default'].createElement(WidgetContainer, null,
         (currentWidget === widgetTypes.QR_CODE) && (React__default['default'].createElement(QRCodeWidget, { qrCode: qrCode, setCurrentWidget: setCurrentWidget, applicationTitle: applicationTitle, canScan: canScan, deeplink: deeplink, isLoggedIn: isLoggedIn, userInfo: userInfo, goToLogin: goToLogin })),
         (currentWidget === widgetTypes.SMS) && (React__default['default'].createElement(SMSWidget, { userInfo: userInfo, sendSms: sendSms, canScan: canScan, setCurrentWidget: setCurrentWidget, deeplink: deeplink })),
