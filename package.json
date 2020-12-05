@@ -6,6 +6,7 @@
   "license": "MIT",
   "repository": "git@github.com:UnumID/Verifier-Client-SDK.git",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
   "engines": {
     "node": ">=10"
   },
