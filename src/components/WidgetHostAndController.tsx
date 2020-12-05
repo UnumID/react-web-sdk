@@ -6,11 +6,10 @@ import QRCodeWidget from 'components/QRCodeWidget';
 import SMSWidget from 'components/SMSWidget';
 import EmailWidget from 'components/EmailWidget';
 import {
-  EmailData,
-  EmailResponse,
+  EmailOptions,
   PresentationRequestResponse,
-  SmsData,
-  SmsResponse,
+  SmsOptions,
+  SuccessResponse,
   UserInfo,
 } from 'types';
 import { widgetTypes } from 'constants/widgetTypes';
@@ -18,8 +17,8 @@ import { widgetTypes } from 'constants/widgetTypes';
 export interface Props {
   applicationTitle: string;
   createPresentationRequest: () => Promise<PresentationRequestResponse>;
-  sendEmail: (options: EmailData) => Promise<EmailResponse>;
-  sendSms: (options: SmsData) => Promise<SmsResponse>;
+  sendEmail: (options: EmailOptions) => Promise<SuccessResponse>;
+  sendSms: (options: SmsOptions) => Promise<SuccessResponse>;
   goToLogin: () => void;
   userInfo: UserInfo;
 }

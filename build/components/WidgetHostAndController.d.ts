@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { EmailData, EmailResponse, PresentationRequestResponse, SmsData, SmsResponse, UserInfo } from 'types';
+import { EmailOptions, PresentationRequestResponse, SmsOptions, SuccessResponse, UserInfo } from 'types';
 export interface Props {
     applicationTitle: string;
     createPresentationRequest: () => Promise<PresentationRequestResponse>;
-    sendEmail: (options: EmailData) => Promise<EmailResponse>;
-    sendSms: (options: SmsData) => Promise<SmsResponse>;
+    sendEmail: (options: EmailOptions) => Promise<SuccessResponse>;
+    sendSms: (options: SmsOptions) => Promise<SuccessResponse>;
     goToLogin: () => void;
     userInfo: UserInfo;
 }

@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'react';
-import { EmailData, EmailResponse } from 'types';
+import { EmailOptions, SuccessResponse } from 'types';
 import './EmailWidget.css';
 export interface Props {
     email: string;
-    sendEmail: (options: EmailData) => Promise<EmailResponse>;
+    sendEmail: (options: EmailOptions) => Promise<SuccessResponse>;
     canScan: boolean;
     goToLogin: () => void;
     deeplink: string;

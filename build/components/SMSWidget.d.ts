@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'react';
-import { SmsData, SmsResponse, UserInfo } from 'types';
+import { SmsOptions, SuccessResponse, UserInfo } from 'types';
 import './SMSWidget.css';
 export interface Props {
     userInfo: UserInfo;
-    sendSms: (options: SmsData) => Promise<SmsResponse>;
+    sendSms: (options: SmsOptions) => Promise<SuccessResponse>;
     canScan: boolean;
     setCurrentWidget: (widget: string) => void;
     deeplink: string;
