@@ -6,12 +6,13 @@
   "license": "MIT",
   "repository": "git@github.com:UnumID/Verifier-Client-SDK.git",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
   "engines": {
     "node": ">=10"
   },
   "scripts": {
     "build": "rollup -c",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
     "lint": "eslint \"src/**/*.ts*\""
   },
   "peerDependencies": {
@@ -22,18 +23,19 @@
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
+    "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
+    "@types/jest": "^26.0.15",
     "@types/react-dom": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
     "bootstrap": "^4.5.3",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.5",
-    "enzyme-to-json": "^3.6.1",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
+    "jest-useragent-mock": "^0.1.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^17.0.1",
@@ -43,9 +45,6 @@
     "rollup-plugin-postcss": "^3.1.8",
     "rollup-plugin-typescript2": "^0.29.0",
     "typescript": "^4.1.2"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "files": [
     "build"
