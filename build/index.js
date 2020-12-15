@@ -486,8 +486,13 @@ var LinkButton = function (_a) {
     return (React__default['default'].createElement(Button, { href: href, variant: "link", onClick: onClick }, children));
 };
 
-var css_248z$2 = ".qr-code {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 20px;\n}\n\n.qr-code .help-item {\n  text-align: left;\n  font-size: 12px;\n}\n\n.qrcode-img-wrapper {\n  height: 196px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.qr-code .bold {\n  font-weight: 700;\n}\n\n.qr-code .btn.focus, .btn:focus {\n  box-shadow: none;\n}\n\n@media screen and (max-width: 600px) {\n  .qrcode-content {\n    flex-direction: column;\n    align-items: center;\n  }\n\n  .description {\n    margin-left: 0;\n    margin-top: 24px;\n  }\n}\n";
+var css_248z$2 = ".spinner {\n  border: 8px solid #f5f5f5;\n  border-top: 8px solid #dddddd;\n  border-radius: 50%;\n  width: 80px;\n  height: 80px;\n  animation: spin 1s linear infinite;\n}\n\n@keyframes spin {\n  0% { transform: rotate(0deg); }\n  100% { transform: rotate(360deg); }\n}\n";
 styleInject(css_248z$2);
+
+var Spinner = function () { return (React__default['default'].createElement("div", { className: "spinner", "aria-label": "spinner" })); };
+
+var css_248z$3 = ".qr-code {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 20px;\n}\n\n.qr-code .help-item {\n  text-align: left;\n  font-size: 12px;\n}\n\n.qrcode-img-wrapper {\n  height: 196px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.qr-code .bold {\n  font-weight: 700;\n}\n\n.qr-code .btn.focus, .btn:focus {\n  box-shadow: none;\n}\n\n@media screen and (max-width: 600px) {\n  .qrcode-content {\n    flex-direction: column;\n    align-items: center;\n  }\n\n  .description {\n    margin-left: 0;\n    margin-top: 24px;\n  }\n}\n";
+styleInject(css_248z$3);
 
 var QRCode = function (_a) {
     var qrCode = _a.qrCode;
@@ -503,8 +508,7 @@ var QRCode = function (_a) {
             React__default['default'].createElement("div", { className: "help-item" }, "1. Install the ACME app from the app store."),
             React__default['default'].createElement("div", { className: "help-item" }, "2. Open the ACME app and click \"Scan a QR code\"."),
             React__default['default'].createElement("div", { className: "help-item" }, "3. Hover over the QR code."))),
-        React__default['default'].createElement("div", { className: "qrcode-img-wrapper" },
-            React__default['default'].createElement("img", { alt: "qr code", src: qrCode }))));
+        React__default['default'].createElement("div", { className: "qrcode-img-wrapper" }, qrCode ? React__default['default'].createElement("img", { alt: "qr code", src: qrCode }) : React__default['default'].createElement(Spinner, null))));
 };
 
 var ActionButton = function (_a) {
@@ -518,8 +522,8 @@ var widgetTypes = {
     SMS: 'SMS',
 };
 
-var css_248z$3 = ".qrcode-widget-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.qrcode-widget-content .bold-label {\n  font-weight: 700;\n  background-color: #1f61cc\n}\n\n.qrcode-widget-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
-styleInject(css_248z$3);
+var css_248z$4 = ".qrcode-widget-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.qrcode-widget-content .bold-label {\n  font-weight: 700;\n  background-color: #1f61cc\n}\n\n.qrcode-widget-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
+styleInject(css_248z$4);
 
 var QRCodeWidget = function (_a) {
     var qrCode = _a.qrCode, setCurrentWidget = _a.setCurrentWidget, applicationTitle = _a.applicationTitle, canScan = _a.canScan, deeplink = _a.deeplink, isLoggedIn = _a.isLoggedIn, userInfo = _a.userInfo, goToLogin = _a.goToLogin;
@@ -543,8 +547,8 @@ var QRCodeWidget = function (_a) {
         (isLoggedIn && userInfo.email && !userInfo.phone) && renderEmailButton()));
 };
 
-var css_248z$4 = ".sms-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.sms-content .bold {\n  font-weight: 700;\n}\n\n.sms-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
-styleInject(css_248z$4);
+var css_248z$5 = ".sms-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.sms-content .bold {\n  font-weight: 700;\n}\n\n.sms-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
+styleInject(css_248z$5);
 
 var SMSWidget = function (_a) {
     var userInfo = _a.userInfo, sendSms = _a.sendSms, canScan = _a.canScan, setCurrentWidget = _a.setCurrentWidget, deeplink = _a.deeplink;
@@ -607,8 +611,8 @@ var SMSWidget = function (_a) {
             React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, backLinkLiteral)))));
 };
 
-var css_248z$5 = ".email-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.email-content .bold {\n  font-weight: 700;\n}\n\n.email-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
-styleInject(css_248z$5);
+var css_248z$6 = ".email-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.email-content .bold {\n  font-weight: 700;\n}\n\n.email-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
+styleInject(css_248z$6);
 
 var EmailWidget = function (_a) {
     var email = _a.email, sendEmail = _a.sendEmail, canScan = _a.canScan, goToLogin = _a.goToLogin, deeplink = _a.deeplink, setCurrentWidget = _a.setCurrentWidget;
