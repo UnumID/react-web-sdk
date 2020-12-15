@@ -1,6 +1,7 @@
 import React, { useState, FunctionComponent } from 'react';
 
 import LinkButton from 'components/LinkButton';
+import Spinner from 'components/Spinner';
 
 import './QRCode.css';
 
@@ -30,7 +31,7 @@ const QRCode: FunctionComponent<Props> = ({ qrCode }) => {
           )
       }
       <div className="qrcode-img-wrapper">
-        <img alt="qr code" src={qrCode} />
+        {qrCode ? <img alt="qr code" src={qrCode} /> : <Spinner />}
       </div>
     </div>
   );

@@ -6,12 +6,10 @@ import QRCode from '../../components/QRCode';
 describe('QRCode', () => {
   const sampleQrCode = 'https://s3-us-west-1.amazonaws.com/lobqrcodes/8883301f-b0ce-4d1e-96c3-7d3e47526d0b';
   let component: RenderResult;
-  beforeEach(() => {
-    component = render(<QRCode qrCode={sampleQrCode} />);
-  });
 
   describe('render', () => {
     it('renders a QRCode component with its contents', () => {
+      component = render(<QRCode qrCode={sampleQrCode} />);
       expect(component.getByText('To continue, scan this QR code')).toBeInTheDocument();
       expect(component.getByText('with your phone camera or ACME app:')).toBeInTheDocument();
       expect(component.getByText('Need help scanning?')).toBeInTheDocument();
@@ -19,10 +17,12 @@ describe('QRCode', () => {
   });
 
   it('hides the help content initially', () => {
+    component = render(<QRCode qrCode={sampleQrCode} />);
     expect(component.queryByText('1. Install the ACME app from the app store.')).not.toBeInTheDocument();
   });
 
   it('shows the help content when the user clicks need help', () => {
+    component = render(<QRCode qrCode={sampleQrCode} />);
     const helpButton = component.getByText('Need help scanning?');
 
     fireEvent.click(helpButton);
@@ -31,7 +31,16 @@ describe('QRCode', () => {
     expect(component.getByText('3. Hover over the QR code.')).toBeInTheDocument();
   });
 
+  it('renders a spinner instead of a qr code when the qr code has not been loaded', () => {
+    component = render(<QRCode qrCode="" />);
+    expect(component.queryByAltText('qr code')).not.toBeInTheDocument();
+    const spinner = component.getByLabelText('spinner');
+    expect(spinner).toBeInTheDocument();
+    expect(spinner).toHaveClass('spinner');
+  });
+
   it('renders the qr code image', () => {
+    component = render(<QRCode qrCode={sampleQrCode} />);
     const image = component.getByAltText('qr code');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', sampleQrCode);
