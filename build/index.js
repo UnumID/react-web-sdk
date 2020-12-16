@@ -96,7 +96,7 @@ var WidgetContainer = function (_a) {
     return (React__default['default'].createElement("div", { className: newClass }, children));
 };
 
-var css_248z$1 = ".link-button {\n  font-weight: 400;\n  color: #007bff;\n  text-decoration: none;\n  text-align: center;\n  vertical-align: middle;\n  background-color: transparent;\n  font-size: 1rem;\n  line-height: 1.5;\n  cursor: pointer;\n  border: none;\n}\n";
+var css_248z$1 = ".link-button {\n  font-weight: 400;\n  color: #007bff;\n  text-decoration: none;\n  text-align: center;\n  vertical-align: middle;\n  background-color: transparent;\n  font-size: 1rem;\n  line-height: 1.5;\n  padding: .375rem .75rem;\n  cursor: pointer;\n  border: none;\n}\n";
 styleInject(css_248z$1);
 
 var LinkButton = function (_a) {
@@ -150,7 +150,7 @@ function cc(obj) {
   return out
 }
 
-var css_248z$4 = ".action-button {\n  display: inline-block;\n  text-align: center;\n  vertical-align: middle;\n  border: 1px solid transparent;\n  padding: .375rem .75rem;\n  line-height: 1.5;\n  border-radius: .25rem;\n  font-size: 1rem;\n  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;\n  color: #ffffff;\n  background-color: #1f61cc;\n  cursor: pointer;\n}\n";
+var css_248z$4 = ".action-button {\n  display: inline-block;\n  text-align: center;\n  vertical-align: middle;\n  border: 1px solid transparent;\n  padding: .375rem .75rem;\n  line-height: 1.5;\n  border-radius: .25rem;\n  font-size: 1rem;\n  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;\n  color: #ffffff;\n  background-color: #1f61cc;\n  cursor: pointer;\n  margin-bottom: 20px;\n}\n";
 styleInject(css_248z$4);
 
 var ActionButton = function (_a) {
