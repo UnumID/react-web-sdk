@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { EmailOptions, PresentationRequestResponse, SmsOptions, SuccessResponse, UserInfo } from 'types';
 export interface Props {
     applicationTitle: string;

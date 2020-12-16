@@ -2,7 +2,7 @@
 SDK which helps the client to manage how deeplink can be presented to holder
 
 ## Installation
-This library is available in Github, built with react framework. This library uses **react-bootstrap** node module for rendering basic components and styling.  Custom basic components are written with these bootstrap library and used in the library.  
+This library is available in Github, built with react framework.
 
 To add it to the react application, run `yarn add verifier-client-sdk@https://github.com/UnumID/Verifier-Client-SDK.git` or add the following to the `dependencies` section of the `package.json` and run `yarn install`.
 

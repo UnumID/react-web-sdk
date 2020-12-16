@@ -1,0 +1,15 @@
+.action-button {
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  font-size: 1rem;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  color: #ffffff;
+  background-color: #1f61cc;
+  cursor: pointer;
+  margin-bottom: 20px;
+}

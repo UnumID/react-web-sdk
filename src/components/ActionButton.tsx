@@ -1,33 +1,27 @@
-import React, { FC } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
+import cc from 'classcat';
 
-import Button from 'react-bootstrap/Button';
+import './ActionButton.css';
 
-interface Props {
-  onClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void);
-  type: 'primary' | 'secondary';
-  className?: string;
+type Props = PropsWithChildren<{
   target?: string;
-  href?: string;
-  children: string;
-}
+  href: string;
+  className?: string;
+}>
 
 const ActionButton: FC<Props> = ({
-  onClick,
-  type,
-  className,
   target,
   href,
+  className,
   children,
 }) => (
-  <Button
-    className={className}
-    variant={type}
-    onClick={onClick}
+  <a
+    className={cc(['action-button', className])}
     href={href}
     target={target}
   >
     {children}
-  </Button>
+  </a>
 );
 
 export default ActionButton;

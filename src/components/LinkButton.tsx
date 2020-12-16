@@ -1,17 +1,15 @@
-import React, { FC } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
+import './LinkButton.css';
 
-import Button from 'react-bootstrap/Button';
-
-interface Props {
-  onClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void);
-  href?: string;
+type Props = PropsWithChildren<{
+  onClick: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void);
   children: string;
-}
+}>;
 
-const LinkButton: FC<Props> = ({ onClick, href, children }) => (
-  <Button href={href} variant="link" onClick={onClick}>
+const LinkButton: FC<Props> = ({ onClick, children }) => (
+  <button type="button" className="link-button" onClick={onClick}>
     {children}
-  </Button>
+  </button>
 );
 
 export default LinkButton;

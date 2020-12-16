@@ -1,7 +1,5 @@
 import React, { FC, ReactNode } from 'react';
 
-import Card from 'react-bootstrap/Card';
-
 import './WidgetContainer.css';
 
 interface Props {
@@ -14,9 +12,9 @@ const WidgetContainer: FC<Props> = ({ children, className }) => {
   newClass = className ? `${className} ${newClass}` : newClass;
 
   return (
-    <Card className={newClass}>
+    <div className={newClass}>
       {children}
-    </Card>
+    </div>
   );
 };
 

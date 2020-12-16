@@ -1,11 +1,9 @@
-import React, { FC } from 'react';
-interface Props {
-    onClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void);
-    type: 'primary' | 'secondary';
-    className?: string;
+import { FC, PropsWithChildren } from 'react';
+import './ActionButton.css';
+declare type Props = PropsWithChildren<{
     target?: string;
-    href?: string;
-    children: string;
-}
+    href: string;
+    className?: string;
+}>;
 declare const ActionButton: FC<Props>;
 export default ActionButton;

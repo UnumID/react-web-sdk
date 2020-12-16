@@ -1,0 +1,13 @@
+.link-button {
+  font-weight: 400;
+  color: #007bff;
+  text-decoration: none;
+  text-align: center;
+  vertical-align: middle;
+  background-color: transparent;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: .375rem .75rem;
+  cursor: pointer;
+  border: none;
+}
