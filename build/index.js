@@ -674,7 +674,7 @@ var EmailWidget = function (_a) {
 };
 
 var WidgetHostAndController = function (_a) {
-    var applicationTitle = _a.applicationTitle, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo;
+    var applicationTitle = _a.applicationTitle, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequest = _a.presentationRequest;
     var _b = React.useState(''), deeplink = _b[0], setDeeplink = _b[1];
     var _c = React.useState(''), qrCode = _c[0], setQrCode = _c[1];
     var _d = React.useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent)), isSameDevice = _d[0], setIsSameDevice = _d[1];
@@ -686,12 +686,18 @@ var WidgetHostAndController = function (_a) {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, createPresentationRequest()];
-                    case 1:
+                    case 0:
+                        if (!presentationRequest) return [3 /*break*/, 1];
+                        setDeeplink(presentationRequest.deeplink);
+                        setQrCode(presentationRequest.qrCode);
+                        return [3 /*break*/, 3];
+                    case 1: return [4 /*yield*/, createPresentationRequest()];
+                    case 2:
                         response = _a.sent();
                         setDeeplink(response.deeplink);
                         setQrCode(response.qrCode);
-                        return [2 /*return*/];
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
                 }
             });
         }); })();

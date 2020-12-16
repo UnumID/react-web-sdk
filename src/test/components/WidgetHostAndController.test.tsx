@@ -69,10 +69,19 @@ describe('WidgetHostAndController', () => {
     render(<WidgetHostAndController {...props} />);
   };
 
-  it('creates a PresentationRequest on load', async () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('creates a PresentationRequest on load if one is not passed as a prop', async () => {
     renderWidget();
     await act(() => dummyCreatePresentationRequestResponse);
     expect(mockCreatePresentationRequest).toBeCalled();
+  });
+
+  it('does not create a new PresentationRequest if one is passed as a prop', async () => {
+    renderWidget({ ...defaultProps, presentationRequest: dummyPresentationRequestResponse });
+    expect(mockCreatePresentationRequest).not.toBeCalled();
   });
 
   it('renders a qr code on desktop', async () => {

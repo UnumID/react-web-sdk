@@ -12,7 +12,7 @@ To add it to the react application, run `yarn add verifier-client-sdk@https://gi
 
 ## Usage
 ```tsx
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 import UnumIDVerifier, {
   EmailOptions,
@@ -22,8 +22,15 @@ import UnumIDVerifier, {
 } from 'verifier-client-sdk';
 
 const App: FC = () => {
+  const [presentationRequest, setPresentationRequest] = useState();
+
   const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
     // call your api endpoint to create a presentationRequest and return the response
+    const response = await callEndpoint();
+    // We recommend that you save the created PresentationRequest
+    // Passing it as a prop to the Verifier Widget will prevent the SDK from creating another
+    // if the widget is rerendered
+    setPresentationRequest(response);
   };
 
   const sendEmail = async (options: EmailOptions): Promise<SuccessResponse> => {
@@ -46,6 +53,9 @@ const App: FC = () => {
       sendEmail={sendEmail}
       sendSMS={sendSms}
       goToLogin={goToLogin}
+      // Passing a PresentationRequest will prevent the Verifier Widget from calling createPresentationRequest
+      // and creating a new one
+      presentationRequest={presentationRequest}
     />
   );
 }

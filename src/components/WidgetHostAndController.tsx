@@ -21,6 +21,7 @@ export interface Props {
   sendSms: (options: SmsOptions) => Promise<SuccessResponse>;
   goToLogin: () => void;
   userInfo: UserInfo;
+  presentationRequest?: PresentationRequestResponse
 }
 
 const WidgetHostAndController: FC<Props> = ({
@@ -30,6 +31,7 @@ const WidgetHostAndController: FC<Props> = ({
   sendSms,
   goToLogin,
   userInfo,
+  presentationRequest,
 }: Props) => {
   const [deeplink, setDeeplink] = useState('');
   const [qrCode, setQrCode] = useState('');
@@ -41,10 +43,14 @@ const WidgetHostAndController: FC<Props> = ({
 
   useEffect(() => {
     (async () => {
-      // create + send PresentationRequest and save resulting deeplink and qrCode in state
-      const response = await createPresentationRequest();
-      setDeeplink(response.deeplink);
-      setQrCode(response.qrCode);
+      if (presentationRequest) {
+        setDeeplink(presentationRequest.deeplink);
+        setQrCode(presentationRequest.qrCode);
+      } else {
+        const response = await createPresentationRequest();
+        setDeeplink(response.deeplink);
+        setQrCode(response.qrCode);
+      }
     })();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
