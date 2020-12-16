@@ -1,6 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import WidgetContainer from 'components/WidgetContainer';
 import QRCodeWidget from 'components/QRCodeWidget';
 import SMSWidget from 'components/SMSWidget';
