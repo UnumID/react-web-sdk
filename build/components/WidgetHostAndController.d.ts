@@ -8,6 +8,7 @@ export interface Props {
     sendSms: (options: SmsOptions) => Promise<SuccessResponse>;
     goToLogin: () => void;
     userInfo: UserInfo;
+    presentationRequest?: PresentationRequestResponse;
 }
 declare const WidgetHostAndController: FC<Props>;
 export default WidgetHostAndController;
