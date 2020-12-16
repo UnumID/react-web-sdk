@@ -2,7 +2,7 @@ import React, { FC, PropsWithChildren } from 'react';
 import './LinkButton.css';
 
 type Props = PropsWithChildren<{
-  onClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void);
+  onClick: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void);
   children: string;
 }>;
 
