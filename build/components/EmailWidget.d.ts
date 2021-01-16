@@ -5,7 +5,7 @@ export interface Props {
     email: string;
     sendEmail: (options: EmailOptions) => Promise<SuccessResponse>;
     canScan: boolean;
-    goToLogin: () => void;
+    goToLogin?: () => void;
     deeplink: string;
     setCurrentWidget: (widget: string) => void;
 }

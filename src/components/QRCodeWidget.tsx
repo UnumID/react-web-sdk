@@ -16,7 +16,7 @@ export interface Props {
   deeplink: string;
   isLoggedIn: boolean;
   userInfo: UserInfo;
-  goToLogin: () => void;
+  goToLogin?: () => void;
 }
 
 const QRCodeWidget: FunctionComponent<Props> = ({

@@ -320,7 +320,7 @@ var EmailWidget = function (_a) {
                     "Error sending Email to ",
                     email,
                     "."),
-            React__default['default'].createElement(LinkButton, { onClick: goToLogin }, "Use a different email"),
+            goToLogin && React__default['default'].createElement(LinkButton, { onClick: goToLogin }, "Use a different email"),
             React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, backLinkLiteral)))));
 };
 

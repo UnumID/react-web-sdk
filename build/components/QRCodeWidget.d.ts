@@ -9,7 +9,7 @@ export interface Props {
     deeplink: string;
     isLoggedIn: boolean;
     userInfo: UserInfo;
-    goToLogin: () => void;
+    goToLogin?: () => void;
 }
 declare const QRCodeWidget: FunctionComponent<Props>;
 export default QRCodeWidget;

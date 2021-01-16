@@ -12,7 +12,7 @@ export interface Props {
   email: string;
   sendEmail: (options: EmailOptions) => Promise<SuccessResponse>;
   canScan: boolean;
-  goToLogin: () => void;
+  goToLogin?: () => void;
   deeplink: string;
   setCurrentWidget: (widget: string) => void;
 }
@@ -68,7 +68,7 @@ const EmailWidget: FunctionComponent<Props> = ({
             )}
           {!emailResp
             && <div className="error">Error sending Email to {email}.</div>}
-          <LinkButton onClick={goToLogin}>Use a different email</LinkButton>
+          { goToLogin && <LinkButton onClick={goToLogin}>Use a different email</LinkButton> }
           <LinkButton onClick={backToQrCode}>
             {backLinkLiteral}
           </LinkButton>
