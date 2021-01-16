@@ -3,8 +3,8 @@ import { EmailOptions, PresentationRequestResponse, SmsOptions, SuccessResponse,
 export interface Props {
     applicationTitle: string;
     createPresentationRequest?: () => Promise<PresentationRequestResponse>;
-    sendEmail: (options: EmailOptions) => Promise<SuccessResponse>;
-    sendSms: (options: SmsOptions) => Promise<SuccessResponse>;
+    sendEmail?: (options: EmailOptions) => Promise<SuccessResponse>;
+    sendSms?: (options: SmsOptions) => Promise<SuccessResponse>;
     goToLogin: () => void;
     userInfo: UserInfo;
     presentationRequest?: PresentationRequestResponse;

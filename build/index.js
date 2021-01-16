@@ -358,8 +358,8 @@ var WidgetHostAndController = function (_a) {
     }, [presentationRequest, createPresentationRequest]);
     return (React__default['default'].createElement(WidgetContainer, null,
         (currentWidget === widgetTypes.QR_CODE) && (React__default['default'].createElement(QRCodeWidget, { qrCode: qrCode, setCurrentWidget: setCurrentWidget, applicationTitle: applicationTitle, canScan: canScan, deeplink: deeplink, isLoggedIn: isLoggedIn, userInfo: userInfo, goToLogin: goToLogin })),
-        (currentWidget === widgetTypes.SMS) && (React__default['default'].createElement(SMSWidget, { userInfo: userInfo, sendSms: sendSms, canScan: canScan, setCurrentWidget: setCurrentWidget, deeplink: deeplink })),
-        (currentWidget === widgetTypes.EMAIL) && (React__default['default'].createElement(EmailWidget, { email: userInfo.email, sendEmail: sendEmail, canScan: canScan, goToLogin: goToLogin, deeplink: deeplink, setCurrentWidget: setCurrentWidget }))));
+        (currentWidget === widgetTypes.SMS) && sendSms && (React__default['default'].createElement(SMSWidget, { userInfo: userInfo, sendSms: sendSms, canScan: canScan, setCurrentWidget: setCurrentWidget, deeplink: deeplink })),
+        (currentWidget === widgetTypes.EMAIL) && sendEmail && (React__default['default'].createElement(EmailWidget, { email: userInfo.email, sendEmail: sendEmail, canScan: canScan, goToLogin: goToLogin, deeplink: deeplink, setCurrentWidget: setCurrentWidget }))));
 };
 
 module.exports = WidgetHostAndController;

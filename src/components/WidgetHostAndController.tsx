@@ -16,8 +16,8 @@ import { widgetTypes } from 'constants/widgetTypes';
 export interface Props {
   applicationTitle: string;
   createPresentationRequest?: () => Promise<PresentationRequestResponse>;
-  sendEmail: (options: EmailOptions) => Promise<SuccessResponse>;
-  sendSms: (options: SmsOptions) => Promise<SuccessResponse>;
+  sendEmail?: (options: EmailOptions) => Promise<SuccessResponse>;
+  sendSms?: (options: SmsOptions) => Promise<SuccessResponse>;
   goToLogin: () => void;
   userInfo: UserInfo;
   presentationRequest?: PresentationRequestResponse
@@ -70,7 +70,7 @@ const WidgetHostAndController: FC<Props> = ({
         />
       )
       }
-      { (currentWidget === widgetTypes.SMS) && (
+      { (currentWidget === widgetTypes.SMS) && sendSms && (
         <SMSWidget
           userInfo={userInfo}
           sendSms={sendSms}
@@ -79,7 +79,7 @@ const WidgetHostAndController: FC<Props> = ({
           deeplink={deeplink}
         />
       )}
-      { (currentWidget === widgetTypes.EMAIL) && (
+      { (currentWidget === widgetTypes.EMAIL) && sendEmail && (
         <EmailWidget
           email={userInfo.email}
           sendEmail={sendEmail}
