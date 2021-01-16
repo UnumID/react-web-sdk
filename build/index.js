@@ -113,18 +113,27 @@ var css_248z$3 = ".qr-code {\n  display: flex;\n  flex-direction: column;\n  ali
 styleInject(css_248z$3);
 
 var QRCode = function (_a) {
-    var qrCode = _a.qrCode;
-    var _b = React.useState(false), showNeedHelp = _b[0], setShowNeedHelp = _b[1];
+    var qrCode = _a.qrCode, _b = _a.applicationTitle, applicationTitle = _b === void 0 ? 'ACME' : _b;
+    var _c = React.useState(false), showNeedHelp = _c[0], setShowNeedHelp = _c[1];
     var handleLinkButtonClick = function () {
         setShowNeedHelp(!showNeedHelp);
     };
     return (React__default['default'].createElement("div", { className: "qr-code" },
         React__default['default'].createElement("div", { className: "bold" }, "To continue, scan this QR code"),
-        React__default['default'].createElement("div", null, "with your phone camera or ACME app:"),
+        React__default['default'].createElement("div", null,
+            "with your phone camera or ",
+            applicationTitle,
+            " app:"),
         React__default['default'].createElement(LinkButton, { onClick: handleLinkButtonClick }, "Need help scanning?"),
         showNeedHelp && (React__default['default'].createElement("div", { className: "help" },
-            React__default['default'].createElement("div", { className: "help-item" }, "1. Install the ACME app from the app store."),
-            React__default['default'].createElement("div", { className: "help-item" }, "2. Open the ACME app and click \"Scan a QR code\"."),
+            React__default['default'].createElement("div", { className: "help-item" },
+                "1. Install the ",
+                applicationTitle,
+                " app from the app store."),
+            React__default['default'].createElement("div", { className: "help-item" },
+                "2. Open the ",
+                applicationTitle,
+                " app and click \"Scan a QR code\"."),
             React__default['default'].createElement("div", { className: "help-item" }, "3. Hover over the QR code."))),
         React__default['default'].createElement("div", { className: "qrcode-img-wrapper" }, qrCode ? React__default['default'].createElement("img", { alt: "qr code", src: qrCode }) : React__default['default'].createElement(Spinner, null))));
 };
@@ -176,7 +185,7 @@ var QRCodeWidget = function (_a) {
         setCurrentWidget(widgetTypes.EMAIL);
     };
     var btnLbl = "Continue with " + applicationTitle + " App";
-    var renderQrCode = function () { return React__default['default'].createElement(QRCode, { qrCode: qrCode }); };
+    var renderQrCode = function () { return React__default['default'].createElement(QRCode, { qrCode: qrCode, applicationTitle: applicationTitle }); };
     var renderDeeplinkButton = function () { return (React__default['default'].createElement(ActionButton, { className: "bold-label", target: "_blank", href: deeplink }, btnLbl)); };
     var renderLoginButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: goToLogin }, "Log in with your email address for more authentication options")); };
     var renderSmsButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: handleSMSLinkClick }, "Get an SMS instead")); };

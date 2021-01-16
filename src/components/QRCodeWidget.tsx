@@ -39,7 +39,7 @@ const QRCodeWidget: FunctionComponent<Props> = ({
 
   const btnLbl = `Continue with ${applicationTitle} App`;
 
-  const renderQrCode = () => <QRCode qrCode={qrCode} />;
+  const renderQrCode = () => <QRCode qrCode={qrCode} applicationTitle={applicationTitle} />;
 
   const renderDeeplinkButton = () => (
     <ActionButton
