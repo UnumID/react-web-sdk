@@ -187,7 +187,7 @@ var QRCodeWidget = function (_a) {
     var btnLbl = "Continue with " + applicationTitle + " App";
     var renderQrCode = function () { return React__default['default'].createElement(QRCode, { qrCode: qrCode, applicationTitle: applicationTitle }); };
     var renderDeeplinkButton = function () { return (React__default['default'].createElement(ActionButton, { className: "bold-label", target: "_blank", href: deeplink }, btnLbl)); };
-    var renderLoginButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: goToLogin }, "Log in with your email address for more authentication options")); };
+    var renderLoginButton = function () { return (goToLogin && (React__default['default'].createElement(LinkButton, { onClick: goToLogin }, "Log in with your email address for more authentication options"))); };
     var renderSmsButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: handleSMSLinkClick }, "Get an SMS instead")); };
     var renderEmailButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: handleEmailLinkClick }, "Get an email instead")); };
     return (React__default['default'].createElement("div", { className: "qrcode-widget-content" },

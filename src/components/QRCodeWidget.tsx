@@ -52,9 +52,11 @@ const QRCodeWidget: FunctionComponent<Props> = ({
   );
 
   const renderLoginButton = () => (
-    <LinkButton onClick={goToLogin}>
-      Log in with your email address for more authentication options
-    </LinkButton>
+    goToLogin && (
+      <LinkButton onClick={goToLogin}>
+        Log in with your email address for more authentication options
+      </LinkButton>
+    )
   );
 
   const renderSmsButton = () => (
