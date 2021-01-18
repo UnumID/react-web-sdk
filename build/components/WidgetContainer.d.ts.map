@@ -1,0 +1,1 @@
+{"version":3,"file":"WidgetContainer.d.ts","sourceRoot":"","sources":["../../src/components/WidgetContainer.tsx"],"names":[],"mappings":"AAAA,OAAc,EAAE,EAAE,EAAE,SAAS,EAAE,MAAM,OAAO,CAAC;AAE7C,OAAO,uBAAuB,CAAC;AAE/B,UAAU,KAAK;IACb,QAAQ,EAAE,SAAS,CAAC;IACpB,SAAS,CAAC,EAAE,MAAM,CAAC;CACpB;AAED,QAAA,MAAM,eAAe,EAAE,EAAE,CAAC,KAAK,CAS9B,CAAC;AAEF,eAAe,eAAe,CAAC"}

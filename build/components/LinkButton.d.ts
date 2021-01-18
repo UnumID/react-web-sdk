@@ -6,3 +6,4 @@ declare type Props = PropsWithChildren<{
 }>;
 declare const LinkButton: FC<Props>;
 export default LinkButton;
+//# sourceMappingURL=LinkButton.d.ts.map

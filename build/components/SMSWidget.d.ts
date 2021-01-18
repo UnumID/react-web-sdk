@@ -10,3 +10,4 @@ export interface Props {
 }
 declare const SMSWidget: FunctionComponent<Props>;
 export default SMSWidget;
+//# sourceMappingURL=SMSWidget.d.ts.map

@@ -11,3 +11,4 @@ export interface Props {
 }
 declare const EmailWidget: FunctionComponent<Props>;
 export default EmailWidget;
+//# sourceMappingURL=EmailWidget.d.ts.map

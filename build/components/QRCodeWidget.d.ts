@@ -13,3 +13,4 @@ export interface Props {
 }
 declare const QRCodeWidget: FunctionComponent<Props>;
 export default QRCodeWidget;
+//# sourceMappingURL=QRCodeWidget.d.ts.map

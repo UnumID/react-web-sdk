@@ -11,3 +11,4 @@ export interface Props {
 }
 declare const WidgetHostAndController: FC<Props>;
 export default WidgetHostAndController;
+//# sourceMappingURL=WidgetHostAndController.d.ts.map
