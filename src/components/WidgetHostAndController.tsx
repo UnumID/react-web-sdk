@@ -51,7 +51,6 @@ const WidgetHostAndController: FC<Props> = ({
         setQrCode(response.qrCode);
       }
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presentationRequest, createPresentationRequest]);
 
   return (

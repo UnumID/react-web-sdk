@@ -354,7 +354,6 @@ var WidgetHostAndController = function (_a) {
                 }
             });
         }); })();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [presentationRequest, createPresentationRequest]);
     return (React__default['default'].createElement(WidgetContainer, null,
         (currentWidget === widgetTypes.QR_CODE) && (React__default['default'].createElement(QRCodeWidget, { qrCode: qrCode, setCurrentWidget: setCurrentWidget, applicationTitle: applicationTitle, canScan: canScan, deeplink: deeplink, isLoggedIn: isLoggedIn, userInfo: userInfo, goToLogin: goToLogin })),
