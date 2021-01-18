@@ -177,7 +177,7 @@ var css_248z$5 = ".qrcode-widget-content {\n  align-items: center;\n  justify-co
 styleInject(css_248z$5);
 
 var QRCodeWidget = function (_a) {
-    var qrCode = _a.qrCode, setCurrentWidget = _a.setCurrentWidget, applicationTitle = _a.applicationTitle, canScan = _a.canScan, deeplink = _a.deeplink, isLoggedIn = _a.isLoggedIn, userInfo = _a.userInfo, goToLogin = _a.goToLogin;
+    var qrCode = _a.qrCode, setCurrentWidget = _a.setCurrentWidget, applicationTitle = _a.applicationTitle, canScan = _a.canScan, deeplink = _a.deeplink, goToLogin = _a.goToLogin, shouldShowEmailLink = _a.shouldShowEmailLink, shouldShowSmsLink = _a.shouldShowSmsLink, shouldShowLoginLink = _a.shouldShowLoginLink;
     var handleSMSLinkClick = function () {
         setCurrentWidget(widgetTypes.SMS);
     };
@@ -193,9 +193,9 @@ var QRCodeWidget = function (_a) {
     return (React__default['default'].createElement("div", { className: "qrcode-widget-content" },
         canScan && renderQrCode(),
         !canScan && renderDeeplinkButton(),
-        !isLoggedIn && renderLoginButton(),
-        (isLoggedIn && userInfo.phone) && renderSmsButton(),
-        (isLoggedIn && userInfo.email && !userInfo.phone) && renderEmailButton()));
+        shouldShowLoginLink && renderLoginButton(),
+        shouldShowSmsLink && renderSmsButton(),
+        shouldShowEmailLink && renderEmailButton()));
 };
 
 var css_248z$6 = ".sms-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.sms-content .bold {\n  font-weight: 700;\n}\n\n.sms-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
@@ -355,8 +355,11 @@ var WidgetHostAndController = function (_a) {
             });
         }); })();
     }, [presentationRequest, createPresentationRequest]);
+    var shouldShowEmailLink = !!(isLoggedIn && userInfo.email && sendEmail);
+    var shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);
+    var shouldShowLoginLink = !!(!isLoggedIn && goToLogin);
     return (React__default['default'].createElement(WidgetContainer, null,
-        (currentWidget === widgetTypes.QR_CODE) && (React__default['default'].createElement(QRCodeWidget, { qrCode: qrCode, setCurrentWidget: setCurrentWidget, applicationTitle: applicationTitle, canScan: canScan, deeplink: deeplink, isLoggedIn: isLoggedIn, userInfo: userInfo, goToLogin: goToLogin })),
+        (currentWidget === widgetTypes.QR_CODE) && (React__default['default'].createElement(QRCodeWidget, { qrCode: qrCode, setCurrentWidget: setCurrentWidget, applicationTitle: applicationTitle, canScan: canScan, deeplink: deeplink, goToLogin: goToLogin, shouldShowEmailLink: shouldShowEmailLink, shouldShowSmsLink: shouldShowSmsLink, shouldShowLoginLink: shouldShowLoginLink })),
         (currentWidget === widgetTypes.SMS) && sendSms && (React__default['default'].createElement(SMSWidget, { userInfo: userInfo, sendSms: sendSms, canScan: canScan, setCurrentWidget: setCurrentWidget, deeplink: deeplink })),
         (currentWidget === widgetTypes.EMAIL) && sendEmail && (React__default['default'].createElement(EmailWidget, { email: userInfo.email, sendEmail: sendEmail, canScan: canScan, goToLogin: goToLogin, deeplink: deeplink, setCurrentWidget: setCurrentWidget }))));
 };

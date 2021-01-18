@@ -5,7 +5,7 @@ export interface Props {
     createPresentationRequest?: () => Promise<PresentationRequestResponse>;
     sendEmail?: (options: EmailOptions) => Promise<SuccessResponse>;
     sendSms?: (options: SmsOptions) => Promise<SuccessResponse>;
-    goToLogin: () => void;
+    goToLogin?: () => void;
     userInfo: UserInfo;
     presentationRequest?: PresentationRequestResponse;
 }

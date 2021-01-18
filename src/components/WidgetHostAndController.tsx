@@ -18,7 +18,7 @@ export interface Props {
   createPresentationRequest?: () => Promise<PresentationRequestResponse>;
   sendEmail?: (options: EmailOptions) => Promise<SuccessResponse>;
   sendSms?: (options: SmsOptions) => Promise<SuccessResponse>;
-  goToLogin: () => void;
+  goToLogin?: () => void;
   userInfo: UserInfo;
   presentationRequest?: PresentationRequestResponse
 }
@@ -53,6 +53,9 @@ const WidgetHostAndController: FC<Props> = ({
     })();
   }, [presentationRequest, createPresentationRequest]);
 
+  const shouldShowEmailLink = !!(isLoggedIn && userInfo.email && sendEmail);
+  const shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);
+  const shouldShowLoginLink = !!(!isLoggedIn && goToLogin);
   return (
     <WidgetContainer>
       {
@@ -63,9 +66,10 @@ const WidgetHostAndController: FC<Props> = ({
           applicationTitle={applicationTitle}
           canScan={canScan}
           deeplink={deeplink}
-          isLoggedIn={isLoggedIn}
-          userInfo={userInfo}
           goToLogin={goToLogin}
+          shouldShowEmailLink={shouldShowEmailLink}
+          shouldShowSmsLink={shouldShowSmsLink}
+          shouldShowLoginLink={shouldShowLoginLink}
         />
       )
       }
