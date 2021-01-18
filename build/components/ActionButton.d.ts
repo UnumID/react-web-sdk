@@ -7,3 +7,4 @@ declare type Props = PropsWithChildren<{
 }>;
 declare const ActionButton: FC<Props>;
 export default ActionButton;
+//# sourceMappingURL=ActionButton.d.ts.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"QRCode.d.ts","sourceRoot":"","sources":["../../src/components/QRCode.tsx"],"names":[],"mappings":"AAAA,OAAc,EAAY,iBAAiB,EAAE,MAAM,OAAO,CAAC;AAK3D,OAAO,cAAc,CAAC;AAEtB,UAAU,KAAK;IACb,MAAM,EAAE,MAAM,CAAC;IACf,gBAAgB,EAAE,MAAM,CAAC;CAC1B;AAED,QAAA,MAAM,MAAM,EAAE,iBAAiB,CAAC,KAAK,CA0BpC,CAAC;AAEF,eAAe,MAAM,CAAC"}

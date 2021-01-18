@@ -3,3 +3,4 @@ export declare const widgetTypes: {
     EMAIL: string;
     SMS: string;
 };
+//# sourceMappingURL=widgetTypes.d.ts.map

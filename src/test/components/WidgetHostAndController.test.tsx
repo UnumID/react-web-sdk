@@ -84,6 +84,11 @@ describe('WidgetHostAndController', () => {
     expect(mockCreatePresentationRequest).not.toBeCalled();
   });
 
+  it('does not create a presentaionRequest if createPresentationRequest is not passed', async () => {
+    renderWidget({ ...defaultProps, createPresentationRequest: undefined });
+    expect(mockCreatePresentationRequest).not.toBeCalled();
+  });
+
   it('renders a qr code on desktop', async () => {
     renderWidget();
     const qrCode = await screen.findByAltText('qr code');

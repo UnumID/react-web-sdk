@@ -1,5 +1,4 @@
 import { FunctionComponent } from 'react';
-import { UserInfo } from 'types';
 import './QRCodeWidget.css';
 export interface Props {
     qrCode: string;
@@ -7,9 +6,11 @@ export interface Props {
     applicationTitle: string;
     canScan: boolean;
     deeplink: string;
-    isLoggedIn: boolean;
-    userInfo: UserInfo;
-    goToLogin: () => void;
+    goToLogin?: () => void;
+    shouldShowEmailLink: boolean;
+    shouldShowSmsLink: boolean;
+    shouldShowLoginLink: boolean;
 }
 declare const QRCodeWidget: FunctionComponent<Props>;
 export default QRCodeWidget;
+//# sourceMappingURL=QRCodeWidget.d.ts.map

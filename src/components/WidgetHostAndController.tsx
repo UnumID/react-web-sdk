@@ -15,10 +15,10 @@ import { widgetTypes } from 'constants/widgetTypes';
 
 export interface Props {
   applicationTitle: string;
-  createPresentationRequest: () => Promise<PresentationRequestResponse>;
-  sendEmail: (options: EmailOptions) => Promise<SuccessResponse>;
-  sendSms: (options: SmsOptions) => Promise<SuccessResponse>;
-  goToLogin: () => void;
+  createPresentationRequest?: () => Promise<PresentationRequestResponse>;
+  sendEmail?: (options: EmailOptions) => Promise<SuccessResponse>;
+  sendSms?: (options: SmsOptions) => Promise<SuccessResponse>;
+  goToLogin?: () => void;
   userInfo: UserInfo;
   presentationRequest?: PresentationRequestResponse
 }
@@ -45,15 +45,17 @@ const WidgetHostAndController: FC<Props> = ({
       if (presentationRequest) {
         setDeeplink(presentationRequest.deeplink);
         setQrCode(presentationRequest.qrCode);
-      } else {
+      } else if (createPresentationRequest) {
         const response = await createPresentationRequest();
         setDeeplink(response.deeplink);
         setQrCode(response.qrCode);
       }
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [presentationRequest, createPresentationRequest]);
 
+  const shouldShowEmailLink = !!(isLoggedIn && userInfo.email && sendEmail);
+  const shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);
+  const shouldShowLoginLink = !!(!isLoggedIn && goToLogin);
   return (
     <WidgetContainer>
       {
@@ -64,13 +66,14 @@ const WidgetHostAndController: FC<Props> = ({
           applicationTitle={applicationTitle}
           canScan={canScan}
           deeplink={deeplink}
-          isLoggedIn={isLoggedIn}
-          userInfo={userInfo}
           goToLogin={goToLogin}
+          shouldShowEmailLink={shouldShowEmailLink}
+          shouldShowSmsLink={shouldShowSmsLink}
+          shouldShowLoginLink={shouldShowLoginLink}
         />
       )
       }
-      { (currentWidget === widgetTypes.SMS) && (
+      { (currentWidget === widgetTypes.SMS) && sendSms && (
         <SMSWidget
           userInfo={userInfo}
           sendSms={sendSms}
@@ -79,7 +82,7 @@ const WidgetHostAndController: FC<Props> = ({
           deeplink={deeplink}
         />
       )}
-      { (currentWidget === widgetTypes.EMAIL) && (
+      { (currentWidget === widgetTypes.EMAIL) && sendEmail && (
         <EmailWidget
           email={userInfo.email}
           sendEmail={sendEmail}

@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
 
-import { UserInfo } from 'types';
 import QRCode from 'components/QRCode';
 import LinkButton from 'components/LinkButton';
 import ActionButton from 'components/ActionButton';
@@ -14,9 +13,10 @@ export interface Props {
   applicationTitle: string;
   canScan: boolean;
   deeplink: string;
-  isLoggedIn: boolean;
-  userInfo: UserInfo;
-  goToLogin: () => void;
+  goToLogin?: () => void;
+  shouldShowEmailLink: boolean;
+  shouldShowSmsLink: boolean;
+  shouldShowLoginLink: boolean;
 }
 
 const QRCodeWidget: FunctionComponent<Props> = ({
@@ -25,9 +25,10 @@ const QRCodeWidget: FunctionComponent<Props> = ({
   applicationTitle,
   canScan,
   deeplink,
-  isLoggedIn,
-  userInfo,
   goToLogin,
+  shouldShowEmailLink,
+  shouldShowSmsLink,
+  shouldShowLoginLink,
 }) => {
   const handleSMSLinkClick = (): void => {
     setCurrentWidget(widgetTypes.SMS);
@@ -39,7 +40,7 @@ const QRCodeWidget: FunctionComponent<Props> = ({
 
   const btnLbl = `Continue with ${applicationTitle} App`;
 
-  const renderQrCode = () => <QRCode qrCode={qrCode} />;
+  const renderQrCode = () => <QRCode qrCode={qrCode} applicationTitle={applicationTitle} />;
 
   const renderDeeplinkButton = () => (
     <ActionButton
@@ -52,9 +53,11 @@ const QRCodeWidget: FunctionComponent<Props> = ({
   );
 
   const renderLoginButton = () => (
-    <LinkButton onClick={goToLogin}>
-      Log in with your email address for more authentication options
-    </LinkButton>
+    goToLogin && (
+      <LinkButton onClick={goToLogin}>
+        Log in with your email address for more authentication options
+      </LinkButton>
+    )
   );
 
   const renderSmsButton = () => (
@@ -73,9 +76,9 @@ const QRCodeWidget: FunctionComponent<Props> = ({
     <div className="qrcode-widget-content">
       { canScan && renderQrCode() }
       { !canScan && renderDeeplinkButton() }
-      { !isLoggedIn && renderLoginButton() }
-      { (isLoggedIn && userInfo.phone) && renderSmsButton() }
-      { (isLoggedIn && userInfo.email && !userInfo.phone) && renderEmailButton() }
+      { shouldShowLoginLink && renderLoginButton() }
+      { shouldShowSmsLink && renderSmsButton() }
+      { shouldShowEmailLink && renderEmailButton() }
     </div>
   );
 };

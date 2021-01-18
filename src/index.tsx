@@ -1,4 +1,5 @@
 import WidgetHostAndController from 'components/WidgetHostAndController';
+
 export type {
   EmailOptions,
   SmsOptions,

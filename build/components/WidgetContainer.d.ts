@@ -6,3 +6,4 @@ interface Props {
 }
 declare const WidgetContainer: FC<Props>;
 export default WidgetContainer;
+//# sourceMappingURL=WidgetContainer.d.ts.map

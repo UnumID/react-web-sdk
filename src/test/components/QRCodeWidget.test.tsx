@@ -11,18 +11,18 @@ describe('QRCodeWidget', () => {
   const mockGoToLogin = jest.fn();
   const dummyQrCode = 'dummy qr code';
   const dummyApplicationTitle = 'Dummy Application Title';
-  const dummyUserInfo = { email: 'test@test.com', phone: 'KL5-5555' };
   const dummyDeeplink = 'https://unumid.org/unumid/presentationRequest/574e1509-6f3e-49c5-9a8b-c49450c17d45';
 
   const defaultProps: Props = {
     applicationTitle: dummyApplicationTitle,
     canScan: true,
-    isLoggedIn: false,
-    userInfo: {},
     deeplink: dummyDeeplink,
     setCurrentWidget: mockSetCurrentWidget,
     qrCode: dummyQrCode,
     goToLogin: mockGoToLogin,
+    shouldShowEmailLink: true,
+    shouldShowLoginLink: true,
+    shouldShowSmsLink: true,
   };
 
   const renderWidget = (props: Props = defaultProps) => {
@@ -55,14 +55,20 @@ describe('QRCodeWidget', () => {
     expect(mockGoToLogin).toBeCalled();
   });
 
-  it('does not render a login link if there is a logged in user', async () => {
-    renderWidget({ ...defaultProps, isLoggedIn: true, userInfo: dummyUserInfo });
+  it('does not render a login link if shouldShowLoginLink is false', async () => {
+    renderWidget({ ...defaultProps, shouldShowLoginLink: false });
     const link = await waitFor(() => screen.queryByText('Log in with your email address for more authentication options'));
     expect(link).not.toBeInTheDocument();
   });
 
-  it('renders sms fallback link if there is a logged in user with a phone nubmer', async () => {
-    renderWidget({ ...defaultProps, isLoggedIn: true, userInfo: dummyUserInfo });
+  it('does not render a login link if there is no goToLogin function', async () => {
+    renderWidget({ ...defaultProps, goToLogin: undefined });
+    const link = await waitFor(() => screen.queryByText('Log in with your email address for more authentication options'));
+    expect(link).not.toBeInTheDocument();
+  });
+
+  it('renders sms fallback link if shouldShowSmsLink is true', async () => {
+    renderWidget({ ...defaultProps, shouldShowSmsLink: true });
     const link = await screen.findByText('Get an SMS instead');
     expect(link).toBeInTheDocument();
 
@@ -70,8 +76,8 @@ describe('QRCodeWidget', () => {
     expect(mockSetCurrentWidget).toBeCalledWith(widgetTypes.SMS);
   });
 
-  it('renders email fallback link if there is a logged in user without a phone number', async () => {
-    renderWidget({ ...defaultProps, isLoggedIn: true, userInfo: { email: 'test@test.com' } });
+  it('renders email fallback link if shouldShowEmailLink is true', async () => {
+    renderWidget({ ...defaultProps, shouldShowEmailLink: true });
     const link = await screen.findByText('Get an email instead');
     expect(link).toBeInTheDocument();
 
@@ -79,12 +85,15 @@ describe('QRCodeWidget', () => {
     expect(mockSetCurrentWidget).toBeCalledWith(widgetTypes.EMAIL);
   });
 
-  it('does not render email or sms options if there is no logged in user', async () => {
-    renderWidget();
-    const emailLink = await waitFor(() => screen.queryByText('Get an email instead'));
-    const smsLink = await waitFor(() => screen.queryByText('Get an SMS instead'));
+  it('does not render email fallback link if shouldShowEmailLink is false', async () => {
+    renderWidget({ ...defaultProps, shouldShowEmailLink: false });
+    const link = await screen.queryByText('Get an email instead');
+    expect(link).not.toBeInTheDocument();
+  });
 
-    expect(emailLink).not.toBeInTheDocument();
-    expect(smsLink).not.toBeInTheDocument();
+  it('does not render sms fallback link if shouldShowSmsLink is false', async () => {
+    renderWidget({ ...defaultProps, shouldShowSmsLink: false });
+    const link = await screen.queryByText('Get an sms instead');
+    expect(link).not.toBeInTheDocument();
   });
 });
