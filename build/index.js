@@ -86,12 +86,12 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z = ".single-widget {\n  margin-left: 10%;\n  margin-right: 10%;\n  margin-top: 3%;\n}\n\n.content-box {\n  background-color: #ffffff;\n  padding: 15px;\n  border: 1px solid #dddddd;\n  box-shadow: 0 1px 2px 0 rgba(0,0,0,.08), 0 3px 2px 0 rgba(0,0,0,.05);\n  min-height: 256px;\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  border-radius: .25rem;\n  background-clip: border-box;\n  line-height: 1.5;\n}\n\n@media screen and (max-width: 600px) {\n  .single-widget {\n    margin-left: auto;\n    margin-right: auto;\n    margin-top: 2%;\n  }\n}\n\n@media screen and (max-width: 530px) {\n  .content-box {\n    width: unset;\n  }\n}\n";
+var css_248z = ".content-box {\n  background-color: #ffffff;\n  padding: 15px;\n  border: 1px solid #dddddd;\n  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.08), 0 3px 2px 0 rgba(0, 0, 0, 0.05);\n  min-height: 256px;\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  border-radius: 0.25rem;\n  background-clip: border-box;\n  line-height: 1.5;\n}\n\n@media screen and (max-width: 600px) {\n  .single-widget {\n    margin-left: auto;\n    margin-right: auto;\n    margin-top: 2%;\n  }\n}\n\n@media screen and (max-width: 530px) {\n  .content-box {\n    width: unset;\n  }\n}\n";
 styleInject(css_248z);
 
 var WidgetContainer = function (_a) {
     var children = _a.children, className = _a.className;
-    var newClass = 'single-widget content-box';
+    var newClass = 'content-box';
     newClass = className ? className + " " + newClass : newClass;
     return (React__default['default'].createElement("div", { className: newClass }, children));
 };

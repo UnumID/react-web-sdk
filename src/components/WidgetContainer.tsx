@@ -8,7 +8,7 @@ interface Props {
 }
 
 const WidgetContainer: FC<Props> = ({ children, className }) => {
-  let newClass = 'single-widget content-box';
+  let newClass = 'content-box';
   newClass = className ? `${className} ${newClass}` : newClass;
 
   return (
