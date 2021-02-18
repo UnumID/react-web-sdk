@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^16.0.0",
+    "@rollup/plugin-image": "^2.0.6",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@testing-library/jest-dom": "^5.11.6",

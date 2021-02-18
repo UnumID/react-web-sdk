@@ -6,6 +6,7 @@ import ActionButton from 'components/ActionButton';
 import { widgetTypes } from 'constants/widgetTypes';
 
 import './QRCodeWidget.css';
+import branding from '../assets/PoweredByUnumID.png';
 
 export interface Props {
   qrCode: string;
@@ -38,18 +39,22 @@ const QRCodeWidget: FunctionComponent<Props> = ({
     setCurrentWidget(widgetTypes.EMAIL);
   };
 
-  const btnLbl = `Continue with ${applicationTitle} App`;
+  const btnLbl = `Verify with ${applicationTitle}`;
 
   const renderQrCode = () => <QRCode qrCode={qrCode} applicationTitle={applicationTitle} />;
 
   const renderDeeplinkButton = () => (
-    <ActionButton
-      className="bold-label"
-      target="_blank"
-      href={deeplink}
-    >
-      {btnLbl}
-    </ActionButton>
+    <div className="deeplink-button-wrapper">
+      <ActionButton
+        className="bold-label"
+        target="_blank"
+        href={deeplink}
+      >
+        {btnLbl}
+      </ActionButton>
+      <img className="branding" alt="Powered by Unum ID" src={branding} />
+    </div>
+
   );
 
   const renderLoginButton = () => (

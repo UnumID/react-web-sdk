@@ -38,7 +38,7 @@ describe('QRCodeWidget', () => {
 
   it('renders a deeplink button if canScan is false', async () => {
     renderWidget({ ...defaultProps, canScan: false });
-    const button = await screen.findByText(`Continue with ${dummyApplicationTitle} App`);
+    const button = await screen.findByText(`Verify with ${dummyApplicationTitle}`);
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);

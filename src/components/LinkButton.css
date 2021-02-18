@@ -1,5 +1,6 @@
 .link-button {
-  font-weight: 400;
+  font-family: inherit;
+  font-weight: 300;
   color: #007bff;
   text-decoration: none;
   text-align: center;

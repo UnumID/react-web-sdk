@@ -98,7 +98,7 @@ describe('WidgetHostAndController', () => {
   it('renders a deeplink button on mobile', async () => {
     mockUserAgent('iPhone');
     renderWidget();
-    const button = await screen.findByText(`Continue with ${dummyApplicationTitle} App`);
+    const button = await screen.findByText(`Verify with ${dummyApplicationTitle}`);
 
     expect(button).toBeDefined();
     clearMockUserAgent();
