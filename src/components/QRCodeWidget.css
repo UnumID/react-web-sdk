@@ -20,8 +20,3 @@
   flex-direction: column;
   align-items: center;
 }
-
-.qrcode-widget-content .branding {
-  width: 130px;
-  margin-top: -15px;
-}

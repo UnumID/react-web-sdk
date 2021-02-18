@@ -2,9 +2,9 @@ import React, { useState, FunctionComponent } from 'react';
 
 import LinkButton from 'components/LinkButton';
 import Spinner from 'components/Spinner';
+import Branding from 'components/Branding';
 
 import './QRCode.css';
-import branding from '../assets/PoweredByUnumID.png';
 
 interface Props {
   qrCode: string;
@@ -21,7 +21,7 @@ const QRCode: FunctionComponent<Props> = ({ qrCode, applicationTitle = 'ACME' })
   const renderQrCode = () => (
     <div className="image-wrapper">
       <img className="qr-code-img" alt="qr code" src={qrCode} />
-      <img className="branding-img" alt="Powered by Unum ID" src={branding} />
+      <Branding />
     </div>
   );
 
