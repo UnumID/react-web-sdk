@@ -117,7 +117,7 @@ styleInject(css_248z$3);
 var Branding = function () { return (React__default['default'].createElement("a", { className: "branding", target: "_blank", rel: "noopener noreferrer", href: "https://unumid.org" },
     React__default['default'].createElement("img", { alt: "Powered by Unum ID", src: img }))); };
 
-var css_248z$4 = ".qr-code {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 20px;\n}\n\n.qr-code .help-item {\n  text-align: left;\n  font-size: 12px;\n}\n\n.qrcode-img-wrapper {\n  height: 196px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.qr-code .bold {\n  font-weight: 700;\n}\n\n.qr-code .btn.focus, .btn:focus {\n  box-shadow: none;\n}\n\n.qr-code .image-wrapper {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.qr-code .qr-code-img {\n  width: 220px;\n}\n\n@media screen and (max-width: 600px) {\n  .qrcode-content {\n    flex-direction: column;\n    align-items: center;\n  }\n\n  .description {\n    margin-left: 0;\n    margin-top: 24px;\n  }\n}\n";
+var css_248z$4 = ".qr-code {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 20px;\n}\n\n.qr-code .help-item {\n  text-align: left;\n  font-size: 12px;\n}\n\n.qrcode-img-wrapper {\n  height: 196px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.qr-code .bold {\n  font-weight: 700;\n}\n\n.qr-code .light {\n  font-weight: 300;\n}\n\n.qr-code .btn.focus, .btn:focus {\n  box-shadow: none;\n}\n\n.qr-code .image-wrapper {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.qr-code .qr-code-img {\n  width: 220px;\n}\n\n@media screen and (max-width: 600px) {\n  .qrcode-content {\n    flex-direction: column;\n    align-items: center;\n  }\n\n  .description {\n    margin-left: 0;\n    margin-top: 24px;\n  }\n}\n";
 styleInject(css_248z$4);
 
 var QRCode = function (_a) {
@@ -131,7 +131,7 @@ var QRCode = function (_a) {
         React__default['default'].createElement(Branding, null))); };
     return (React__default['default'].createElement("div", { className: "qr-code" },
         React__default['default'].createElement("div", { className: "bold" }, "To continue, scan this QR code"),
-        React__default['default'].createElement("div", null,
+        React__default['default'].createElement("div", { className: "light" },
             "with your phone camera or ",
             applicationTitle,
             " app:"),
