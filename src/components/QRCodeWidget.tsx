@@ -39,7 +39,7 @@ const QRCodeWidget: FunctionComponent<Props> = ({
     setCurrentWidget(widgetTypes.EMAIL);
   };
 
-  const btnLbl = `Continue with ${applicationTitle} App`;
+  const btnLbl = `Verify with ${applicationTitle}`;
 
   const renderQrCode = () => <QRCode qrCode={qrCode} applicationTitle={applicationTitle} />;
 

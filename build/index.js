@@ -164,7 +164,7 @@ function cc(obj) {
   return out
 }
 
-var css_248z$4 = ".action-button {\n  display: inline-block;\n  text-align: center;\n  vertical-align: middle;\n  border: 1px solid transparent;\n  padding: .375rem .75rem;\n  line-height: 1.5;\n  border-radius: .25rem;\n  font-size: 1rem;\n  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;\n  color: #ffffff;\n  background-color: #1f61cc;\n  cursor: pointer;\n  margin-bottom: 20px;\n}\n";
+var css_248z$4 = ".action-button {\n  display: inline-block;\n  text-align: center;\n  vertical-align: middle;\n  border: 1px solid transparent;\n  padding: .375rem .75rem;\n  line-height: 1.5;\n  border-radius: .25rem;\n  font-size: 1rem;\n  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;\n  color: #ffffff;\n  background-color: #1f61cc;\n  cursor: pointer;\n  margin-bottom: 20px;\n  width: 200px;\n  text-decoration: none;\n}\n";
 styleInject(css_248z$4);
 
 var ActionButton = function (_a) {
@@ -189,7 +189,7 @@ var QRCodeWidget = function (_a) {
     var handleEmailLinkClick = function () {
         setCurrentWidget(widgetTypes.EMAIL);
     };
-    var btnLbl = "Continue with " + applicationTitle + " App";
+    var btnLbl = "Verify with " + applicationTitle;
     var renderQrCode = function () { return React__default['default'].createElement(QRCode, { qrCode: qrCode, applicationTitle: applicationTitle }); };
     var renderDeeplinkButton = function () { return (React__default['default'].createElement("div", { className: "deeplink-button-wrapper" },
         React__default['default'].createElement(ActionButton, { className: "bold-label", target: "_blank", href: deeplink }, btnLbl),
