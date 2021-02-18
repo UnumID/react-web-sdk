@@ -46,6 +46,12 @@ describe('QRCodeWidget', () => {
     expect(button).toHaveAttribute('target', '_blank');
   });
 
+  it('renders Unum ID branding with the deeplink button', async () => {
+    renderWidget({ ...defaultProps, canScan: false });
+    const branding = await screen.findByAltText('Powered by Unum ID');
+    expect(branding).toBeInTheDocument();
+  });
+
   it('renders a login link if there is no logged in user', async () => {
     renderWidget();
     const link = await screen.findByText('Log in with your email address for more authentication options');

@@ -3,10 +3,10 @@ import React, { FunctionComponent } from 'react';
 import QRCode from 'components/QRCode';
 import LinkButton from 'components/LinkButton';
 import ActionButton from 'components/ActionButton';
+import Branding from 'components/Branding';
 import { widgetTypes } from 'constants/widgetTypes';
 
 import './QRCodeWidget.css';
-import branding from '../assets/PoweredByUnumID.png';
 
 export interface Props {
   qrCode: string;
@@ -52,7 +52,7 @@ const QRCodeWidget: FunctionComponent<Props> = ({
       >
         {btnLbl}
       </ActionButton>
-      <img className="branding" alt="Powered by Unum ID" src={branding} />
+      <Branding />
     </div>
 
   );
