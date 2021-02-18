@@ -86,7 +86,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z = ".content-box {\n  background-color: #ffffff;\n  padding: 15px;\n  min-height: 256px;\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  border-radius: 0.25rem;\n  background-clip: border-box;\n  line-height: 1.5;\n}\n\n@media screen and (max-width: 600px) {\n  .single-widget {\n    margin-left: auto;\n    margin-right: auto;\n    margin-top: 2%;\n  }\n}\n\n@media screen and (max-width: 530px) {\n  .content-box {\n    width: unset;\n  }\n}\n";
+var css_248z = ".content-box {\n  background-color: #ffffff;\n  display: flex;\n  flex-direction: column;\n  line-height: 1.5;\n}\n\n@media screen and (max-width: 600px) {\n  .single-widget {\n    margin-left: auto;\n    margin-right: auto;\n    margin-top: 2%;\n  }\n}\n\n@media screen and (max-width: 530px) {\n  .content-box {\n    width: unset;\n  }\n}\n";
 styleInject(css_248z);
 
 var WidgetContainer = function (_a) {
@@ -173,7 +173,7 @@ var widgetTypes = {
     SMS: 'SMS',
 };
 
-var css_248z$5 = ".qrcode-widget-content {\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  flex-direction: column;\n  display: flex;\n}\n\n.qrcode-widget-content .bold-label {\n  font-weight: 700;\n  background-color: #1f61cc\n}\n\n.qrcode-widget-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
+var css_248z$5 = ".qrcode-widget-content {\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  display: flex;\n}\n\n.qrcode-widget-content .bold-label {\n  font-weight: 700;\n  background-color: #1f61cc\n}\n\n.qrcode-widget-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n";
 styleInject(css_248z$5);
 
 var QRCodeWidget = function (_a) {
