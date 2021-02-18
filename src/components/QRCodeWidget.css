@@ -14,3 +14,14 @@
   font-weight: 700;
   color: #ff0000;
 }
+
+.qrcode-widget-content .deeplink-button-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qrcode-widget-content .branding {
+  width: 130px;
+  margin-top: -15px;
+}
