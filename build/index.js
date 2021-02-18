@@ -96,7 +96,7 @@ var WidgetContainer = function (_a) {
     return (React__default['default'].createElement("div", { className: newClass }, children));
 };
 
-var css_248z$1 = ".link-button {\n  font-weight: 300;\n  color: #007bff;\n  text-decoration: none;\n  text-align: center;\n  vertical-align: middle;\n  background-color: transparent;\n  font-size: 1rem;\n  line-height: 1.5;\n  padding: .375rem .75rem;\n  cursor: pointer;\n  border: none;\n}\n";
+var css_248z$1 = ".link-button {\n  font-family: inherit;\n  font-weight: 300;\n  color: #007bff;\n  text-decoration: none;\n  text-align: center;\n  vertical-align: middle;\n  background-color: transparent;\n  font-size: 1rem;\n  line-height: 1.5;\n  padding: .375rem .75rem;\n  cursor: pointer;\n  border: none;\n}\n";
 styleInject(css_248z$1);
 
 var LinkButton = function (_a) {
