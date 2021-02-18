@@ -28,7 +28,7 @@ const QRCode: FunctionComponent<Props> = ({ qrCode, applicationTitle = 'ACME' })
   return (
     <div className="qr-code">
       <div className="bold">To continue, scan this QR code</div>
-      <div>with your phone camera or {applicationTitle} app:</div>
+      <div className="light">with your phone camera or {applicationTitle} app:</div>
       <LinkButton onClick={handleLinkButtonClick}>Need help scanning?</LinkButton>
       {
           showNeedHelp && (
