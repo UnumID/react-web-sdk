@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { EmailOptions, PresentationRequestResponse, SmsOptions, SuccessResponse, UserInfo } from 'types';
+import './WidgetHostAndController.css';
 export interface Props {
     applicationTitle: string;
     createPresentationRequest?: () => Promise<PresentationRequestResponse>;

@@ -12,6 +12,8 @@ import {
 } from 'types';
 import { widgetTypes } from 'constants/widgetTypes';
 
+import './WidgetHostAndController.css';
+
 export interface Props {
   applicationTitle: string;
   createPresentationRequest?: () => Promise<PresentationRequestResponse>;
@@ -56,7 +58,7 @@ const WidgetHostAndController: FC<Props> = ({
   const shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);
   const shouldShowLoginLink = !!(!isLoggedIn && goToLogin);
   return (
-    <>
+    <div className="unumid-web-sdk-widget">
       {
       (currentWidget === widgetTypes.QR_CODE) && (
         <QRCodeWidget
@@ -91,7 +93,7 @@ const WidgetHostAndController: FC<Props> = ({
           setCurrentWidget={setCurrentWidget}
         />
       )}
-    </>
+    </div>
   );
 };
 

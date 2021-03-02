@@ -327,6 +327,9 @@ var EmailWidget = function (_a) {
             React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, backLinkLiteral)))));
 };
 
+var css_248z$8 = ".unumid-web-sdk-widget {\n  background-color: #ffffff;\n  display: flex;\n  flex-direction: column;\n  line-height: 1.5;\n}\n\n@media screen and (max-width: 530px) {\n  .unumid-web-sdk-widget {\n    width: unset;\n  }\n}\n";
+styleInject(css_248z$8);
+
 var WidgetHostAndController = function (_a) {
     var applicationTitle = _a.applicationTitle, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequest = _a.presentationRequest;
     var _b = React.useState(''), deeplink = _b[0], setDeeplink = _b[1];
@@ -361,7 +364,7 @@ var WidgetHostAndController = function (_a) {
     var shouldShowEmailLink = !!(isLoggedIn && userInfo.email && sendEmail);
     var shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);
     var shouldShowLoginLink = !!(!isLoggedIn && goToLogin);
-    return (React__default['default'].createElement(React__default['default'].Fragment, null,
+    return (React__default['default'].createElement("div", { className: "unumid-web-sdk-widget" },
         (currentWidget === widgetTypes.QR_CODE) && (React__default['default'].createElement(QRCodeWidget, { qrCode: qrCode, setCurrentWidget: setCurrentWidget, applicationTitle: applicationTitle, canScan: canScan, deeplink: deeplink, goToLogin: goToLogin, shouldShowEmailLink: shouldShowEmailLink, shouldShowSmsLink: shouldShowSmsLink, shouldShowLoginLink: shouldShowLoginLink })),
         (currentWidget === widgetTypes.SMS) && sendSms && (React__default['default'].createElement(SMSWidget, { userInfo: userInfo, sendSms: sendSms, canScan: canScan, setCurrentWidget: setCurrentWidget, deeplink: deeplink })),
         (currentWidget === widgetTypes.EMAIL) && sendEmail && (React__default['default'].createElement(EmailWidget, { email: userInfo.email, sendEmail: sendEmail, canScan: canScan, goToLogin: goToLogin, deeplink: deeplink, setCurrentWidget: setCurrentWidget }))));
