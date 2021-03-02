@@ -1,6 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
 
-import WidgetContainer from 'components/WidgetContainer';
 import QRCodeWidget from 'components/QRCodeWidget';
 import SMSWidget from 'components/SMSWidget';
 import EmailWidget from 'components/EmailWidget';
@@ -57,7 +56,7 @@ const WidgetHostAndController: FC<Props> = ({
   const shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);
   const shouldShowLoginLink = !!(!isLoggedIn && goToLogin);
   return (
-    <WidgetContainer>
+    <>
       {
       (currentWidget === widgetTypes.QR_CODE) && (
         <QRCodeWidget
@@ -92,8 +91,7 @@ const WidgetHostAndController: FC<Props> = ({
           setCurrentWidget={setCurrentWidget}
         />
       )}
-
-    </WidgetContainer>
+    </>
   );
 };
 
