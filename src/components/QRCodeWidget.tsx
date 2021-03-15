@@ -18,6 +18,7 @@ export interface Props {
   shouldShowEmailLink: boolean;
   shouldShowSmsLink: boolean;
   shouldShowLoginLink: boolean;
+  deeplinkImgSrc?: string;
 }
 
 const QRCodeWidget: FunctionComponent<Props> = ({
@@ -30,6 +31,7 @@ const QRCodeWidget: FunctionComponent<Props> = ({
   shouldShowEmailLink,
   shouldShowSmsLink,
   shouldShowLoginLink,
+  deeplinkImgSrc,
 }) => {
   const handleSMSLinkClick = (): void => {
     setCurrentWidget(widgetTypes.SMS);
@@ -50,7 +52,7 @@ const QRCodeWidget: FunctionComponent<Props> = ({
         target="_blank"
         href={deeplink}
       >
-        {btnLbl}
+        { deeplinkImgSrc ? <img src={deeplinkImgSrc} alt={btnLbl} /> : btnLbl }
       </ActionButton>
       <Branding />
     </div>
