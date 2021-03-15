@@ -9,6 +9,7 @@ export interface Props {
     goToLogin?: () => void;
     userInfo: UserInfo;
     presentationRequest?: PresentationRequestResponse;
+    deeplinkImgSrc?: string;
 }
 declare const WidgetHostAndController: FC<Props>;
 export default WidgetHostAndController;

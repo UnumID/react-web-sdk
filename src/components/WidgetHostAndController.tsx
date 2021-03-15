@@ -21,7 +21,8 @@ export interface Props {
   sendSms?: (options: SmsOptions) => Promise<SuccessResponse>;
   goToLogin?: () => void;
   userInfo: UserInfo;
-  presentationRequest?: PresentationRequestResponse
+  presentationRequest?: PresentationRequestResponse;
+  deeplinkImgSrc?: string;
 }
 
 const WidgetHostAndController: FC<Props> = ({
@@ -32,6 +33,7 @@ const WidgetHostAndController: FC<Props> = ({
   goToLogin,
   userInfo,
   presentationRequest,
+  deeplinkImgSrc,
 }: Props) => {
   const [deeplink, setDeeplink] = useState('');
   const [qrCode, setQrCode] = useState('');
@@ -71,6 +73,7 @@ const WidgetHostAndController: FC<Props> = ({
           shouldShowEmailLink={shouldShowEmailLink}
           shouldShowSmsLink={shouldShowSmsLink}
           shouldShowLoginLink={shouldShowLoginLink}
+          deeplinkImgSrc={deeplinkImgSrc}
         />
       )
       }

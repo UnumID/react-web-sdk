@@ -10,6 +10,7 @@ export interface Props {
     shouldShowEmailLink: boolean;
     shouldShowSmsLink: boolean;
     shouldShowLoginLink: boolean;
+    deeplinkImgSrc?: string;
 }
 declare const QRCodeWidget: FunctionComponent<Props>;
 export default QRCodeWidget;

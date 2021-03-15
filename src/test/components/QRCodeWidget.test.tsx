@@ -46,6 +46,13 @@ describe('QRCodeWidget', () => {
     expect(button).toHaveAttribute('target', '_blank');
   });
 
+  it('uses an image for the deeplink button if one was provided', async () => {
+    renderWidget({ ...defaultProps, canScan: false, deeplinkImgSrc: './testImage.png' });
+    const image = await screen.findByAltText(`Verify with ${dummyApplicationTitle}`);
+
+    expect(image).toBeInTheDocument();
+  });
+
   it('renders Unum ID branding with the deeplink button', async () => {
     renderWidget({ ...defaultProps, canScan: false });
     const branding = await screen.findByAltText('Powered by Unum ID');
