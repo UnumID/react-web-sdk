@@ -21,6 +21,12 @@ import UnumIDVerifier, {
   SuccessResponse
 } from 'verifier-client-sdk';
 
+// an image to use for the deeplink button
+// it will be displayed at 250 x 50 pixels, so a width:height ratio of 5:1 should be used
+// we suggest using your brand's styling, name, and/or logo in a clear call to action,
+// i.e. "Continue with ACME app" alongside the ACME logo
+import deeplinkImgSrc from '../assets/deeplink-button-image.png';
+
 const App: FC = () => {
   const [presentationRequest, setPresentationRequest] = useState();
 
@@ -56,6 +62,8 @@ const App: FC = () => {
       // Passing a PresentationRequest will prevent the Verifier Widget from calling createPresentationRequest
       // and creating a new one
       presentationRequest={presentationRequest}
+      // Optional. If deeplinkImgSrc is not provided, a default appearance for the deeplink button will be used
+      deeplinkImgSrc={deeplinkImgSrc}
     />
   );
 }
