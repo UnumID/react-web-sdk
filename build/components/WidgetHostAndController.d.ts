@@ -10,6 +10,7 @@ export interface Props {
     userInfo: UserInfo;
     presentationRequest?: PresentationRequestResponse;
     deeplinkImgSrc?: string;
+    createInitialPresentationRequest?: boolean;
 }
 declare const WidgetHostAndController: FC<Props>;
 export default WidgetHostAndController;

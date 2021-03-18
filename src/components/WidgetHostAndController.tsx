@@ -1,4 +1,9 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, {
+  FC,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 
 import QRCodeWidget from 'components/QRCodeWidget';
 import SMSWidget from 'components/SMSWidget';
@@ -11,6 +16,7 @@ import {
   UserInfo,
 } from 'types';
 import { widgetTypes } from 'constants/widgetTypes';
+import { useTimeout } from 'hooks/useTimeout';
 
 import './WidgetHostAndController.css';
 
@@ -23,6 +29,7 @@ export interface Props {
   userInfo: UserInfo;
   presentationRequest?: PresentationRequestResponse;
   deeplinkImgSrc?: string;
+  createInitialPresentationRequest?: boolean;
 }
 
 const WidgetHostAndController: FC<Props> = ({
@@ -32,29 +39,64 @@ const WidgetHostAndController: FC<Props> = ({
   sendSms,
   goToLogin,
   userInfo,
-  presentationRequest,
+  presentationRequest: presentationRequestProp,
   deeplinkImgSrc,
+  createInitialPresentationRequest = !presentationRequestProp,
 }: Props) => {
   const [deeplink, setDeeplink] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [isSameDevice, setIsSameDevice] = useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent));
   const [canScan, setCanScan] = useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent));
   const [currentWidget, setCurrentWidget] = useState(widgetTypes.QR_CODE);
+  const [presentationRequest, setPresentationRequest] = useState(presentationRequestProp);
+
+  const triggerPresentationRequestCreation = async () => {
+    if (createPresentationRequest) {
+      const response = await createPresentationRequest();
+
+      if (response) {
+        setPresentationRequest(response);
+        setDeeplink(response.deeplink);
+        setQrCode(response.qrCode);
+      }
+    }
+  };
+
+  const memoizedTriggerPresentationRequestCreation = useCallback(
+    triggerPresentationRequestCreation,
+    [createPresentationRequest],
+  );
+
+  const timeUntilExpiration = presentationRequest
+    && new Date(presentationRequest.presentationRequest.expiresAt).getTime() - new Date().getTime();
+  const oneMinuteBeforeExpiration = timeUntilExpiration && (timeUntilExpiration - 60 * 1000);
+  const nineMinutesFromNow = 9 * 60 * 1000;
+  const delay = oneMinuteBeforeExpiration || nineMinutesFromNow;
+
+  const [startTimeout, stopTimeout] = useTimeout(memoizedTriggerPresentationRequestCreation);
 
   const [isLoggedIn] = useState(!!userInfo);
 
   useEffect(() => {
-    (async () => {
-      if (presentationRequest) {
-        setDeeplink(presentationRequest.deeplink);
-        setQrCode(presentationRequest.qrCode);
-      } else if (createPresentationRequest) {
-        const response = await createPresentationRequest();
-        setDeeplink(response.deeplink);
-        setQrCode(response.qrCode);
-      }
-    })();
-  }, [presentationRequest, createPresentationRequest]);
+    if (presentationRequestProp) {
+      setDeeplink(presentationRequestProp.deeplink);
+      setQrCode(presentationRequestProp.qrCode);
+    } else if (createInitialPresentationRequest) {
+      memoizedTriggerPresentationRequestCreation();
+    }
+  }, [
+    presentationRequestProp,
+    memoizedTriggerPresentationRequestCreation,
+    createInitialPresentationRequest,
+  ]);
+
+  useEffect(() => {
+    stopTimeout();
+    startTimeout(delay);
+
+    return stopTimeout();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presentationRequest]);
 
   const shouldShowEmailLink = !!(isLoggedIn && userInfo.email && sendEmail);
   const shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);

@@ -4,6 +4,14 @@ import { act } from 'react-dom/test-utils';
 import { clear as clearMockUserAgent, mockUserAgent } from 'jest-useragent-mock';
 
 import WidgetHostAndController, { Props } from '../../components/WidgetHostAndController';
+import { useTimeout } from '../../hooks/useTimeout';
+
+const mockStart = jest.fn();
+const mockStop = jest.fn();
+jest.mock('../../hooks/useTimeout');
+
+const mockUseTimeout = useTimeout as jest.Mock;
+mockUseTimeout.mockReturnValue([mockStart, mockStop]);
 
 describe('WidgetHostAndController', () => {
   const dummyApplicationTitle = 'Dummy Application Title';
@@ -84,9 +92,20 @@ describe('WidgetHostAndController', () => {
     expect(mockCreatePresentationRequest).not.toBeCalled();
   });
 
+  it('does not create a new PresentationRequest if createInitialPresentationRequest prop is false', () => {
+    renderWidget({ ...defaultProps, createInitialPresentationRequest: false });
+    expect(mockCreatePresentationRequest).not.toBeCalled();
+  });
+
   it('does not create a presentaionRequest if createPresentationRequest is not passed', async () => {
     renderWidget({ ...defaultProps, createPresentationRequest: undefined });
     expect(mockCreatePresentationRequest).not.toBeCalled();
+  });
+
+  it('sets a timeout to create a new presentationRequest before the old one expires', async () => {
+    renderWidget();
+    await act(() => dummyCreatePresentationRequestResponse);
+    expect(mockStart).toBeCalled();
   });
 
   it('renders a qr code on desktop', async () => {
