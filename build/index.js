@@ -339,6 +339,7 @@ var useTimeout = function (callback) {
     var stop = function () {
         if (isActive) {
             clearTimeout(timeout);
+            setIsActive(false);
         }
     };
     return [start, stop];
@@ -396,6 +397,7 @@ var WidgetHostAndController = function (_a) {
         createInitialPresentationRequest,
     ]);
     React.useEffect(function () {
+        stopTimeout();
         startTimeout(delay);
         return stopTimeout();
         // eslint-disable-next-line react-hooks/exhaustive-deps

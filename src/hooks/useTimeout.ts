@@ -18,6 +18,7 @@ export const useTimeout = (
   const stop = () => {
     if (isActive) {
       clearTimeout(timeout);
+      setIsActive(false);
     }
   };
 

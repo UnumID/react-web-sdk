@@ -91,6 +91,7 @@ const WidgetHostAndController: FC<Props> = ({
   ]);
 
   useEffect(() => {
+    stopTimeout();
     startTimeout(delay);
 
     return stopTimeout();
