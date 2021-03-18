@@ -327,6 +327,39 @@ var EmailWidget = function (_a) {
             React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, backLinkLiteral)))));
 };
 
+var useInterval = function (callback, intervalDuration) {
+    var _a = React.useState(false), isActive = _a[0], setIsActive = _a[1];
+    var start = function () {
+        if (!isActive) {
+            setIsActive(true);
+        }
+    };
+    var stop = function () {
+        if (isActive) {
+            setIsActive(false);
+        }
+    };
+    // eslint-disable-next-line consistent-return
+    React.useEffect(function () {
+        var tick = function () { return __awaiter(void 0, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, callback()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+        var interval;
+        if (isActive) {
+            interval = setInterval(tick, intervalDuration);
+        }
+        return function () { clearInterval(interval); };
+    }, [intervalDuration, isActive, callback]);
+    return [start, stop];
+};
+
 var css_248z$8 = ".unumid-web-sdk-widget {\n  background-color: #ffffff;\n  display: flex;\n  flex-direction: column;\n  line-height: 1.5;\n}\n\n@media screen and (max-width: 530px) {\n  .unumid-web-sdk-widget {\n    width: unset;\n  }\n}\n";
 styleInject(css_248z$8);
 
@@ -337,30 +370,46 @@ var WidgetHostAndController = function (_a) {
     var _d = React.useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent)), isSameDevice = _d[0], setIsSameDevice = _d[1];
     var _e = React.useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent)), canScan = _e[0], setCanScan = _e[1];
     var _f = React.useState(widgetTypes.QR_CODE), currentWidget = _f[0], setCurrentWidget = _f[1];
-    var isLoggedIn = React.useState(!!userInfo)[0];
-    React.useEffect(function () {
-        (function () { return __awaiter(void 0, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!presentationRequest) return [3 /*break*/, 1];
-                        setDeeplink(presentationRequest.deeplink);
-                        setQrCode(presentationRequest.qrCode);
-                        return [3 /*break*/, 3];
-                    case 1:
-                        if (!createPresentationRequest) return [3 /*break*/, 3];
-                        return [4 /*yield*/, createPresentationRequest()];
-                    case 2:
-                        response = _a.sent();
+    var triggerPresentationRequestCreation = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!createPresentationRequest) return [3 /*break*/, 2];
+                    return [4 /*yield*/, createPresentationRequest()];
+                case 1:
+                    response = _a.sent();
+                    if (response) {
                         setDeeplink(response.deeplink);
                         setQrCode(response.qrCode);
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); })();
-    }, [presentationRequest, createPresentationRequest]);
+                    }
+                    _a.label = 2;
+                case 2: return [2 /*return*/];
+            }
+        });
+    }); };
+    var memoizedTriggerPresentationRequestCreation = React.useCallback(triggerPresentationRequestCreation, [createPresentationRequest]);
+    var timeUntilExpiration = presentationRequest
+        && new Date(presentationRequest.presentationRequest.expiresAt).getTime() - new Date().getTime();
+    var oneMinuteBeforeExpiration = timeUntilExpiration && (timeUntilExpiration - 60 * 1000);
+    var nineMinutesFromNow = 9 * 60 * 1000;
+    var interval = oneMinuteBeforeExpiration || nineMinutesFromNow;
+    var _g = useInterval(memoizedTriggerPresentationRequestCreation, interval), startInterval = _g[0], stopInterval = _g[1];
+    var isLoggedIn = React.useState(!!userInfo)[0];
+    React.useEffect(function () {
+        if (presentationRequest) {
+            setDeeplink(presentationRequest.deeplink);
+            setQrCode(presentationRequest.qrCode);
+        }
+        else {
+            memoizedTriggerPresentationRequestCreation();
+        }
+    }, [presentationRequest, memoizedTriggerPresentationRequestCreation]);
+    React.useEffect(function () {
+        startInterval();
+        return stopInterval();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     var shouldShowEmailLink = !!(isLoggedIn && userInfo.email && sendEmail);
     var shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);
     var shouldShowLoginLink = !!(!isLoggedIn && goToLogin);

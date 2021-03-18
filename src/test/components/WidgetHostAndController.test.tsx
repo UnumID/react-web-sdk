@@ -4,6 +4,14 @@ import { act } from 'react-dom/test-utils';
 import { clear as clearMockUserAgent, mockUserAgent } from 'jest-useragent-mock';
 
 import WidgetHostAndController, { Props } from '../../components/WidgetHostAndController';
+import { useInterval } from '../../hooks/useInterval';
+
+const mockStart = jest.fn();
+const mockStop = jest.fn();
+jest.mock('../../hooks/useInterval');
+
+const mockUseInterval = useInterval as jest.Mock;
+mockUseInterval.mockReturnValue([mockStart, mockStop]);
 
 describe('WidgetHostAndController', () => {
   const dummyApplicationTitle = 'Dummy Application Title';
@@ -87,6 +95,12 @@ describe('WidgetHostAndController', () => {
   it('does not create a presentaionRequest if createPresentationRequest is not passed', async () => {
     renderWidget({ ...defaultProps, createPresentationRequest: undefined });
     expect(mockCreatePresentationRequest).not.toBeCalled();
+  });
+
+  it('sets an interval to create a new presentationRequest before the old one expires', async () => {
+    renderWidget();
+    await act(() => dummyCreatePresentationRequestResponse);
+    expect(mockStart).toBeCalled();
   });
 
   it('renders a qr code on desktop', async () => {
