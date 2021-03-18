@@ -8,13 +8,13 @@ describe('useTimeout', () => {
     const callback = jest.fn();
     const delay = 1000;
 
-    const { result } = renderHook(() => useTimeout(callback, delay));
+    const { result } = renderHook(() => useTimeout(callback));
 
     act(() => {
-      result.current[0]();
+      result.current[0](delay);
     });
 
-    jest.advanceTimersByTime(1000);
+    jest.advanceTimersByTime(delay);
     expect(callback).toBeCalledTimes(1);
   });
 });

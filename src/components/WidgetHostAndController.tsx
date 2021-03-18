@@ -29,6 +29,7 @@ export interface Props {
   userInfo: UserInfo;
   presentationRequest?: PresentationRequestResponse;
   deeplinkImgSrc?: string;
+  createInitialPresentationRequest?: boolean;
 }
 
 const WidgetHostAndController: FC<Props> = ({
@@ -40,6 +41,7 @@ const WidgetHostAndController: FC<Props> = ({
   userInfo,
   presentationRequest: presentationRequestProp,
   deeplinkImgSrc,
+  createInitialPresentationRequest = !presentationRequestProp,
 }: Props) => {
   const [deeplink, setDeeplink] = useState('');
   const [qrCode, setQrCode] = useState('');
@@ -71,10 +73,7 @@ const WidgetHostAndController: FC<Props> = ({
   const nineMinutesFromNow = 9 * 60 * 1000;
   const delay = oneMinuteBeforeExpiration || nineMinutesFromNow;
 
-  const [startTimeout, stopTimeout] = useTimeout(
-    memoizedTriggerPresentationRequestCreation,
-    delay,
-  );
+  const [startTimeout, stopTimeout] = useTimeout(memoizedTriggerPresentationRequestCreation);
 
   const [isLoggedIn] = useState(!!userInfo);
 
@@ -82,16 +81,21 @@ const WidgetHostAndController: FC<Props> = ({
     if (presentationRequestProp) {
       setDeeplink(presentationRequestProp.deeplink);
       setQrCode(presentationRequestProp.qrCode);
-    } else {
+    } else if (createInitialPresentationRequest) {
       memoizedTriggerPresentationRequestCreation();
     }
-  }, [presentationRequestProp, memoizedTriggerPresentationRequestCreation]);
+  }, [
+    presentationRequestProp,
+    memoizedTriggerPresentationRequestCreation,
+    createInitialPresentationRequest,
+  ]);
 
   useEffect(() => {
-    startTimeout();
+    startTimeout(delay);
 
     return stopTimeout();
-  }, [startTimeout, stopTimeout, presentationRequest, presentationRequest]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presentationRequest]);
 
   const shouldShowEmailLink = !!(isLoggedIn && userInfo.email && sendEmail);
   const shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);

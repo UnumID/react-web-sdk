@@ -327,10 +327,10 @@ var EmailWidget = function (_a) {
             React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, backLinkLiteral)))));
 };
 
-var useTimeout = function (callback, delay) {
+var useTimeout = function (callback) {
     var _a = React.useState(false), isActive = _a[0], setIsActive = _a[1];
     var timeout;
-    var start = function () {
+    var start = function (delay) {
         if (!isActive) {
             setIsActive(true);
             setTimeout(callback, delay);
@@ -348,13 +348,15 @@ var css_248z$8 = ".unumid-web-sdk-widget {\n  background-color: #ffffff;\n  disp
 styleInject(css_248z$8);
 
 var WidgetHostAndController = function (_a) {
-    var applicationTitle = _a.applicationTitle, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequestProp = _a.presentationRequest, deeplinkImgSrc = _a.deeplinkImgSrc;
-    var _b = React.useState(''), deeplink = _b[0], setDeeplink = _b[1];
-    var _c = React.useState(''), qrCode = _c[0], setQrCode = _c[1];
-    var _d = React.useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent)), isSameDevice = _d[0], setIsSameDevice = _d[1];
-    var _e = React.useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent)), canScan = _e[0], setCanScan = _e[1];
-    var _f = React.useState(widgetTypes.QR_CODE), currentWidget = _f[0], setCurrentWidget = _f[1];
-    var _g = React.useState(presentationRequestProp), presentationRequest = _g[0], setPresentationRequest = _g[1];
+    var applicationTitle = _a.applicationTitle, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequestProp = _a.presentationRequest, deeplinkImgSrc = _a.deeplinkImgSrc, _b = _a.createInitialPresentationRequest, createInitialPresentationRequest = _b === void 0 ? !!presentationRequestProp : _b;
+    var _c = React.useState(''), deeplink = _c[0], setDeeplink = _c[1];
+    var _d = React.useState(''), qrCode = _d[0], setQrCode = _d[1];
+    var _e = React.useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent)), isSameDevice = _e[0], setIsSameDevice = _e[1];
+    var _f = React.useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent)), canScan = _f[0], setCanScan = _f[1];
+    var _g = React.useState(widgetTypes.QR_CODE), currentWidget = _g[0], setCurrentWidget = _g[1];
+    var _h = React.useState(presentationRequestProp), presentationRequest = _h[0], setPresentationRequest = _h[1];
+    console.log('presentationRequestProp', presentationRequestProp);
+    console.log('presentationRequest', presentationRequest);
     var triggerPresentationRequestCreation = function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -380,21 +382,38 @@ var WidgetHostAndController = function (_a) {
     var oneMinuteBeforeExpiration = timeUntilExpiration && (timeUntilExpiration - 60 * 1000);
     var nineMinutesFromNow = 9 * 60 * 1000;
     var delay = oneMinuteBeforeExpiration || nineMinutesFromNow;
-    var _h = useTimeout(memoizedTriggerPresentationRequestCreation, delay), startTimeout = _h[0], stopTimeout = _h[1];
+    var _j = useTimeout(memoizedTriggerPresentationRequestCreation), startTimeout = _j[0], stopTimeout = _j[1];
     var isLoggedIn = React.useState(!!userInfo)[0];
     React.useEffect(function () {
         if (presentationRequestProp) {
             setDeeplink(presentationRequestProp.deeplink);
             setQrCode(presentationRequestProp.qrCode);
         }
-        else {
+        else if (createInitialPresentationRequest) {
             memoizedTriggerPresentationRequestCreation();
         }
-    }, [presentationRequestProp, memoizedTriggerPresentationRequestCreation]);
+    }, [
+        presentationRequestProp,
+        memoizedTriggerPresentationRequestCreation,
+        createInitialPresentationRequest,
+    ]);
+    // useEffect(() => {
+    //   console.log('startTimeout changed');
+    // }, [startTimeout]);
+    // useEffect(() => {
+    //   console.log('stopTimeout changed');
+    // }, [stopTimeout]);
+    // useEffect(() => {
+    //   console.log('presentationRequest changed');
+    // }, [presentationRequest]);
+    // useEffect(() => {
+    //   console.log('delay changed');
+    // }, [delay]);
     React.useEffect(function () {
-        startTimeout();
+        startTimeout(delay);
         return stopTimeout();
-    }, [startTimeout, stopTimeout, presentationRequest, presentationRequest]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [presentationRequest]);
     var shouldShowEmailLink = !!(isLoggedIn && userInfo.email && sendEmail);
     var shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);
     var shouldShowLoginLink = !!(!isLoggedIn && goToLogin);

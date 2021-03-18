@@ -1,18 +1,14 @@
 import { useState } from 'react';
 
-interface UseTimeoutResult extends Array<() => void> {
-  0: () => void;
-  1: () => void;
-}
+type UseTimeoutResult = [(delay: number) => void, () => void];
 
 export const useTimeout = (
   callback: () => void,
-  delay: number,
 ): UseTimeoutResult => {
   const [isActive, setIsActive] = useState(false);
 
   let timeout: NodeJS.Timeout;
-  const start = () => {
+  const start = (delay: number) => {
     if (!isActive) {
       setIsActive(true);
       setTimeout(callback, delay);

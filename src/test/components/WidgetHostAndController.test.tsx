@@ -92,6 +92,11 @@ describe('WidgetHostAndController', () => {
     expect(mockCreatePresentationRequest).not.toBeCalled();
   });
 
+  it('does not create a new PresentationRequest if createInitialPresentationRequest prop is false', () => {
+    renderWidget({ ...defaultProps, createInitialPresentationRequest: false });
+    expect(mockCreatePresentationRequest).not.toBeCalled();
+  });
+
   it('does not create a presentaionRequest if createPresentationRequest is not passed', async () => {
     renderWidget({ ...defaultProps, createPresentationRequest: undefined });
     expect(mockCreatePresentationRequest).not.toBeCalled();
