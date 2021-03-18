@@ -327,36 +327,20 @@ var EmailWidget = function (_a) {
             React__default['default'].createElement(LinkButton, { onClick: backToQrCode }, backLinkLiteral)))));
 };
 
-var useInterval = function (callback, intervalDuration) {
+var useTimeout = function (callback, delay) {
     var _a = React.useState(false), isActive = _a[0], setIsActive = _a[1];
+    var timeout;
     var start = function () {
         if (!isActive) {
             setIsActive(true);
+            setTimeout(callback, delay);
         }
     };
     var stop = function () {
         if (isActive) {
-            setIsActive(false);
+            clearTimeout(timeout);
         }
     };
-    // eslint-disable-next-line consistent-return
-    React.useEffect(function () {
-        var tick = function () { return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, callback()];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); };
-        var interval;
-        if (isActive) {
-            interval = setInterval(tick, intervalDuration);
-        }
-        return function () { clearInterval(interval); };
-    }, [intervalDuration, isActive, callback]);
     return [start, stop];
 };
 
@@ -364,12 +348,13 @@ var css_248z$8 = ".unumid-web-sdk-widget {\n  background-color: #ffffff;\n  disp
 styleInject(css_248z$8);
 
 var WidgetHostAndController = function (_a) {
-    var applicationTitle = _a.applicationTitle, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequest = _a.presentationRequest, deeplinkImgSrc = _a.deeplinkImgSrc;
+    var applicationTitle = _a.applicationTitle, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequestProp = _a.presentationRequest, deeplinkImgSrc = _a.deeplinkImgSrc;
     var _b = React.useState(''), deeplink = _b[0], setDeeplink = _b[1];
     var _c = React.useState(''), qrCode = _c[0], setQrCode = _c[1];
     var _d = React.useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent)), isSameDevice = _d[0], setIsSameDevice = _d[1];
     var _e = React.useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent)), canScan = _e[0], setCanScan = _e[1];
     var _f = React.useState(widgetTypes.QR_CODE), currentWidget = _f[0], setCurrentWidget = _f[1];
+    var _g = React.useState(presentationRequestProp), presentationRequest = _g[0], setPresentationRequest = _g[1];
     var triggerPresentationRequestCreation = function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -380,6 +365,7 @@ var WidgetHostAndController = function (_a) {
                 case 1:
                     response = _a.sent();
                     if (response) {
+                        setPresentationRequest(response);
                         setDeeplink(response.deeplink);
                         setQrCode(response.qrCode);
                     }
@@ -393,23 +379,22 @@ var WidgetHostAndController = function (_a) {
         && new Date(presentationRequest.presentationRequest.expiresAt).getTime() - new Date().getTime();
     var oneMinuteBeforeExpiration = timeUntilExpiration && (timeUntilExpiration - 60 * 1000);
     var nineMinutesFromNow = 9 * 60 * 1000;
-    var interval = oneMinuteBeforeExpiration || nineMinutesFromNow;
-    var _g = useInterval(memoizedTriggerPresentationRequestCreation, interval), startInterval = _g[0], stopInterval = _g[1];
+    var delay = oneMinuteBeforeExpiration || nineMinutesFromNow;
+    var _h = useTimeout(memoizedTriggerPresentationRequestCreation, delay), startTimeout = _h[0], stopTimeout = _h[1];
     var isLoggedIn = React.useState(!!userInfo)[0];
     React.useEffect(function () {
-        if (presentationRequest) {
-            setDeeplink(presentationRequest.deeplink);
-            setQrCode(presentationRequest.qrCode);
+        if (presentationRequestProp) {
+            setDeeplink(presentationRequestProp.deeplink);
+            setQrCode(presentationRequestProp.qrCode);
         }
         else {
             memoizedTriggerPresentationRequestCreation();
         }
-    }, [presentationRequest, memoizedTriggerPresentationRequestCreation]);
+    }, [presentationRequestProp, memoizedTriggerPresentationRequestCreation]);
     React.useEffect(function () {
-        startInterval();
-        return stopInterval();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        startTimeout();
+        return stopTimeout();
+    }, [startTimeout, stopTimeout, presentationRequest, presentationRequest]);
     var shouldShowEmailLink = !!(isLoggedIn && userInfo.email && sendEmail);
     var shouldShowSmsLink = !!(isLoggedIn && userInfo.phone && sendSms);
     var shouldShowLoginLink = !!(!isLoggedIn && goToLogin);

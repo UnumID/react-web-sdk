@@ -4,14 +4,14 @@ import { act } from 'react-dom/test-utils';
 import { clear as clearMockUserAgent, mockUserAgent } from 'jest-useragent-mock';
 
 import WidgetHostAndController, { Props } from '../../components/WidgetHostAndController';
-import { useInterval } from '../../hooks/useInterval';
+import { useTimeout } from '../../hooks/useTimeout';
 
 const mockStart = jest.fn();
 const mockStop = jest.fn();
-jest.mock('../../hooks/useInterval');
+jest.mock('../../hooks/useTimeout');
 
-const mockUseInterval = useInterval as jest.Mock;
-mockUseInterval.mockReturnValue([mockStart, mockStop]);
+const mockUseTimeout = useTimeout as jest.Mock;
+mockUseTimeout.mockReturnValue([mockStart, mockStop]);
 
 describe('WidgetHostAndController', () => {
   const dummyApplicationTitle = 'Dummy Application Title';
@@ -97,7 +97,7 @@ describe('WidgetHostAndController', () => {
     expect(mockCreatePresentationRequest).not.toBeCalled();
   });
 
-  it('sets an interval to create a new presentationRequest before the old one expires', async () => {
+  it('sets a timeout to create a new presentationRequest before the old one expires', async () => {
     renderWidget();
     await act(() => dummyCreatePresentationRequestResponse);
     expect(mockStart).toBeCalled();
