@@ -348,15 +348,13 @@ var css_248z$8 = ".unumid-web-sdk-widget {\n  background-color: #ffffff;\n  disp
 styleInject(css_248z$8);
 
 var WidgetHostAndController = function (_a) {
-    var applicationTitle = _a.applicationTitle, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequestProp = _a.presentationRequest, deeplinkImgSrc = _a.deeplinkImgSrc, _b = _a.createInitialPresentationRequest, createInitialPresentationRequest = _b === void 0 ? !!presentationRequestProp : _b;
+    var applicationTitle = _a.applicationTitle, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequestProp = _a.presentationRequest, deeplinkImgSrc = _a.deeplinkImgSrc, _b = _a.createInitialPresentationRequest, createInitialPresentationRequest = _b === void 0 ? !presentationRequestProp : _b;
     var _c = React.useState(''), deeplink = _c[0], setDeeplink = _c[1];
     var _d = React.useState(''), qrCode = _d[0], setQrCode = _d[1];
     var _e = React.useState(!!/Mobi|Android|iPhone/i.test(navigator.userAgent)), isSameDevice = _e[0], setIsSameDevice = _e[1];
     var _f = React.useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent)), canScan = _f[0], setCanScan = _f[1];
     var _g = React.useState(widgetTypes.QR_CODE), currentWidget = _g[0], setCurrentWidget = _g[1];
     var _h = React.useState(presentationRequestProp), presentationRequest = _h[0], setPresentationRequest = _h[1];
-    console.log('presentationRequestProp', presentationRequestProp);
-    console.log('presentationRequest', presentationRequest);
     var triggerPresentationRequestCreation = function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -397,18 +395,6 @@ var WidgetHostAndController = function (_a) {
         memoizedTriggerPresentationRequestCreation,
         createInitialPresentationRequest,
     ]);
-    // useEffect(() => {
-    //   console.log('startTimeout changed');
-    // }, [startTimeout]);
-    // useEffect(() => {
-    //   console.log('stopTimeout changed');
-    // }, [stopTimeout]);
-    // useEffect(() => {
-    //   console.log('presentationRequest changed');
-    // }, [presentationRequest]);
-    // useEffect(() => {
-    //   console.log('delay changed');
-    // }, [delay]);
     React.useEffect(function () {
         startTimeout(delay);
         return stopTimeout();
