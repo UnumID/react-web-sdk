@@ -23,6 +23,9 @@ yarn add @unumid/web-sdk@https://github.com/UnumID/Verifier-Client-SDK.git
 
 The library will be available via the npm/yarn registries soon, after which the url will not be necessary
 
+## Functionality
+### Creating PresentationRequests
+
 ## API
 ### WidgetHostAndController Component
 The Web SDK exports a single component, `WidgetHostAndController` (TODO: rename to something better)
@@ -49,70 +52,181 @@ This component encapsulates all of the Web SDK's functionality.
 **goToLogin** (`() => void`) _optional_: A function which redirects the user to your existing login page. You should provide this if you are using Unum ID as an additional authentication factor on top of your existing login. If this prop is not provided, the login fallback option will not be available.
 
 
-## Usage
 
-
-### Example
+## Examples
+### Simplest possible use case. Allows the SDK to handle all PresentationRequest creation, and does not provide any additional fallback options.
 ```tsx
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
-import UnumIDVerifier, {
-  EmailOptions,
-  SmsOptions,
-  PresentationRequestResponse,
-  SuccessResponse
-} from '@unumid/web-sdk';
+import WidgetHostAndController, { PresentationRequestResponse } from '@unumid/web-sdk';
 
-// an image to use for the deeplink button
-// it will be displayed at 250 x 50 pixels, so a width:height ratio of 5:1 should be used
-// we will generate a suggested image for you when you send us your branding materials
 import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
 const App: FC = () => {
-  const [presentationRequest, setPresentationRequest] = useState();
 
   const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
-    // call your api endpoint to create a presentationRequest and return the response
-    const response = await callEndpoint();
-    // We recommend that you save the created PresentationRequest
-    // Passing it as a prop to the Verifier Widget will prevent the SDK from immediately creating another
-    // if the widget is rerendered
-    setPresentationRequest(response);
-  };
-
-  const sendEmail = async (options: EmailOptions): Promise<SuccessResponse> => {
-    // call your backend to send an email and return the response
-  };
-
-  const sendSms = async (options: SmsOptions): Promise<SuccessResponse> => {
-    // call your backend to send an sms and return the response
-  };
-
-  const goToLogin = (): void => {
-    // navigate to your login page
+    // call your backend to create a presentationRequest and return the response
   };
 
   return (
-    <UnumIDVerifier
+    <WidgetHostAndController
       applicationTitle="My Application"
-      userInfo={{ email: 'test@test.com', phone: '555-5555' }}
+      userInfo={{}}
       createPresentationRequest={createPresentationRequest}
-      sendEmail={sendEmail}
-      sendSMS={sendSms}
-      goToLogin={goToLogin}
-      presentationRequest={presentationRequest}
-      createInitialPresentationRequest={false}
       deeplinkImgSrc={deeplinkImgSrc}
     />
   );
 }
 ```
 
-**Client reference application** is available at Git and can be cloned using 
-`git clone https://github.com/UnumID/Verifier-Client-SDK-Client-Reference-App.git`. 
+### Allows the SDK to handle PresentationRequest creation and enables fallback options
+```tsx
+import { FC } from 'react';
+
+import WidgetHostAndController, {
+  EmailOptions,
+  SmsOptions,
+  PresentationRequestResponse,
+  SuccessResponse
+} from '@unumid/web-sdk';
+
+import deeplinkImgSrc from '../assets/deeplink-button-image.png';
+
+const App: FC = () => {
+
+  const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
+    // call your backend to create a presentationRequest and return the response
+  };
+
+  const sendEmail = async (options: EmailOptions): Promise<SuccessResponse> => {
+    // call your backend to send a deeplink via email and return the response
+  }
+
+  const sendSms = async (options: SmsOptions): Promise<SuccessResponse> => {
+    // call your backend to send a deeplink via sms and return the response
+  }
+
+  const goToLogin = async (options: EmailOptions): Promise<SuccessResponse> => {
+    // navigate to your login page
+  }
+
+  return (
+    <WidgetHostAndController
+      applicationTitle="My Application"
+      userInfo={{}}
+      createPresentationRequest={createPresentationRequest}
+      deeplinkImgSrc={deeplinkImgSrc}
+      sendEmail={sendEmail}
+      sendSms={sendSms}
+      goToLogin={goToLogin}
+    />
+  );
+}
+```
+
+### Allows your application more control over when the initial PresentationRequest is created. Enables fallback options.
+```tsx
+import { FC, useState } from 'react';
+
+import WidgetHostAndController, {
+  EmailOptions,
+  SmsOptions,
+  PresentationRequestResponse,
+  SuccessResponse
+} from '@unumid/web-sdk';
+import { PresentationRequestOptions } from '@unumid/types';
+
+import deeplinkImgSrc from '../assets/deeplink-button-image.png';
+
+const App: FC = () => {
+  const [presentationRequest, setPresentationRequest] = useState();
+
+  const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
+    // call your backend to create a presentationRequest and return the response
+    const options: PresentationRequestOptions = {
+      // customizable presentationRequest options
+    }
+    const response = await callBackend(options);
+    setPresentationRequest(response)
+  };
+
+  const sendEmail = async (options: EmailOptions): Promise<SuccessResponse> => {
+    // call your backend to send a deeplink via email and return the response
+  }
+
+  const sendSms = async (options: SmsOptions): Promise<SuccessResponse> => {
+    // call your backend to send a deeplink via sms and return the response
+  }
+
+  const goToLogin = async (options: EmailOptions): Promise<SuccessResponse> => {
+    // navigate to your login page
+  }
+
+  return (
+    <WidgetHostAndController
+      applicationTitle="My Application"
+      userInfo={{}}
+      createPresentationRequest={createPresentationRequest}
+      presentationRequest={presentationRequest}
+      createInitialPresentationRequest={false}
+      deeplinkImgSrc={deeplinkImgSrc}
+      sendEmail={sendEmail}
+      sendSms={sendSms}
+      goToLogin={goToLogin}
+    />
+  );
+}
+```
+
+### In an application using Redux or another flux-like state management library
+```tsx
+import { FC } from 'react';
+import { useSelector } from 'react-redux';
+
+import WidgetHostAndController, {
+  EmailOptions,
+  SmsOptions,
+  PresentationRequestResponse,
+  SuccessResponse
+} from '@unumid/web-sdk';
+import { PresentationRequestOptions } from '@unumid/types';
+
+// import your action creators. We're assuming they have been wrapped into hooks in this example, but your application may be different.
+import { useActionCreators } from './hooks/actionCreators';
+
+import deeplinkImgSrc from '../assets/deeplink-button-image.png';
+
+const App: FC = () => {
+  // these functions can be defined as async action creators using redux-thunk, redux-saga, or other libraries
+  const { createPresentationRequest, sendSms, sendEmail } = useActionCreators();
+  const presentationRequest = useSelector(state => state.presentationRequest);
+  const loggedInUser = useSelector(state => state.loggedInUser);
+
+  const goToLogin = async (options: EmailOptions): Promise<SuccessResponse> => {
+    // navigate to your login page
+  }
+
+  return (
+    <WidgetHostAndController
+      applicationTitle="My Application"
+      userInfo={loggedInUser}
+      createPresentationRequest={createPresentationRequest}
+      presentationRequest={presentationRequest}
+      createInitialPresentationRequest={false}
+      deeplinkImgSrc={deeplinkImgSrc}
+      sendEmail={sendEmail}
+      sendSms={sendSms}
+      goToLogin={goToLogin}
+    />
+  );
+}
+```
 
 ### Minimum Requirements
 The minimum supported version of React is v16.8.0. If you are using an older version of React, you will need to upgrade it to at least v16.8.0 in order to use the Web SDK.
 
 ### TypeScript support
 THe Web SDK is written in TypeScript and exports relevant types. Some types are also pulled from our shared types library, [`@unumid/types`](https://github.com/UnumID/types). We recommend adding `@unumid/types` as a dependency to ensure full type support between the Web SDK and [Server SDK](https://github.com/UnumID/Server-SDK-TypeScript).
+
+**Client reference application** is available at Git and can be cloned using 
+`git clone https://github.com/UnumID/Verifier-Client-SDK-Client-Reference-App.git`. 
