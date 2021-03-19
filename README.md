@@ -3,13 +3,7 @@ SDK which helps the client to manage how deeplink can be presented to holder
 A React-based SDK which helps manage creating and sending PresentationRequests 
 
 ## Installation
-This library is available in Github, built with react framework.
-
-To add it to the react application, run `yarn add @unumid/web-sdk@https://github.com/UnumID/Verifier-Client-SDK.git` or add the following to the `dependencies` section of the `package.json` and run `yarn install`.
-
-```
-"@unumid/web-sdk": "https://github.com/UnumID/Verifier-Client-SDK.git"
-```
+The Web SDK is currently only available via GitHub, but will be available via the npm/yarn registries soon.
 
 Using npm:
 ```
@@ -21,10 +15,32 @@ Using yarn:
 yarn add @unumid/web-sdk@https://github.com/UnumID/Verifier-Client-SDK.git
 ```
 
-The library will be available via the npm/yarn registries soon, after which the url will not be necessary
+or add the following to your `package.json` and run `npm/yarn install`
+```
+"@unumid/web-sdk": "https://github.com/UnumID/Verifier-Client-SDK.git"
+```
 
 ## Functionality
 ### Creating PresentationRequests
+By default, the Web SDK will create a PresentationRequest as soon as it is rendered, and will periodically regenerate the PresentationRequest (to ensure that it does not expire) until the user shares data or declines the request, or the widget is unmounted. You can use different combinations of props (see below) to choose how much control over PresentationRequest creation you want to have.
+
+### Displaying deeplinks
+#### QR Code
+On larger screens such as a desktop monitor or laptop, the Web SDK will default to displaying deeplinks as a QR code to be scanned by a mobile device with your mobile app powered by the Holder SDK.
+
+#### Button
+On mobile devices, the Web SDK will default to displaying deeplinks as a button, which can be tapped to open the deeplink in your mobile app.
+
+#### Fallback options
+In some situations, neither a QR code nor a button is convenient. The Web SDK offers the following fallback options for sending the deeplink to your mobile app
+
+**email**: Sends the user an email containing the deeplink, which they can open on their device. The user's email address is required in order to use this option.
+
+**sms**: Sends the user an sms containing the deeplink, which they can open on their device. The user's mobile phone number is required in order to use this option.
+
+**push notification** (coming soon): sends a push notification to the user's device. The user must have push notifications enabled for your mobile app in order to use this option
+
+**login**: If your client application doesn't have the information required to use the desired fallback options, we can redirect them to your existing login page.
 
 ## API
 ### WidgetHostAndController Component
@@ -41,9 +57,9 @@ This component encapsulates all of the Web SDK's functionality.
 
 **deeplinkImgSrc** (string) _optional_: path to the image to display as a Deeplink button(TODO: this should be required)
 
-**createInitialPresentationRequest** (boolean) _optional_: Whether the widget should immediately call `createPresentationRequest` on load. You can combine this with the `presentationRequest` prop to gain control over when the initial presentationRequest is created. By default, it is `false` if you provide the `presentationRequest` prop and `true` if you do not.
+**createInitialPresentationRequest** (boolean) _optional_: Whether the widget should immediately call `createPresentationRequest` on load. You can combine this with the `presentationRequest` prop to gain control over when the initial PresentationRequest is created. By default, it is `false` if you provide the `presentationRequest` prop and `true` if you do not.
 
-**createPresentationRequest** (`() => Promise<PresentationRequestResponse> | void`) _optional_: A function which should call your Server SDK powered backend to create a presentationRequest. If it returns a value, it is assumed that that value is a `PresentationRequestResponse`. If it does not return a value, you must provide the response via the `presentationRequest` prop in order for the widget to display the presentationRequest. (As in a redux application, where `createPresentationRequest` will probably be an async action creator of some sort.) The widget will call this function on an interval in order to ensure that it never displays an expired presentationRequest (TODO: this should be required)
+**createPresentationRequest** (`() => Promise<PresentationRequestResponse> | void`) _optional_: A function which should call your Server SDK powered backend to create a PresentationRequest. If it returns a value, it is assumed that that value is a `PresentationRequestResponse`. If it does not return a value, you must provide the response via the `presentationRequest` prop in order for the widget to display the PresentationRequest. (As in a redux application, where `createPresentationRequest` will probably be an async action creator of some sort.) The widget will call this function on an interval in order to ensure that it never displays an expired PresentationRequest (TODO: this should be required)
 
 **sendEmail** (`(options: EmailOptions) => Promise<SuccessResponse>`) _optional_: A function which takes an `EmailOptions` object and calls your backend to send a deeplink via email. You may use the `sendEmail` function from the Server SDK to send the email, or your own email provider. If this prop is not provided, the Email fallback option  will not be available.
 
@@ -65,7 +81,7 @@ import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 const App: FC = () => {
 
   const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
-    // call your backend to create a presentationRequest and return the response
+    // call your backend to create a PresentationRequest and return the response
   };
 
   return (
@@ -95,7 +111,7 @@ import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 const App: FC = () => {
 
   const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
-    // call your backend to create a presentationRequest and return the response
+    // call your backend to create a PresentationRequest and return the response
   };
 
   const sendEmail = async (options: EmailOptions): Promise<SuccessResponse> => {
@@ -142,9 +158,9 @@ const App: FC = () => {
   const [presentationRequest, setPresentationRequest] = useState();
 
   const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
-    // call your backend to create a presentationRequest and return the response
+    // call your backend to create a PresentationRequest and return the response
     const options: PresentationRequestOptions = {
-      // customizable presentationRequest options
+      // customizable PresentationRequest options
     }
     const response = await callBackend(options);
     setPresentationRequest(response)
