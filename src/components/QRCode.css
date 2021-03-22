@@ -5,6 +5,10 @@
   padding: 20px;
 }
 
+.qr-code .help {
+  margin-bottom: 6px;
+}
+
 .qr-code .help-item {
   text-align: left;
   font-size: 12px;
