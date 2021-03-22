@@ -160,7 +160,7 @@ function cc(obj) {
   return out
 }
 
-var css_248z$4 = ".action-button {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  line-height: 1.5;\n  border-radius: .25rem;\n  font-size: 1rem;\n  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;\n  color: #ffffff;\n  background-color: #1f61cc;\n  cursor: pointer;\n  margin-bottom: 20px;\n  width: 250px;\n  height: 50px;\n  text-decoration: none;\n}\n\n.action-button img {\n  width: 100%;\n  height: 100%;\n}\n";
+var css_248z$4 = ".action-button {\n  cursor: pointer;\n  margin-bottom: 20px;\n  max-width: 250px;\n  max-height: 50px;\n}\n\n.action-button img {\n  width: 100%;\n  height: 100%;\n}\n";
 styleInject(css_248z$4);
 
 var ActionButton = function (_a) {
@@ -174,7 +174,7 @@ var widgetTypes = {
     SMS: 'SMS',
 };
 
-var css_248z$5 = ".qrcode-widget-content {\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  display: flex;\n}\n\n.qrcode-widget-content .bold-label {\n  font-weight: 700;\n  background-color: #1f61cc\n}\n\n.qrcode-widget-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n\n.qrcode-widget-content .deeplink-button-wrapper {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n";
+var css_248z$5 = ".qrcode-widget-content {\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  display: flex;\n}\n\n.qrcode-widget-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n\n.qrcode-widget-content .deeplink-button-wrapper {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n";
 styleInject(css_248z$5);
 
 var QRCodeWidget = function (_a) {
@@ -188,7 +188,7 @@ var QRCodeWidget = function (_a) {
     var btnLbl = "Verify with " + applicationTitle;
     var renderQrCode = function () { return React__default['default'].createElement(QRCode, { qrCode: qrCode, applicationTitle: applicationTitle }); };
     var renderDeeplinkButton = function () { return (React__default['default'].createElement("div", { className: "deeplink-button-wrapper" },
-        React__default['default'].createElement(ActionButton, { className: "bold-label", target: "_blank", href: deeplink }, deeplinkImgSrc ? React__default['default'].createElement("img", { src: deeplinkImgSrc, alt: btnLbl }) : btnLbl),
+        React__default['default'].createElement(ActionButton, { target: "_blank", href: deeplink }, deeplinkImgSrc ? React__default['default'].createElement("img", { src: deeplinkImgSrc, alt: btnLbl }) : btnLbl),
         React__default['default'].createElement(Branding, null))); };
     var renderLoginButton = function () { return (goToLogin && (React__default['default'].createElement(LinkButton, { onClick: goToLogin }, "Log in with your email address for more authentication options"))); };
     var renderSmsButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: handleSMSLinkClick }, "Get an SMS instead")); };
