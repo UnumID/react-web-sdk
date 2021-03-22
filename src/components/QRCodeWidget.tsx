@@ -48,7 +48,6 @@ const QRCodeWidget: FunctionComponent<Props> = ({
   const renderDeeplinkButton = () => (
     <div className="deeplink-button-wrapper">
       <ActionButton
-        className="bold-label"
         target="_blank"
         href={deeplink}
       >
