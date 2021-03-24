@@ -1,6 +1,5 @@
 # Web SDK
-SDK which helps the client to manage how deeplink can be presented to holder
-A React-based SDK which helps manage creating and sending PresentationRequests 
+The Unum ID Web SDK is a library for adding Unum ID functionality and UI to a React application. It helps you create PresentationRequests and share them with an Unum ID-powered mobile app.
 
 ## Installation
 The Web SDK is currently only available via GitHub, but will be available via the npm/yarn registries soon.
@@ -25,20 +24,23 @@ or add the following to your `package.json` and run `npm/yarn install`
 By default, the Web SDK will create a PresentationRequest as soon as it is rendered, and will periodically regenerate the PresentationRequest (to ensure that it does not expire) until the user shares data or declines the request, or the widget is unmounted. You can use different combinations of props (see below) to choose how much control over PresentationRequest creation you want to have.
 
 ### Displaying deeplinks
-#### QR Code
-On larger screens such as a desktop monitor or laptop, the Web SDK will default to displaying deeplinks as a QR code to be scanned by a mobile device with your mobile app powered by the Holder SDK.
+PresentationRequests are shared to an Unum ID-powered mobile app a user's device via deep links. The Web SDK determines how it displays them based on the browser's userAgent.
 
 #### Button
-On mobile devices, the Web SDK will default to displaying deeplinks as a button, which can be tapped to open the deeplink in your mobile app.
+On mobile browsers, the Web SDK will default to displaying the deep link as a button, which can be tapped to open the deeplink in the mobile app.
+
+#### QR Code
+On non-mobile browsers, the Web SDK will default to displaying the deep link as a QR code that users can scan with their mobile device.
+
 
 #### Fallback options
-In some situations, neither a QR code nor a button is convenient. The Web SDK offers the following fallback options for sending the deeplink to your mobile app
+In some situations, neither a QR code nor a button is convenient. The Web SDK offers the following fallback options for sending the deep link to the user's device.
 
-**email**: Sends the user an email containing the deeplink, which they can open on their device. The user's email address is required in order to use this option.
+**push notification** (coming soon): sends a push notification to the user's device. The user must have push notifications enabled for an Unum ID-powered mobile app in order to use this option.
 
-**sms**: Sends the user an sms containing the deeplink, which they can open on their device. The user's mobile phone number is required in order to use this option.
+**sms**: Sends the user an sms containing the deeplink, which they can open on their device. You must provide the user's mobile phone number in order to use this option.
 
-**push notification** (coming soon): sends a push notification to the user's device. The user must have push notifications enabled for your mobile app in order to use this option
+**email**: Sends the user an email containing the deeplink, which they can open on their device. You must providetThe user's email address in order to use this option.
 
 **login**: If your client application doesn't have the information required to use the desired fallback options, we can redirect them to your existing login page.
 
@@ -70,18 +72,18 @@ This component encapsulates all of the Web SDK's functionality.
 
 
 ## Examples
-### Simplest possible use case. Allows the SDK to handle all PresentationRequest creation, and does not provide any additional fallback options.
-```tsx
-import { FC } from 'react';
+The simplest possible use case. It allows the SDK to handle all PresentationRequest creation, and does not provide any additional fallback options.
+```jsx
+import WidgetHostAndController from '@unumid/web-sdk';
 
-import WidgetHostAndController, { PresentationRequestResponse } from '@unumid/web-sdk';
-
+// Import an image to use for the (mobile) deeplink button.
+// In this example, images are stored in an 'assets' directory. Your application may be different.
 import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
-const App: FC = () => {
+const App = () => {
 
-  const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
-    // call your backend to create a PresentationRequest and return the response
+  const createPresentationRequest = async () => {
+    // Call your backend to create a PresentationRequest and return the response.
   };
 
   return (
@@ -95,7 +97,34 @@ const App: FC = () => {
 }
 ```
 
-### Allows the SDK to handle PresentationRequest creation and enables fallback options
+THe simplest use case (above), using TypeScript
+```tsx
+import { FC } from 'react';
+
+import WidgetHostAndController, { PresentationRequestResponse } from '@unumid/web-sdk';
+
+// Import an image to use for the (mobile) deeplink button
+// In this example, images are stored in an 'assets' directory. Your application may be different.
+import deeplinkImgSrc from '../assets/deeplink-button-image.png';
+
+const App: FC = () => {
+
+  const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
+    // Call your backend to create a PresentationRequest and return the response.
+  };
+
+  return (
+    <WidgetHostAndController
+      applicationTitle="My Application"
+      userInfo={{}}
+      createPresentationRequest={createPresentationRequest}
+      deeplinkImgSrc={deeplinkImgSrc}
+    />
+  );
+}
+```
+
+A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options. (TypeScript)
 ```tsx
 import { FC } from 'react';
 
@@ -106,30 +135,34 @@ import WidgetHostAndController, {
   SuccessResponse
 } from '@unumid/web-sdk';
 
+// Import an image to use for the (mobile) deeplink button.
+// In this example, images are stored in an 'assets' directory. Your application may be different.
 import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
 const App: FC = () => {
-
   const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
-    // call your backend to create a PresentationRequest and return the response
+    // Call your backend to create a PresentationRequest and return the response.
   };
 
   const sendEmail = async (options: EmailOptions): Promise<SuccessResponse> => {
-    // call your backend to send a deeplink via email and return the response
+    // Call your backend to send a deeplink via email and return the response.
   }
 
   const sendSms = async (options: SmsOptions): Promise<SuccessResponse> => {
-    // call your backend to send a deeplink via sms and return the response
+    // Nall your backend to send a deeplink via sms and return the response.
   }
 
   const goToLogin = async (options: EmailOptions): Promise<SuccessResponse> => {
-    // navigate to your login page
+    // Navigate to your login page.
   }
 
   return (
     <WidgetHostAndController
       applicationTitle="My Application"
-      userInfo={{}}
+      userInfo={{
+        email: 'mrplow@gmail.com', // The user's email is required to enable the email fallback.
+        phone: 'KL5-5555' // The user's mobile phone number is required to enable the sms fallback.
+      }}
       createPresentationRequest={createPresentationRequest}
       deeplinkImgSrc={deeplinkImgSrc}
       sendEmail={sendEmail}
@@ -140,7 +173,7 @@ const App: FC = () => {
 }
 ```
 
-### Allows your application more control over when the initial PresentationRequest is created. Enables fallback options.
+Allows your application more control over when the initial PresentationRequest is created. Enables fallback options. (TypeScript)
 ```tsx
 import { FC, useState } from 'react';
 
@@ -152,39 +185,45 @@ import WidgetHostAndController, {
 } from '@unumid/web-sdk';
 import { PresentationRequestOptions } from '@unumid/types';
 
+// Import an image to use for the (mobile) deeplink button.
+// In this example, images are stored in an 'assets' directory. Your application may be different.
 import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
 const App: FC = () => {
+  // Save the PresentationRequest in local component state.
   const [presentationRequest, setPresentationRequest] = useState();
 
-  const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
-    // call your backend to create a PresentationRequest and return the response
+  const createPresentationRequest = async (): Promise<void> => {
     const options: PresentationRequestOptions = {
-      // customizable PresentationRequest options
+      // Customizable PresentationRequest options.
     }
+    // Call your backend to create a PresentationRequest and save in the component state.
     const response = await callBackend(options);
     setPresentationRequest(response)
   };
 
   const sendEmail = async (options: EmailOptions): Promise<SuccessResponse> => {
-    // call your backend to send a deeplink via email and return the response
+    // Call your backend to send a deeplink via email and return the response.
   }
 
   const sendSms = async (options: SmsOptions): Promise<SuccessResponse> => {
-    // call your backend to send a deeplink via sms and return the response
+    // Call your backend to send a deeplink via sms and return the response.
   }
 
   const goToLogin = async (options: EmailOptions): Promise<SuccessResponse> => {
-    // navigate to your login page
+    // Navigate to your login page.
   }
 
   return (
     <WidgetHostAndController
       applicationTitle="My Application"
-      userInfo={{}}
-      createPresentationRequest={createPresentationRequest}
-      presentationRequest={presentationRequest}
-      createInitialPresentationRequest={false}
+      userInfo={{
+        email: 'mrplow@gmail.com', // The user's email is required to enable the email fallback.
+        phone: 'KL5-5555' // The user's mobile phone number is required to enable the sms fallback.
+      }}
+      presentationRequest={presentationRequest} // Provide the Web SDK with an already-created PresentationRequest.
+      createInitialPresentationRequest={false} // Prevent the Web SDK from immediately creating a new PresentationRequest on load.
+      createPresentationRequest={createPresentationRequest} // We still need to provide the Web SDK with a createPresentationRequest function so that it can create a new PresentationRequest before the current one expires.
       deeplinkImgSrc={deeplinkImgSrc}
       sendEmail={sendEmail}
       sendSms={sendSms}
@@ -194,7 +233,7 @@ const App: FC = () => {
 }
 ```
 
-### In an application using Redux or another flux-like state management library
+Applications using Redux and other similar state management libraries have some unique challenges, as side effects such as creating resources usually happen in action creator functions, which dispatch actions to the store rather than returning values. In this example, we're providing the Web SDK with our `createPresentationRequest` action creator to call, then selecting the created PresentationRequest from the store to provide separately. (TypeScript)
 ```tsx
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
@@ -207,28 +246,37 @@ import WidgetHostAndController, {
 } from '@unumid/web-sdk';
 import { PresentationRequestOptions } from '@unumid/types';
 
-// import your action creators. We're assuming they have been wrapped into hooks in this example, but your application may be different.
+// Import your action creators. They have been wrapped in React hooks in this example, but your application may be different.
 import { useActionCreators } from './hooks/actionCreators';
 
+// Import an image to use for the (mobile) deeplink button.
+// In this example, images are stored in an 'assets' directory. Your application may be different.
 import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
 const App: FC = () => {
-  // these functions can be defined as async action creators using redux-thunk, redux-saga, or other libraries
+  // These functions can be defined as async action creators using redux-thunk, redux-saga, or other libraries.
   const { createPresentationRequest, sendSms, sendEmail } = useActionCreators();
+
+  // Select a previously created PresentationRequest from state.
   const presentationRequest = useSelector(state => state.presentationRequest);
+
+  // Select the logged in user from state.
   const loggedInUser = useSelector(state => state.loggedInUser);
 
   const goToLogin = async (options: EmailOptions): Promise<SuccessResponse> => {
-    // navigate to your login page
+    // Navigate to your login page.
   }
 
   return (
     <WidgetHostAndController
       applicationTitle="My Application"
-      userInfo={loggedInUser}
-      createPresentationRequest={createPresentationRequest}
-      presentationRequest={presentationRequest}
-      createInitialPresentationRequest={false}
+      userInfo={{
+        email: loggedInUser.email, // The user's email is required to enable the email fallback.
+        phone: loggedInUser.mobilePhoneNumber // The user's mobile phone number is required to enable the sms fallback.
+      }}
+      presentationRequest={presentationRequest} // Provide the Web SDK with an already-created PresentationRequest.
+      createInitialPresentationRequest={true} // The Web SDK should immediately create a PresentationRequest on load.
+      createPresentationRequest={createPresentationRequest} // We still need to provide the Web SDK with a createPresentationRequest function so that it can create a new PresentationRequest before the current one expires.
       deeplinkImgSrc={deeplinkImgSrc}
       sendEmail={sendEmail}
       sendSms={sendSms}
@@ -238,10 +286,10 @@ const App: FC = () => {
 }
 ```
 
-### Minimum Requirements
+## Minimum Requirements
 The minimum supported version of React is v16.8.0. If you are using an older version of React, you will need to upgrade it to at least v16.8.0 in order to use the Web SDK.
 
-### TypeScript support
+## TypeScript support
 The Web SDK is written in TypeScript and exports relevant types. Some types are also pulled from our shared types library, [`@unumid/types`](https://github.com/UnumID/types). We recommend adding `@unumid/types` as a dependency to ensure full type support between the Web SDK and [Server SDK](https://github.com/UnumID/Server-SDK-TypeScript).
 
 **Client reference application** is available at Git and can be cloned using 
