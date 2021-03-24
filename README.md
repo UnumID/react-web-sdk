@@ -21,7 +21,7 @@ or add the following to your `package.json` and run `npm/yarn install`
 
 ## Functionality
 ### Creating PresentationRequests
-By default, the Web SDK will create a PresentationRequest as soon as it is rendered, and will periodically regenerate the PresentationRequest (to ensure that it does not expire) until the user shares data or declines the request, or the widget is unmounted. You can use different combinations of props (see below) to choose how much control over PresentationRequest creation you want to have.
+By default, the Web SDK will create a PresentationRequest as soon as it is rendered, and will periodically regenerate the PresentationRequest (to ensure that it does not expire) until the user shares data or declines the request, or the widget is unmounted. You can use different combinations of props (see below) to choose how much control over PresentationRequest creation you want to have. For example, instead of automatically creating a PresentationRequest on load, you may want to trigger its creation based on a user interaction like a button click.
 
 ### Displaying deeplinks
 PresentationRequests are shared to an Unum ID-powered mobile app a user's device via deep links. The Web SDK determines how it displays them based on the browser's userAgent.
@@ -81,7 +81,6 @@ import WidgetHostAndController from '@unumid/web-sdk';
 import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
 const App = () => {
-
   const createPresentationRequest = async () => {
     // Call your backend to create a PresentationRequest and return the response.
   };
@@ -94,10 +93,10 @@ const App = () => {
       deeplinkImgSrc={deeplinkImgSrc}
     />
   );
-}
+};
 ```
 
-THe simplest use case (above), using TypeScript
+The simplest use case (above), using TypeScript.
 ```tsx
 import { FC } from 'react';
 
@@ -108,7 +107,6 @@ import WidgetHostAndController, { PresentationRequestResponse } from '@unumid/we
 import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
 const App: FC = () => {
-
   const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
     // Call your backend to create a PresentationRequest and return the response.
   };
@@ -121,7 +119,7 @@ const App: FC = () => {
       deeplinkImgSrc={deeplinkImgSrc}
     />
   );
-}
+};
 ```
 
 A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options.
@@ -139,15 +137,15 @@ const App = () => {
 
   const sendEmail = async (options) => {
     // Call your backend to send a deeplink via email and return the response.
-  }
+  };
 
   const sendSms = async (options) => {
     // Nall your backend to send a deeplink via sms and return the response.
-  }
+  };
 
-  const goToLogin = async () => {
+  const goToLogin = () => {
     // Navigate to your login page.
-  }
+  };
 
   return (
     <WidgetHostAndController
@@ -163,7 +161,7 @@ const App = () => {
       goToLogin={goToLogin}
     />
   );
-}
+};
 ```
 
 Allows your application more control over when the initial PresentationRequest is created. Enables fallback options.
@@ -183,23 +181,28 @@ const App = () => {
   const createPresentationRequest = async () => {
     const options = {
       // Customizable PresentationRequest options.
-    }
+      credentialRequests: [{
+        type: 'LoginCredential',
+        issuers: ['did:unum:5235d82e-5aac-4df4-adf2-7c6cc0cbec95']
+      }],
+      verifier: 'did:unum:a74fce7c-7dfa-4702-b85f-f68a854c3cfe'
+    };
     // Call your backend to create a PresentationRequest and save in the component state.
     const response = await callBackend(options);
-    setPresentationRequest(response)
+    setPresentationRequest(response);
   };
 
   const sendEmail = async (options) => {
     // Call your backend to send a deeplink via email and return the response.
-  }
+  };
 
   const sendSms = async (options) => {
     // Call your backend to send a deeplink via sms and return the response.
-  }
+  };
 
-  const goToLogin = async () => {
+  const goToLogin = () => {
     // Navigate to your login page.
-  }
+  };
 
   return (
     <WidgetHostAndController
@@ -217,7 +220,7 @@ const App = () => {
       goToLogin={goToLogin}
     />
   );
-}
+};
 ```
 
 Applications using Redux and other similar state management libraries have some unique challenges, as side effects such as creating resources usually happen in action creator functions, which dispatch actions to the store rather than returning values. In this example, we're providing the Web SDK with our `createPresentationRequest` action creator to call, then selecting the created PresentationRequest from the store to provide separately.
@@ -243,9 +246,9 @@ const App = () => {
   // Select the logged in user from state.
   const loggedInUser = useSelector(state => state.loggedInUser);
 
-  const goToLogin = async () => {
+  const goToLogin = () => {
     // Navigate to your login page.
-  }
+  };
 
   return (
     <WidgetHostAndController
@@ -263,7 +266,7 @@ const App = () => {
       goToLogin={goToLogin}
     />
   );
-}
+};
 ```
 
 ## Minimum Requirements
