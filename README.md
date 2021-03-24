@@ -124,35 +124,28 @@ const App: FC = () => {
 }
 ```
 
-A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options. (TypeScript)
-```tsx
-import { FC } from 'react';
-
-import WidgetHostAndController, {
-  EmailOptions,
-  SmsOptions,
-  PresentationRequestResponse,
-  SuccessResponse
-} from '@unumid/web-sdk';
+A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options.
+```jsx
+import WidgetHostAndController from '@unumid/web-sdk';
 
 // Import an image to use for the (mobile) deeplink button.
 // In this example, images are stored in an 'assets' directory. Your application may be different.
 import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
-const App: FC = () => {
-  const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
+const App = () => {
+  const createPresentationRequest = async () => {
     // Call your backend to create a PresentationRequest and return the response.
   };
 
-  const sendEmail = async (options: EmailOptions): Promise<SuccessResponse> => {
+  const sendEmail = async (options) => {
     // Call your backend to send a deeplink via email and return the response.
   }
 
-  const sendSms = async (options: SmsOptions): Promise<SuccessResponse> => {
+  const sendSms = async (options) => {
     // Nall your backend to send a deeplink via sms and return the response.
   }
 
-  const goToLogin = async (options: EmailOptions): Promise<SuccessResponse> => {
+  const goToLogin = async () => {
     // Navigate to your login page.
   }
 
@@ -173,28 +166,22 @@ const App: FC = () => {
 }
 ```
 
-Allows your application more control over when the initial PresentationRequest is created. Enables fallback options. (TypeScript)
-```tsx
-import { FC, useState } from 'react';
+Allows your application more control over when the initial PresentationRequest is created. Enables fallback options.
+```jsx
+import { useState } from 'react';
 
-import WidgetHostAndController, {
-  EmailOptions,
-  SmsOptions,
-  PresentationRequestResponse,
-  SuccessResponse
-} from '@unumid/web-sdk';
-import { PresentationRequestOptions } from '@unumid/types';
+import WidgetHostAndController from '@unumid/web-sdk';
 
 // Import an image to use for the (mobile) deeplink button.
 // In this example, images are stored in an 'assets' directory. Your application may be different.
 import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
-const App: FC = () => {
+const App = () => {
   // Save the PresentationRequest in local component state.
   const [presentationRequest, setPresentationRequest] = useState();
 
-  const createPresentationRequest = async (): Promise<void> => {
-    const options: PresentationRequestOptions = {
+  const createPresentationRequest = async () => {
+    const options = {
       // Customizable PresentationRequest options.
     }
     // Call your backend to create a PresentationRequest and save in the component state.
@@ -202,15 +189,15 @@ const App: FC = () => {
     setPresentationRequest(response)
   };
 
-  const sendEmail = async (options: EmailOptions): Promise<SuccessResponse> => {
+  const sendEmail = async (options) => {
     // Call your backend to send a deeplink via email and return the response.
   }
 
-  const sendSms = async (options: SmsOptions): Promise<SuccessResponse> => {
+  const sendSms = async (options) => {
     // Call your backend to send a deeplink via sms and return the response.
   }
 
-  const goToLogin = async (options: EmailOptions): Promise<SuccessResponse> => {
+  const goToLogin = async () => {
     // Navigate to your login page.
   }
 
@@ -233,18 +220,11 @@ const App: FC = () => {
 }
 ```
 
-Applications using Redux and other similar state management libraries have some unique challenges, as side effects such as creating resources usually happen in action creator functions, which dispatch actions to the store rather than returning values. In this example, we're providing the Web SDK with our `createPresentationRequest` action creator to call, then selecting the created PresentationRequest from the store to provide separately. (TypeScript)
-```tsx
-import { FC } from 'react';
+Applications using Redux and other similar state management libraries have some unique challenges, as side effects such as creating resources usually happen in action creator functions, which dispatch actions to the store rather than returning values. In this example, we're providing the Web SDK with our `createPresentationRequest` action creator to call, then selecting the created PresentationRequest from the store to provide separately.
+```jsx
 import { useSelector } from 'react-redux';
 
-import WidgetHostAndController, {
-  EmailOptions,
-  SmsOptions,
-  PresentationRequestResponse,
-  SuccessResponse
-} from '@unumid/web-sdk';
-import { PresentationRequestOptions } from '@unumid/types';
+import WidgetHostAndController from '@unumid/web-sdk';
 
 // Import your action creators. They have been wrapped in React hooks in this example, but your application may be different.
 import { useActionCreators } from './hooks/actionCreators';
@@ -253,7 +233,7 @@ import { useActionCreators } from './hooks/actionCreators';
 // In this example, images are stored in an 'assets' directory. Your application may be different.
 import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
-const App: FC = () => {
+const App = () => {
   // These functions can be defined as async action creators using redux-thunk, redux-saga, or other libraries.
   const { createPresentationRequest, sendSms, sendEmail } = useActionCreators();
 
@@ -263,7 +243,7 @@ const App: FC = () => {
   // Select the logged in user from state.
   const loggedInUser = useSelector(state => state.loggedInUser);
 
-  const goToLogin = async (options: EmailOptions): Promise<SuccessResponse> => {
+  const goToLogin = async () => {
     // Navigate to your login page.
   }
 
