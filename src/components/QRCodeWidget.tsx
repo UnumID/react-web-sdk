@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react';
+import { HolderApp } from '@unumid/types';
 
 import QRCode from 'components/QRCode';
 import LinkButton from 'components/LinkButton';
@@ -9,29 +10,27 @@ import { widgetTypes } from 'constants/widgetTypes';
 import './QRCodeWidget.css';
 
 export interface Props {
+  holderApp: Pick<HolderApp, 'name' | 'deeplinkButtonImg'>;
+  deeplink: string;
   qrCode: string;
   setCurrentWidget: (widget: string) => void;
-  applicationTitle: string;
   canScan: boolean;
-  deeplink: string;
   goToLogin?: () => void;
   shouldShowEmailLink: boolean;
   shouldShowSmsLink: boolean;
   shouldShowLoginLink: boolean;
-  deeplinkImgSrc?: string;
 }
 
 const QRCodeWidget: FunctionComponent<Props> = ({
+  holderApp,
   qrCode,
-  setCurrentWidget,
-  applicationTitle,
-  canScan,
   deeplink,
+  setCurrentWidget,
+  canScan,
   goToLogin,
   shouldShowEmailLink,
   shouldShowSmsLink,
   shouldShowLoginLink,
-  deeplinkImgSrc,
 }) => {
   const handleSMSLinkClick = (): void => {
     setCurrentWidget(widgetTypes.SMS);
@@ -41,9 +40,7 @@ const QRCodeWidget: FunctionComponent<Props> = ({
     setCurrentWidget(widgetTypes.EMAIL);
   };
 
-  const btnLbl = `Verify with ${applicationTitle}`;
-
-  const renderQrCode = () => <QRCode qrCode={qrCode} applicationTitle={applicationTitle} />;
+  const renderQrCode = () => <QRCode qrCode={qrCode} holderAppName={holderApp.name} />;
 
   const renderDeeplinkButton = () => (
     <div className="deeplink-button-wrapper">
@@ -51,7 +48,7 @@ const QRCodeWidget: FunctionComponent<Props> = ({
         target="_blank"
         href={deeplink}
       >
-        { deeplinkImgSrc ? <img src={deeplinkImgSrc} alt={btnLbl} /> : btnLbl }
+        <img src={holderApp.deeplinkButtonImg} alt={`Verify with ${holderApp.name}`} />
       </ActionButton>
       <Branding />
     </div>

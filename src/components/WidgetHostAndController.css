@@ -2,11 +2,15 @@
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   line-height: 1.5;
+  min-height: 360px;
 }
 
 @media screen and (max-width: 530px) {
   .unumid-web-sdk-widget {
     width: unset;
+    min-height: 150px;
   }
 }

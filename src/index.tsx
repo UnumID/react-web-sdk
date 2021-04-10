@@ -4,7 +4,6 @@ export type {
   EmailOptions,
   SmsOptions,
   SuccessResponse,
-  PresentationRequestResponse,
 } from 'types';
 
 export default WidgetHostAndController;

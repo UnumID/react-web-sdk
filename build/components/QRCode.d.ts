@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import './QRCode.css';
 interface Props {
     qrCode: string;
-    applicationTitle: string;
+    holderAppName: string;
 }
 declare const QRCode: FunctionComponent<Props>;
 export default QRCode;

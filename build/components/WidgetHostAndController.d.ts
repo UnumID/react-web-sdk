@@ -1,15 +1,14 @@
 import { FC } from 'react';
-import { EmailOptions, PresentationRequestResponse, SmsOptions, SuccessResponse, UserInfo } from 'types';
+import { PresentationRequestPostDto } from '@unumid/types';
+import { EmailOptions, SmsOptions, SuccessResponse, UserInfo } from 'types';
 import './WidgetHostAndController.css';
 export interface Props {
-    applicationTitle: string;
-    createPresentationRequest?: () => Promise<PresentationRequestResponse>;
+    createPresentationRequest: () => Promise<PresentationRequestPostDto>;
     sendEmail?: (options: EmailOptions) => Promise<SuccessResponse>;
     sendSms?: (options: SmsOptions) => Promise<SuccessResponse>;
     goToLogin?: () => void;
-    userInfo: UserInfo;
-    presentationRequest?: PresentationRequestResponse;
-    deeplinkImgSrc?: string;
+    userInfo?: UserInfo;
+    presentationRequest?: PresentationRequestPostDto;
     createInitialPresentationRequest?: boolean;
 }
 declare const WidgetHostAndController: FC<Props>;

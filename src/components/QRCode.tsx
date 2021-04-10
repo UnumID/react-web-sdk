@@ -8,10 +8,10 @@ import './QRCode.css';
 
 interface Props {
   qrCode: string;
-  applicationTitle: string;
+  holderAppName: string;
 }
 
-const QRCode: FunctionComponent<Props> = ({ qrCode, applicationTitle = 'ACME' }) => {
+const QRCode: FunctionComponent<Props> = ({ qrCode, holderAppName }) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
 
   const handleLinkButtonClick = (): void => {
@@ -28,13 +28,13 @@ const QRCode: FunctionComponent<Props> = ({ qrCode, applicationTitle = 'ACME' })
   return (
     <div className="qr-code">
       <div className="bold">To continue, scan this QR code</div>
-      <div className="light">with your phone camera or {applicationTitle} app:</div>
+      <div className="light">with your phone camera or {holderAppName} app:</div>
       <LinkButton onClick={handleLinkButtonClick}>Need help scanning?</LinkButton>
       {
           showNeedHelp && (
           <div className="help">
-            <div className="help-item">1. Install the {applicationTitle} app from the app store.</div>
-            <div className="help-item">2. Open the {applicationTitle} app and click &quot;Scan a QR code&quot;.</div>
+            <div className="help-item">1. Install the {holderAppName} app from the app store.</div>
+            <div className="help-item">2. Open the {holderAppName} app and click &quot;Scan a QR code&quot;.</div>
             <div className="help-item">3. Hover over the QR code.</div>
           </div>
           )

@@ -5,16 +5,16 @@ import {
 } from '@testing-library/react';
 import QRCodeWidget, { Props } from '../../components/QRCodeWidget';
 import { widgetTypes } from '../../constants/widgetTypes';
+import { dummyHolderAppInfo, dummyPresentationRequestResponse } from '../mocks';
 
 describe('QRCodeWidget', () => {
   const mockSetCurrentWidget = jest.fn();
   const mockGoToLogin = jest.fn();
-  const dummyQrCode = 'dummy qr code';
-  const dummyApplicationTitle = 'Dummy Application Title';
-  const dummyDeeplink = 'https://unumid.org/unumid/presentationRequest/574e1509-6f3e-49c5-9a8b-c49450c17d45';
+  const dummyQrCode = dummyPresentationRequestResponse.qrCode;
+  const dummyDeeplink = dummyPresentationRequestResponse.deeplink;
 
   const defaultProps: Props = {
-    applicationTitle: dummyApplicationTitle,
+    holderApp: dummyHolderAppInfo,
     canScan: true,
     deeplink: dummyDeeplink,
     setCurrentWidget: mockSetCurrentWidget,
@@ -38,19 +38,20 @@ describe('QRCodeWidget', () => {
 
   it('renders a deeplink button if canScan is false', async () => {
     renderWidget({ ...defaultProps, canScan: false });
-    const button = await screen.findByText(`Verify with ${dummyApplicationTitle}`);
-    expect(button).toBeInTheDocument();
+    const link = screen.getByAltText(`Verify with ${dummyHolderAppInfo.name}`).closest('a');
+    expect(link).toBeInTheDocument();
 
-    fireEvent.click(button);
-    expect(button).toHaveAttribute('href', dummyDeeplink);
-    expect(button).toHaveAttribute('target', '_blank');
+    fireEvent.click(link);
+    expect(link).toHaveAttribute('href', dummyDeeplink);
+    expect(link).toHaveAttribute('target', '_blank');
   });
 
-  it('uses an image for the deeplink button if one was provided', async () => {
-    renderWidget({ ...defaultProps, canScan: false, deeplinkImgSrc: './testImage.png' });
-    const image = await screen.findByAltText(`Verify with ${dummyApplicationTitle}`);
+  it('uses the button image from the holderApp', async () => {
+    renderWidget({ ...defaultProps, canScan: false });
+    const image = await screen.findByAltText(`Verify with ${dummyHolderAppInfo.name}`);
 
     expect(image).toBeInTheDocument();
+    expect(image).toHaveAttribute('src', dummyHolderAppInfo.deeplinkButtonImg);
   });
 
   it('renders Unum ID branding with the deeplink button', async () => {
