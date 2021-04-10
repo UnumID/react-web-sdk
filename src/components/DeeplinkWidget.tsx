@@ -1,13 +1,13 @@
-import React, { FunctionComponent } from 'react';
+import React, { FC } from 'react';
 import { HolderApp } from '@unumid/types';
 
 import QRCode from 'components/QRCode';
 import LinkButton from 'components/LinkButton';
-import ActionButton from 'components/ActionButton';
+import DeeplinkButton from 'components/DeeplinkButton';
 import Branding from 'components/Branding';
 import { widgetTypes } from 'constants/widgetTypes';
 
-import './QRCodeWidget.css';
+import './DeeplinkWidget.css';
 
 export interface Props {
   holderApp: Pick<HolderApp, 'name' | 'deeplinkButtonImg'>;
@@ -21,7 +21,7 @@ export interface Props {
   shouldShowLoginLink: boolean;
 }
 
-const QRCodeWidget: FunctionComponent<Props> = ({
+const DeeplinkWidget: FC<Props> = ({
   holderApp,
   qrCode,
   deeplink,
@@ -44,12 +44,12 @@ const QRCodeWidget: FunctionComponent<Props> = ({
 
   const renderDeeplinkButton = () => (
     <div className="deeplink-button-wrapper">
-      <ActionButton
+      <DeeplinkButton
         target="_blank"
         href={deeplink}
       >
         <img src={holderApp.deeplinkButtonImg} alt={`Verify with ${holderApp.name}`} />
-      </ActionButton>
+      </DeeplinkButton>
       <Branding />
     </div>
 
@@ -76,7 +76,7 @@ const QRCodeWidget: FunctionComponent<Props> = ({
   );
 
   return (
-    <div className="qrcode-widget-content">
+    <div className="deeplink-widget">
       { canScan && renderQrCode() }
       { !canScan && renderDeeplinkButton() }
       { shouldShowLoginLink && renderLoginButton() }
@@ -86,4 +86,4 @@ const QRCodeWidget: FunctionComponent<Props> = ({
   );
 };
 
-export default QRCodeWidget;
+export default DeeplinkWidget;

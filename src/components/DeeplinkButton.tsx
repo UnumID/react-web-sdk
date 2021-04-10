@@ -1,7 +1,7 @@
 import React, { FC, PropsWithChildren } from 'react';
 import cc from 'classcat';
 
-import './ActionButton.css';
+import './DeeplinkButton.css';
 
 type Props = PropsWithChildren<{
   target?: string;
@@ -9,14 +9,14 @@ type Props = PropsWithChildren<{
   className?: string;
 }>
 
-const ActionButton: FC<Props> = ({
+const DeeplinkButton: FC<Props> = ({
   target,
   href,
   className,
   children,
 }) => (
   <a
-    className={cc(['action-button', className])}
+    className={cc(['deeplink-button', className])}
     href={href}
     target={target}
   >
@@ -24,4 +24,4 @@ const ActionButton: FC<Props> = ({
   </a>
 );
 
-export default ActionButton;
+export default DeeplinkButton;

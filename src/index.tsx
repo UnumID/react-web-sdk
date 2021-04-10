@@ -1,4 +1,4 @@
-import WidgetHostAndController from 'components/WidgetHostAndController';
+import UnumIDWidget from 'components/UnumIDWidget';
 
 export type {
   EmailOptions,
@@ -6,4 +6,4 @@ export type {
   SuccessResponse,
 } from 'types';
 
-export default WidgetHostAndController;
+export default UnumIDWidget;

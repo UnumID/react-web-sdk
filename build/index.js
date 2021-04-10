@@ -160,12 +160,12 @@ function cc(obj) {
   return out
 }
 
-var css_248z$4 = ".action-button {\n  cursor: pointer;\n  margin-bottom: 20px;\n  max-width: 250px;\n  max-height: 50px;\n}\n\n.action-button img {\n  width: 100%;\n  height: 100%;\n}\n";
+var css_248z$4 = ".deeplink-button {\n  cursor: pointer;\n  margin-bottom: 20px;\n  max-width: 250px;\n  max-height: 50px;\n}\n\n.deeplink-button img {\n  width: 100%;\n  height: 100%;\n}\n";
 styleInject(css_248z$4);
 
-var ActionButton = function (_a) {
+var DeeplinkButton = function (_a) {
     var target = _a.target, href = _a.href, className = _a.className, children = _a.children;
-    return (React__default['default'].createElement("a", { className: cc(['action-button', className]), href: href, target: target }, children));
+    return (React__default['default'].createElement("a", { className: cc(['deeplink-button', className]), href: href, target: target }, children));
 };
 
 var widgetTypes = {
@@ -174,10 +174,10 @@ var widgetTypes = {
     SMS: 'SMS',
 };
 
-var css_248z$3 = ".qrcode-widget-content {\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  display: flex;\n}\n\n.qrcode-widget-content .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n\n.qrcode-widget-content .deeplink-button-wrapper {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n";
+var css_248z$3 = ".deeplink-widget {\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  display: flex;\n}\n\n.deeplink-widget .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n\n.deeplink-widget .deeplink-button-wrapper {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n";
 styleInject(css_248z$3);
 
-var QRCodeWidget = function (_a) {
+var DeeplinkWidget = function (_a) {
     var holderApp = _a.holderApp, qrCode = _a.qrCode, deeplink = _a.deeplink, setCurrentWidget = _a.setCurrentWidget, canScan = _a.canScan, goToLogin = _a.goToLogin, shouldShowEmailLink = _a.shouldShowEmailLink, shouldShowSmsLink = _a.shouldShowSmsLink, shouldShowLoginLink = _a.shouldShowLoginLink;
     var handleSMSLinkClick = function () {
         setCurrentWidget(widgetTypes.SMS);
@@ -187,13 +187,13 @@ var QRCodeWidget = function (_a) {
     };
     var renderQrCode = function () { return React__default['default'].createElement(QRCode, { qrCode: qrCode, holderAppName: holderApp.name }); };
     var renderDeeplinkButton = function () { return (React__default['default'].createElement("div", { className: "deeplink-button-wrapper" },
-        React__default['default'].createElement(ActionButton, { target: "_blank", href: deeplink },
+        React__default['default'].createElement(DeeplinkButton, { target: "_blank", href: deeplink },
             React__default['default'].createElement("img", { src: holderApp.deeplinkButtonImg, alt: "Verify with " + holderApp.name })),
         React__default['default'].createElement(Branding, null))); };
     var renderLoginButton = function () { return (goToLogin && (React__default['default'].createElement(LinkButton, { onClick: goToLogin }, "Log in with your email address for more authentication options"))); };
     var renderSmsButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: handleSMSLinkClick }, "Get an SMS instead")); };
     var renderEmailButton = function () { return (React__default['default'].createElement(LinkButton, { onClick: handleEmailLinkClick }, "Get an email instead")); };
-    return (React__default['default'].createElement("div", { className: "qrcode-widget-content" },
+    return (React__default['default'].createElement("div", { className: "deeplink-widget" },
         canScan && renderQrCode(),
         !canScan && renderDeeplinkButton(),
         shouldShowLoginLink && renderLoginButton(),
@@ -348,7 +348,7 @@ var useTimeout = function (callback) {
 var css_248z = ".unumid-web-sdk-widget {\n  background-color: #ffffff;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  line-height: 1.5;\n  min-height: 360px;\n}\n\n@media screen and (max-width: 530px) {\n  .unumid-web-sdk-widget {\n    width: unset;\n    min-height: 150px;\n  }\n}\n";
 styleInject(css_248z);
 
-var WidgetHostAndController = function (_a) {
+var UnumIDWidget = function (_a) {
     var _b;
     var createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequestProp = _a.presentationRequest, _c = _a.createInitialPresentationRequest, createInitialPresentationRequest = _c === void 0 ? !presentationRequestProp : _c;
     // determines whether to initially show a qr code or a button
@@ -421,10 +421,10 @@ var WidgetHostAndController = function (_a) {
             React__default['default'].createElement(Spinner, null)));
     }
     return (React__default['default'].createElement("div", { className: "unumid-web-sdk-widget" },
-        (currentWidget === widgetTypes.QR_CODE) && (React__default['default'].createElement(QRCodeWidget, { holderApp: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.holderApp, deeplink: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.deeplink, qrCode: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.qrCode, setCurrentWidget: setCurrentWidget, canScan: canScan, goToLogin: goToLogin, shouldShowEmailLink: shouldShowEmailLink, shouldShowSmsLink: shouldShowSmsLink, shouldShowLoginLink: shouldShowLoginLink })),
+        (currentWidget === widgetTypes.QR_CODE) && (React__default['default'].createElement(DeeplinkWidget, { holderApp: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.holderApp, deeplink: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.deeplink, qrCode: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.qrCode, setCurrentWidget: setCurrentWidget, canScan: canScan, goToLogin: goToLogin, shouldShowEmailLink: shouldShowEmailLink, shouldShowSmsLink: shouldShowSmsLink, shouldShowLoginLink: shouldShowLoginLink })),
         (currentWidget === widgetTypes.SMS) && sendSms && userInfo && (React__default['default'].createElement(SMSWidget, { userInfo: userInfo, sendSms: sendSms, canScan: canScan, setCurrentWidget: setCurrentWidget, deeplink: presentationRequest.deeplink })),
         (currentWidget === widgetTypes.EMAIL) && sendEmail && userInfo && (React__default['default'].createElement(EmailWidget, { email: userInfo.email, sendEmail: sendEmail, canScan: canScan, goToLogin: goToLogin, deeplink: presentationRequest.deeplink, setCurrentWidget: setCurrentWidget }))));
 };
 
-module.exports = WidgetHostAndController;
+module.exports = UnumIDWidget;
 //# sourceMappingURL=index.js.map

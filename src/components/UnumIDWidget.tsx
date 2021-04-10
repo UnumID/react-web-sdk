@@ -6,9 +6,10 @@ import React, {
 } from 'react';
 import { PresentationRequestPostDto } from '@unumid/types';
 
-import QRCodeWidget from 'components/QRCodeWidget';
+import QRCodeWidget from 'components/DeeplinkWidget';
 import SMSWidget from 'components/SMSWidget';
 import EmailWidget from 'components/EmailWidget';
+import Spinner from 'components/Spinner';
 import {
   EmailOptions,
   SmsOptions,
@@ -18,8 +19,7 @@ import {
 import { widgetTypes } from 'constants/widgetTypes';
 import { useTimeout } from 'hooks/useTimeout';
 
-import './WidgetHostAndController.css';
-import Spinner from './Spinner';
+import './UnumIDWidget.css';
 
 export interface Props {
   createPresentationRequest: () => Promise<PresentationRequestPostDto>;
@@ -31,7 +31,7 @@ export interface Props {
   createInitialPresentationRequest?: boolean;
 }
 
-const WidgetHostAndController: FC<Props> = ({
+const UnumIDWidget: FC<Props> = ({
   createPresentationRequest,
   sendEmail,
   sendSms,
@@ -157,4 +157,4 @@ const WidgetHostAndController: FC<Props> = ({
   );
 };
 
-export default WidgetHostAndController;
+export default UnumIDWidget;

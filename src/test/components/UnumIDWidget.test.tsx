@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { clear as clearMockUserAgent, mockUserAgent } from 'jest-useragent-mock';
 
-import WidgetHostAndController, { Props } from '../../components/WidgetHostAndController';
+import UnumIDWidget, { Props } from '../../components/UnumIDWidget';
 import { useTimeout } from '../../hooks/useTimeout';
 import { dummyPresentationRequestResponse } from '../mocks';
 
@@ -14,7 +14,7 @@ jest.mock('../../hooks/useTimeout');
 const mockUseTimeout = useTimeout as jest.Mock;
 mockUseTimeout.mockReturnValue([mockStart, mockStop]);
 
-describe('WidgetHostAndController', () => {
+describe('UnumIDWidget', () => {
   const dummyUserInfo = { email: 'test@test.com', phone: 'KL5-5555' };
 
   const dummyCreatePresentationRequestResponse = Promise.resolve(dummyPresentationRequestResponse);
@@ -34,7 +34,7 @@ describe('WidgetHostAndController', () => {
   };
 
   const renderWidget = (props: Props = defaultProps) => {
-    render(<WidgetHostAndController {...props} />);
+    render(<UnumIDWidget {...props} />);
   };
 
   afterEach(() => {

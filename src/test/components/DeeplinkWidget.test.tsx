@@ -3,11 +3,11 @@ import React from 'react';
 import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
-import QRCodeWidget, { Props } from '../../components/QRCodeWidget';
+import DeeplinkWidget, { Props } from '../../components/DeeplinkWidget';
 import { widgetTypes } from '../../constants/widgetTypes';
 import { dummyHolderAppInfo, dummyPresentationRequestResponse } from '../mocks';
 
-describe('QRCodeWidget', () => {
+describe('DeeplinkWidget', () => {
   const mockSetCurrentWidget = jest.fn();
   const mockGoToLogin = jest.fn();
   const dummyQrCode = dummyPresentationRequestResponse.qrCode;
@@ -26,7 +26,7 @@ describe('QRCodeWidget', () => {
   };
 
   const renderWidget = (props: Props = defaultProps) => {
-    render(<QRCodeWidget {...props} />);
+    render(<DeeplinkWidget {...props} />);
   };
 
   it('renders a qr code if canScan is true', async () => {

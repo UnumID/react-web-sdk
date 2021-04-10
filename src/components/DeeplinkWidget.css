@@ -1,16 +1,16 @@
-.qrcode-widget-content {
+.deeplink-widget {
   align-items: center;
   justify-content: center;
   flex-direction: column;
   display: flex;
 }
 
-.qrcode-widget-content .error {
+.deeplink-widget .error {
   font-weight: 700;
   color: #ff0000;
 }
 
-.qrcode-widget-content .deeplink-button-wrapper {
+.deeplink-widget .deeplink-button-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
