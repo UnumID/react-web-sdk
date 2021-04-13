@@ -152,7 +152,7 @@ const FallbackButton: FC<Props> = ({
 
     const options: ExternalMessageInput = {
       to: userInfo.phone,
-      deeplink
+      deeplink,
     };
 
     if (sendSms) {

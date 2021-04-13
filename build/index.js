@@ -348,7 +348,7 @@ var FallbackButton = function (_a) {
                     deeplink = presentationRequest.deeplink, presentationRequest.verifier;
                     options = {
                         to: userInfo.phone,
-                        deeplink: deeplink
+                        deeplink: deeplink,
                     };
                     if (!sendSms) return [3 /*break*/, 5];
                     _a.label = 1;

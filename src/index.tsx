@@ -1,8 +1,7 @@
 import UnumIDWidget from 'components/UnumIDWidget';
 
 export type {
-  EmailOptions,
-  SmsOptions,
+  ExternalMessageInput,
   SuccessResponse,
 } from 'types';
 
