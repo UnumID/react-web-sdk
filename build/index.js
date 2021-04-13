@@ -283,7 +283,7 @@ var FallbackButton = function (_a) {
      * Otherwise uses the default provided by the UnumIDClient.
      */
     var actuallySendEmail = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deeplink, verifier, options, e_1, e_2;
+        var deeplink, options, e_1, e_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -294,11 +294,10 @@ var FallbackButton = function (_a) {
                         console.log('email fallback not available');
                         return [2 /*return*/];
                     }
-                    deeplink = presentationRequest.deeplink, verifier = presentationRequest.verifier;
+                    deeplink = presentationRequest.deeplink, presentationRequest.verifier;
                     options = {
                         to: userInfo === null || userInfo === void 0 ? void 0 : userInfo.email,
-                        subject: "Verification Request: " + verifier.name,
-                        htmlBody: "<div>Click <a href=" + deeplink + ">here</a> to complete.</div>",
+                        deeplink: deeplink,
                     };
                     if (!sendEmail) return [3 /*break*/, 5];
                     _a.label = 1;
@@ -335,7 +334,7 @@ var FallbackButton = function (_a) {
    * Otherwise uses the default provided by the UnumIDClient.
    */
     var actuallySendSms = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deeplink, verifier, options, e_3, e_4;
+        var deeplink, options, e_3, e_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -346,10 +345,10 @@ var FallbackButton = function (_a) {
                         console.log('sms fallback not available');
                         return [2 /*return*/];
                     }
-                    deeplink = presentationRequest.deeplink, verifier = presentationRequest.verifier;
+                    deeplink = presentationRequest.deeplink, presentationRequest.verifier;
                     options = {
                         to: userInfo.phone,
-                        msg: "Verification Request: " + verifier.name + ". Click here to complete: " + deeplink + ".",
+                        deeplink: deeplink
                     };
                     if (!sendSms) return [3 /*break*/, 5];
                     _a.label = 1;

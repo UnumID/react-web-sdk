@@ -20,19 +20,13 @@ export interface UserInfo {
   pushToken?: PushToken;
 }
 
-export interface SmsOptions {
-  to: string;
-  msg: string;
-}
-
 export interface SuccessResponse {
   success: boolean;
 }
 
-export interface EmailOptions {
+export interface ExternalMessageInput {
   to: string;
-  subject: string;
-  htmlBody: string;
+  deeplink: string;
 }
 
 export type FallbackType = 'PUSH' | 'SMS' | 'EMAIL' | 'LOGIN';

@@ -4,8 +4,7 @@ import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/typ
 
 import {
   FallbackType,
-  EmailOptions,
-  SmsOptions,
+  ExternalMessageInput,
   SuccessResponse,
   UserInfo,
 } from 'types';
@@ -19,8 +18,8 @@ interface Props {
   setFallbackError: (err?: string) => void;
   userInfo?: UserInfo;
   presentationRequest: PresentationRequestPostDto;
-  sendEmail?: (options: EmailOptions) => Promise<SuccessResponse>;
-  sendSms?: (options: SmsOptions) => Promise<SuccessResponse>;
+  sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
+  sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
   sendPushNotification?: (options: PushNotificationOptions) => Promise<any>;
   goToLogin?: () => void;
 }
@@ -110,10 +109,9 @@ const FallbackButton: FC<Props> = ({
     }
 
     const { deeplink, verifier } = presentationRequest;
-    const options: EmailOptions = {
+    const options: ExternalMessageInput = {
       to: userInfo?.email,
-      subject: `Verification Request: ${verifier.name}`,
-      htmlBody: `<div>Click <a href=${deeplink}>here</a> to complete.</div>`,
+      deeplink,
     };
 
     if (sendEmail) {
@@ -152,9 +150,9 @@ const FallbackButton: FC<Props> = ({
 
     const { deeplink, verifier } = presentationRequest;
 
-    const options: SmsOptions = {
+    const options: ExternalMessageInput = {
       to: userInfo.phone,
-      msg: `Verification Request: ${verifier.name}. Click here to complete: ${deeplink}.`,
+      deeplink
     };
 
     if (sendSms) {

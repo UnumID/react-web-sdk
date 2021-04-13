@@ -11,9 +11,8 @@ import Spinner from 'components/Spinner';
 import LinkButton from 'components/LinkButton';
 import FallbackButton from 'components/FallbackButton';
 import {
-  EmailOptions,
+  ExternalMessageInput,
   FallbackType,
-  SmsOptions,
   SuccessResponse,
   UserInfo,
   WidgetType,
@@ -30,8 +29,8 @@ export interface Props {
   apiKey: string;
   env: SaasEnvironment;
   createPresentationRequest: () => Promise<PresentationRequestPostDto>;
-  sendEmail?: (options: EmailOptions) => Promise<SuccessResponse>;
-  sendSms?: (options: SmsOptions) => Promise<SuccessResponse>;
+  sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
+  sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
   sendPushNotification?: (options: PushNotificationOptions) => Promise<any>;
   goToLogin?: () => void;
   userInfo?: UserInfo;

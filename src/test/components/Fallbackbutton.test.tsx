@@ -71,8 +71,8 @@ describe('FallbackButton component', () => {
     userEvent.click(button);
     expect(props.sendSms).toBeCalled();
     expect(props.sendSms).toBeCalledWith({
-      to: defaultProps.userInfo.phone,
-      msg: `Verification Request: ${props.presentationRequest.verifier.name}. Click here to complete: ${props.presentationRequest.deeplink}.`,
+      to: props.userInfo.phone,
+      deeplink: props.presentationRequest.deeplink,
     });
   });
 
@@ -83,9 +83,8 @@ describe('FallbackButton component', () => {
     userEvent.click(button);
     expect(props.sendEmail).toBeCalled();
     expect(props.sendEmail).toBeCalledWith({
-      to: defaultProps.userInfo.email,
-      subject: `Verification Request: ${props.presentationRequest.verifier.name}`,
-      htmlBody: `<div>Click <a href=${props.presentationRequest.deeplink}>here</a> to complete.</div>`,
+      to: props.userInfo.email,
+      deeplink: props.presentationRequest.deeplink,
     });
   });
 
@@ -117,7 +116,7 @@ describe('FallbackButton component', () => {
     expect(props.client.sendSms).toBeCalled();
     expect(props.client.sendSms).toBeCalledWith({
       to: props.userInfo.phone,
-      msg: `Verification Request: ${props.presentationRequest.verifier.name}. Click here to complete: ${props.presentationRequest.deeplink}.`,
+      deeplink: props.presentationRequest.deeplink,
     });
   });
 
@@ -129,8 +128,7 @@ describe('FallbackButton component', () => {
     expect(props.client.sendEmail).toBeCalled();
     expect(props.client.sendEmail).toBeCalledWith({
       to: props.userInfo.email,
-      subject: `Verification Request: ${props.presentationRequest.verifier.name}`,
-      htmlBody: `<div>Click <a href=${props.presentationRequest.deeplink}>here</a> to complete.</div>`,
+      deeplink: props.presentationRequest.deeplink,
     });
   });
 

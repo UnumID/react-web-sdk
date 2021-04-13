@@ -30,7 +30,7 @@ describe('UnumIDClient', () => {
     it('calls the saas', async () => {
       const path = '/sms';
       const method = 'POST';
-      const data = { to: '5555555', msg: 'test' };
+      const data = { to: '5555555', deeplink: 'acme://unumid/presentationRequest/test' };
       await client.makeSaasCall(path, method, data);
 
       expect(mockAxiosInstance).toBeCalledWith({
@@ -45,8 +45,7 @@ describe('UnumIDClient', () => {
     it('sends an email via the saas', async () => {
       const options = {
         to: 'test@unum.id',
-        htmlBody: '<div>test</div>',
-        subject: 'test',
+        deeplink: 'acme://unumid/presentationRequest/test',
       };
 
       await client.sendEmail(options);
@@ -62,7 +61,7 @@ describe('UnumIDClient', () => {
     it('sends an sms via the saas', async () => {
       const options = {
         to: 'KL5-5555',
-        msg: 'test',
+        deeplink: 'acme://unumid/presentationRequest/test',
       };
 
       await client.sendSms(options);
