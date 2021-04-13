@@ -11,6 +11,9 @@ interface Props {
   holderAppName: string;
 }
 
+/**
+ * Component responsible for rendering a QR code
+ */
 const QRCode: FunctionComponent<Props> = ({ qrCode, holderAppName }) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
 

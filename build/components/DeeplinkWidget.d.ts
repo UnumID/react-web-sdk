@@ -5,13 +5,12 @@ export interface Props {
     holderApp: Pick<HolderApp, 'name' | 'deeplinkButtonImg'>;
     deeplink: string;
     qrCode: string;
-    setCurrentWidget: (widget: string) => void;
     canScan: boolean;
-    goToLogin?: () => void;
-    shouldShowEmailLink: boolean;
-    shouldShowSmsLink: boolean;
-    shouldShowLoginLink: boolean;
 }
+/**
+ * Component responsible for rendering a deep link referencing a PresentationRequest,
+ * either as a QR code (default on desktop) or a button (default on mobile).
+ */
 declare const DeeplinkWidget: FC<Props>;
 export default DeeplinkWidget;
 //# sourceMappingURL=DeeplinkWidget.d.ts.map

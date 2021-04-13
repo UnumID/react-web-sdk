@@ -3,6 +3,9 @@ import React, { FC } from 'react';
 import PoweredByUnumID from '../assets/PoweredByUnumID.png';
 import './Branding.css';
 
+/**
+ * Component responsible for displaying Unum ID branding.
+ */
 const Branding: FC = () => (
   <a
     className="branding"

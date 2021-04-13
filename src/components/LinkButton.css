@@ -12,3 +12,7 @@
   cursor: pointer;
   border: none;
 }
+
+.link-button:focus {
+  outline: none;
+}

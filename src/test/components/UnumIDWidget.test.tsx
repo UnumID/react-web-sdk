@@ -10,6 +10,7 @@ import { dummyPresentationRequestResponse } from '../mocks';
 const mockStart = jest.fn();
 const mockStop = jest.fn();
 jest.mock('../../hooks/useTimeout');
+jest.mock('../../UnumIDClient');
 
 const mockUseTimeout = useTimeout as jest.Mock;
 mockUseTimeout.mockReturnValue([mockStart, mockStop]);
@@ -26,6 +27,8 @@ describe('UnumIDWidget', () => {
   const mockGoToLogin = jest.fn();
 
   const defaultProps: Props = {
+    apiKey: 'dummy api key',
+    env: 'development',
     userInfo: dummyUserInfo,
     createPresentationRequest: mockCreatePresentationRequest,
     goToLogin: mockGoToLogin,
@@ -78,17 +81,34 @@ describe('UnumIDWidget', () => {
     clearMockUserAgent();
   });
 
-  it('renders the sms widget when appropriate', async () => {
+  it('renders the push notfication fallback option when appropriate', async () => {
+    const props = {
+      ...defaultProps,
+      userInfo: {
+        pushToken: {
+          provider: 'FCM',
+          value: 'test token',
+        },
+      },
+    };
+    renderWidget(props);
+    const pushButton = await screen.findByText('Get a push notification instead.');
+
+    fireEvent.click(pushButton);
+    expect(await screen.findByText('We sent a push notification to your device.')).toBeInTheDocument();
+  });
+
+  it('renders the sms fallback option when appropriate', async () => {
     renderWidget();
-    const smsButton = await screen.findByText('Get an SMS instead');
+    const smsButton = await screen.findByText('Get an SMS instead.');
 
     fireEvent.click(smsButton);
     expect(await screen.findByText(`We texted a link to ${dummyUserInfo.phone}.`)).toBeInTheDocument();
   });
 
-  it('renders the email widget when appropriate', async () => {
+  it('renders the email fallback option when appropriate', async () => {
     renderWidget({ ...defaultProps, userInfo: { email: dummyUserInfo.email } });
-    const emailButton = await screen.findByText('Get an email instead');
+    const emailButton = await screen.findByText('Get an email instead.');
 
     fireEvent.click(emailButton);
     expect(await screen.findByText(`We emailed a link to ${dummyUserInfo.email}.`)).toBeInTheDocument();

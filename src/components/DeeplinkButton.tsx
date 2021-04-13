@@ -9,6 +9,10 @@ type Props = PropsWithChildren<{
   className?: string;
 }>
 
+/**
+ * Component responsible for displaying a deep link as a clickable button.
+ * Primarily intended for use in mobile browsers.
+ */
 const DeeplinkButton: FC<Props> = ({
   target,
   href,

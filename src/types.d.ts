@@ -1,3 +1,5 @@
+import { PushToken } from '@unumid/types';
+
 export interface CredentialRequest {
   type: string;
   issuers: string[];
@@ -13,8 +15,9 @@ export interface Proof {
 }
 
 export interface UserInfo {
-  email: string;
-  phone: string;
+  email?: string;
+  phone?: string;
+  pushToken?: PushToken;
 }
 
 export interface SmsOptions {
@@ -31,3 +34,7 @@ export interface EmailOptions {
   subject: string;
   htmlBody: string;
 }
+
+export type FallbackType = 'PUSH' | 'SMS' | 'EMAIL' | 'LOGIN';
+export type WidgetType = 'DEEPLINK' | 'FALLBACK_RESULT';
+export type SaasEnvironment = 'development' | 'sandbox' | 'production';

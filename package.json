@@ -27,6 +27,7 @@
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/react-hooks": "^5.1.0",
+    "@testing-library/user-event": "^13.1.2",
     "@types/jest": "^26.0.15",
     "@types/react-dom": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
@@ -51,5 +52,7 @@
   "files": [
     "build"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
 }

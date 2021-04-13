@@ -2,10 +2,8 @@ import React, { FC } from 'react';
 import { HolderApp } from '@unumid/types';
 
 import QRCode from 'components/QRCode';
-import LinkButton from 'components/LinkButton';
 import DeeplinkButton from 'components/DeeplinkButton';
 import Branding from 'components/Branding';
-import { widgetTypes } from 'constants/widgetTypes';
 
 import './DeeplinkWidget.css';
 
@@ -13,33 +11,19 @@ export interface Props {
   holderApp: Pick<HolderApp, 'name' | 'deeplinkButtonImg'>;
   deeplink: string;
   qrCode: string;
-  setCurrentWidget: (widget: string) => void;
   canScan: boolean;
-  goToLogin?: () => void;
-  shouldShowEmailLink: boolean;
-  shouldShowSmsLink: boolean;
-  shouldShowLoginLink: boolean;
 }
 
+/**
+ * Component responsible for rendering a deep link referencing a PresentationRequest,
+ * either as a QR code (default on desktop) or a button (default on mobile).
+ */
 const DeeplinkWidget: FC<Props> = ({
   holderApp,
   qrCode,
   deeplink,
-  setCurrentWidget,
   canScan,
-  goToLogin,
-  shouldShowEmailLink,
-  shouldShowSmsLink,
-  shouldShowLoginLink,
 }) => {
-  const handleSMSLinkClick = (): void => {
-    setCurrentWidget(widgetTypes.SMS);
-  };
-
-  const handleEmailLinkClick = (): void => {
-    setCurrentWidget(widgetTypes.EMAIL);
-  };
-
   const renderQrCode = () => <QRCode qrCode={qrCode} holderAppName={holderApp.name} />;
 
   const renderDeeplinkButton = () => (
@@ -55,33 +39,11 @@ const DeeplinkWidget: FC<Props> = ({
 
   );
 
-  const renderLoginButton = () => (
-    goToLogin && (
-      <LinkButton onClick={goToLogin}>
-        Log in with your email address for more authentication options
-      </LinkButton>
-    )
-  );
-
-  const renderSmsButton = () => (
-    <LinkButton onClick={handleSMSLinkClick}>
-      Get an SMS instead
-    </LinkButton>
-  );
-
-  const renderEmailButton = () => (
-    <LinkButton onClick={handleEmailLinkClick}>
-      Get an email instead
-    </LinkButton>
-  );
-
   return (
     <div className="deeplink-widget">
       { canScan && renderQrCode() }
       { !canScan && renderDeeplinkButton() }
-      { shouldShowLoginLink && renderLoginButton() }
-      { shouldShowSmsLink && renderSmsButton() }
-      { shouldShowEmailLink && renderEmailButton() }
+
     </div>
   );
 };
