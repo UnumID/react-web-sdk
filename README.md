@@ -36,36 +36,40 @@ On non-mobile browsers, the Web SDK will default to displaying the deep link as 
 #### Fallback options
 In some situations, neither a QR code nor a button is convenient. The Web SDK offers the following fallback options for sending the deep link to the user's device.
 
-**push notification** (coming soon): sends a push notification to the user's device. The user must have push notifications enabled for an Unum ID-powered mobile app in order to use this option.
+**push notification** Sends a push notification to the user's device. The user must have push notifications enabled for an Unum ID-powered mobile app in order to use this option. To use the default push notification service provided by Unum ID, you will need to upload the push notification credentials (Firebase Cloud Messaging and/or Apple Push Notification Service) for your app.
 
 **sms**: Sends the user an sms containing the deeplink, which they can open on their device. You must provide the user's mobile phone number in order to use this option.
 
-**email**: Sends the user an email containing the deeplink, which they can open on their device. You must providetThe user's email address in order to use this option.
+**email**: Sends the user an email containing the deeplink, which they can open on their device. You must provide The user's email address in order to use this option.
 
-**login**: If your client application doesn't have the information required to use the desired fallback options, we can redirect them to your existing login page.
+**login**: If your client application doesn't have the information required to use the desired fallback options, we can redirect them to your existing login page. You must provide the `goToLogin` prop in order to use this option.
+
+**custom notifications** The Web SDK sends default push, sms, and email notifications using the Unum ID SaaS. If you want to customize your notifications, you may provide the `sendPushNotification`, `sendEmail` and/or `sendSms` props. If these props are provided, they will be used instead of the default.
 
 ## API
-### WidgetHostAndController Component
-The Web SDK exports a single component, `WidgetHostAndController` (TODO: rename to something better)
+### UnumIDWidget Component
+The Web SDK default exports a single component, `UnumIDWidget`
 This component encapsulates all of the Web SDK's functionality.
 
 
 #### Props
-**applicationTitle** (string) _required_: The name of your Unum ID powered mobile app
+**env** (string) _required_: The environment to run in ('development', 'sandbox', or 'production'). This determines which Unum ID SaaS environment the Web SDK will connect to.
 
-**userInfo** (`UserInfo`) _required_: Information about a logged in user of your application. The Web SDK will use this to determine which fallback options are available. (TODO: this should not be required)
+**apiKey** (string) _required_: Your Web SDK api key (obtained from Unum ID).
+
+**userInfo** (`UserInfo`) _optional_: Information about a logged in user of your application. The Web SDK will use this to determine which fallback options are available.
 
 **presentationRequest** (`PresentationRequestResponse`) _optional_: a `PresentationRequestResponse` object, created on your server via the [Server SDK](https://github.com/UnumID/Server-SDK-TypeScript). You may provide this prop in combination with setting `createInitialPresentationRequest` (below) to `false` for more control over when the widget should display a PresentationRequest to the user.
 
-**deeplinkImgSrc** (string) _optional_: path to the image to display as a Deeplink button(TODO: this should be required)
+**createInitialPresentationRequest** (boolean) _required_: Whether the widget should immediately call `createPresentationRequest` on load. You can combine this with the `presentationRequest` prop to gain control over when the initial PresentationRequest is created. By default, it is `false` if you provide the `presentationRequest` prop and `true` if you do not.
 
-**createInitialPresentationRequest** (boolean) _optional_: Whether the widget should immediately call `createPresentationRequest` on load. You can combine this with the `presentationRequest` prop to gain control over when the initial PresentationRequest is created. By default, it is `false` if you provide the `presentationRequest` prop and `true` if you do not.
+**createPresentationRequest** (`() => Promise<PresentationRequestResponse> | void`) _optional_: A function which should call your Server SDK powered backend to create a PresentationRequest. If it returns a value, it is assumed that that value is a `PresentationRequestResponse`. If it does not return a value, you must provide the response via the `presentationRequest` prop in order for the widget to display the PresentationRequest. (As in a redux application, where `createPresentationRequest` will probably be an async action creator of some sort.) The widget will call this function on an interval in order to ensure that it never displays an expired PresentationRequest 
 
-**createPresentationRequest** (`() => Promise<PresentationRequestResponse> | void`) _optional_: A function which should call your Server SDK powered backend to create a PresentationRequest. If it returns a value, it is assumed that that value is a `PresentationRequestResponse`. If it does not return a value, you must provide the response via the `presentationRequest` prop in order for the widget to display the PresentationRequest. (As in a redux application, where `createPresentationRequest` will probably be an async action creator of some sort.) The widget will call this function on an interval in order to ensure that it never displays an expired PresentationRequest (TODO: this should be required)
+**sendEmail** (`(options: EmailOptions) => Promise<SuccessResponse>`) _optional_: A function which takes an `EmailOptions` object and calls your backend to send a deeplink via email. You may use the `sendEmail` function from the Server SDK to send the email, or your own email provider.
 
-**sendEmail** (`(options: EmailOptions) => Promise<SuccessResponse>`) _optional_: A function which takes an `EmailOptions` object and calls your backend to send a deeplink via email. You may use the `sendEmail` function from the Server SDK to send the email, or your own email provider. If this prop is not provided, the Email fallback option  will not be available.
+**sendSms** (`(options: SmsOptions) => Promise<SuccessResponse>`) _optional_: A function which takes an `SmsOptions` object and calls your backend to send a deeplink via sms. You may use the `sendSMS` function from the Server SDK to send the SMS, or your own SMS provider.
 
-**sendSms** (`(options: SmsOptions) => Promise<SuccessResponse>`) _optional_: A function which takes an `SmsOptions` object and calls your backend to send a deeplink via sms. You may use the `sendSMS` function from the Server SDK to send the SMS, or your own SMS provider. If this prop is not provided, the SMS fallback option will not be available.
+**sendPushNotification** (`options: PushNotificationOptions) => Promise<SuccessResponse>`) _optional_: A function which takes a `PushNotificationOptions` object and calls your backend to send a deeplink via push notification.
 
 **goToLogin** (`() => void`) _optional_: A function which redirects the user to your existing login page. You should provide this if you are using Unum ID as an additional authentication factor on top of your existing login. If this prop is not provided, the login fallback option will not be available.
 
@@ -76,22 +80,13 @@ The simplest possible use case. It allows the SDK to handle all PresentationRequ
 ```jsx
 import WidgetHostAndController from '@unumid/web-sdk';
 
-// Import an image to use for the (mobile) deeplink button.
-// In this example, images are stored in an 'assets' directory. Your application may be different.
-import deeplinkImgSrc from '../assets/deeplink-button-image.png';
-
 const App = () => {
   const createPresentationRequest = async () => {
     // Call your backend to create a PresentationRequest and return the response.
   };
 
   return (
-    <WidgetHostAndController
-      applicationTitle="My Application"
-      userInfo={{}}
-      createPresentationRequest={createPresentationRequest}
-      deeplinkImgSrc={deeplinkImgSrc}
-    />
+    <WidgetHostAndController createPresentationRequest={createPresentationRequest} />
   );
 };
 ```
@@ -102,77 +97,47 @@ import { FC } from 'react';
 
 import WidgetHostAndController, { PresentationRequestResponse } from '@unumid/web-sdk';
 
-// Import an image to use for the (mobile) deeplink button
-// In this example, images are stored in an 'assets' directory. Your application may be different.
-import deeplinkImgSrc from '../assets/deeplink-button-image.png';
-
 const App: FC = () => {
   const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
     // Call your backend to create a PresentationRequest and return the response.
   };
 
   return (
-    <WidgetHostAndController
-      applicationTitle="My Application"
-      userInfo={{}}
-      createPresentationRequest={createPresentationRequest}
-      deeplinkImgSrc={deeplinkImgSrc}
-    />
+    <WidgetHostAndController createPresentationRequest={createPresentationRequest} />
   );
 };
 ```
 
-A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options.
+A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options by providing user info.
 ```jsx
 import WidgetHostAndController from '@unumid/web-sdk';
-
-// Import an image to use for the (mobile) deeplink button.
-// In this example, images are stored in an 'assets' directory. Your application may be different.
-import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
 const App = () => {
   const createPresentationRequest = async () => {
     // Call your backend to create a PresentationRequest and return the response.
   };
 
-  const sendEmail = async (options) => {
-    // Call your backend to send a deeplink via email and return the response.
-  };
-
-  const sendSms = async (options) => {
-    // Nall your backend to send a deeplink via sms and return the response.
-  };
-
-  const goToLogin = () => {
-    // Navigate to your login page.
-  };
-
   return (
     <WidgetHostAndController
-      applicationTitle="My Application"
       userInfo={{
         email: 'mrplow@gmail.com', // The user's email is required to enable the email fallback.
-        phone: 'KL5-5555' // The user's mobile phone number is required to enable the sms fallback.
+        phone: 'KL5-5555', // The user's mobile phone number is required to enable the sms fallback.
+        pushToken: {
+          provider: 'FCM', // this is a token for Firebase Cloud Messaging (FCM)
+          value: 'my firebase cloud messaging token' // FCM token from the user's device
+        }
       }}
       createPresentationRequest={createPresentationRequest}
-      deeplinkImgSrc={deeplinkImgSrc}
-      sendEmail={sendEmail}
-      sendSms={sendSms}
-      goToLogin={goToLogin}
     />
   );
 };
 ```
 
-Allows your application more control over when the initial PresentationRequest is created. Enables fallback options.
+Allows your application more control over when the initial PresentationRequest is created. Enables custom email, sms, and push notification fallbacks.
 ```jsx
 import { useState } from 'react';
 
 import WidgetHostAndController from '@unumid/web-sdk';
-
-// Import an image to use for the (mobile) deeplink button.
-// In this example, images are stored in an 'assets' directory. Your application may be different.
-import deeplinkImgSrc from '../assets/deeplink-button-image.png';
 
 const App = () => {
   // Save the PresentationRequest in local component state.
@@ -193,12 +158,16 @@ const App = () => {
   };
 
   const sendEmail = async (options) => {
-    // Call your backend to send a deeplink via email and return the response.
+    // Call your backend to send a deeplink via custom email and return the response.
   };
 
   const sendSms = async (options) => {
-    // Call your backend to send a deeplink via sms and return the response.
+    // Call your backend to send a deeplink via custom sms and return the response.
   };
+
+  const sendPushNotification = async (options) => {
+    // Call your backend to send a deeplink via custom push notification and return the response.
+  }
 
   const goToLogin = () => {
     // Navigate to your login page.
@@ -209,15 +178,20 @@ const App = () => {
       applicationTitle="My Application"
       userInfo={{
         email: 'mrplow@gmail.com', // The user's email is required to enable the email fallback.
-        phone: 'KL5-5555' // The user's mobile phone number is required to enable the sms fallback.
+        phone: 'KL5-5555', // The user's mobile phone number is required to enable the sms fallback.
+        pushToken: {
+          provider: 'FCM', // this is a token for Firebase Cloud Messaging (FCM)
+          value: 'my firebase cloud messaging token' // FCM token from the user's device
+        }
       }}
       presentationRequest={presentationRequest} // Provide the Web SDK with an already-created PresentationRequest.
       createInitialPresentationRequest={false} // Prevent the Web SDK from immediately creating a new PresentationRequest on load.
       createPresentationRequest={createPresentationRequest} // We still need to provide the Web SDK with a createPresentationRequest function so that it can create a new PresentationRequest before the current one expires.
-      deeplinkImgSrc={deeplinkImgSrc}
-      sendEmail={sendEmail}
-      sendSms={sendSms}
+      sendEmail={sendEmail} // Will be used instead of the default email fallback
+      sendSms={sendSms} // Will be used instead of the default sms fallback
+      sendPushNotification={sendPushNotification} // Will be used instead of the default push notification fallback
       goToLogin={goToLogin}
+
     />
   );
 };
@@ -232,13 +206,9 @@ import WidgetHostAndController from '@unumid/web-sdk';
 // Import your action creators. They have been wrapped in React hooks in this example, but your application may be different.
 import { useActionCreators } from './hooks/actionCreators';
 
-// Import an image to use for the (mobile) deeplink button.
-// In this example, images are stored in an 'assets' directory. Your application may be different.
-import deeplinkImgSrc from '../assets/deeplink-button-image.png';
-
 const App = () => {
   // These functions can be defined as async action creators using redux-thunk, redux-saga, or other libraries.
-  const { createPresentationRequest, sendSms, sendEmail } = useActionCreators();
+  const { createPresentationRequest } = useActionCreators();
 
   // Select a previously created PresentationRequest from state.
   const presentationRequest = useSelector(state => state.presentationRequest);
@@ -252,17 +222,17 @@ const App = () => {
 
   return (
     <WidgetHostAndController
-      applicationTitle="My Application"
       userInfo={{
-        email: loggedInUser.email, // The user's email is required to enable the email fallback.
-        phone: loggedInUser.mobilePhoneNumber // The user's mobile phone number is required to enable the sms fallback.
+        email: 'mrplow@gmail.com', // The user's email is required to enable the email fallback.
+        phone: 'KL5-5555', // The user's mobile phone number is required to enable the sms fallback.
+        pushToken: {
+          provider: 'FCM', // this is a token for Firebase Cloud Messaging (FCM)
+          value: 'my firebase cloud messaging token' // FCM token from the user's device
+        }
       }}
       presentationRequest={presentationRequest} // Provide the Web SDK with an already-created PresentationRequest.
       createInitialPresentationRequest={true} // The Web SDK should immediately create a PresentationRequest on load.
       createPresentationRequest={createPresentationRequest} // We still need to provide the Web SDK with a createPresentationRequest function so that it can create a new PresentationRequest before the current one expires.
-      deeplinkImgSrc={deeplinkImgSrc}
-      sendEmail={sendEmail}
-      sendSms={sendSms}
       goToLogin={goToLogin}
     />
   );
