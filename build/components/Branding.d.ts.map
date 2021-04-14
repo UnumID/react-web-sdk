@@ -1,1 +1,1 @@
-{"version":3,"file":"Branding.d.ts","sourceRoot":"","sources":["../../src/components/Branding.tsx"],"names":[],"mappings":"AAAA,OAAc,EAAE,EAAE,EAAE,MAAM,OAAO,CAAC;AAGlC,OAAO,gBAAgB,CAAC;AAExB,QAAA,MAAM,QAAQ,EAAE,EASf,CAAC;AAEF,eAAe,QAAQ,CAAC"}
+{"version":3,"file":"Branding.d.ts","sourceRoot":"","sources":["../../src/components/Branding.tsx"],"names":[],"mappings":"AAAA,OAAc,EAAE,EAAE,EAAE,MAAM,OAAO,CAAC;AAGlC,OAAO,gBAAgB,CAAC;AAExB;;GAEG;AACH,QAAA,MAAM,QAAQ,EAAE,EASf,CAAC;AAEF,eAAe,QAAQ,CAAC"}

@@ -1,11 +1,11 @@
-.action-button {
+.deeplink-button {
   cursor: pointer;
   margin-bottom: 20px;
   max-width: 250px;
   max-height: 50px;
 }
 
-.action-button img {
+.deeplink-button img {
   width: 100%;
   height: 100%;
 }

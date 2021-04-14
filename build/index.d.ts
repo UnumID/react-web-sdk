@@ -1,4 +1,4 @@
-import WidgetHostAndController from 'components/WidgetHostAndController';
-export type { EmailOptions, SmsOptions, SuccessResponse, PresentationRequestResponse, } from 'types';
-export default WidgetHostAndController;
+import UnumIDWidget from 'components/UnumIDWidget';
+export type { ExternalMessageInput, SuccessResponse, } from 'types';
+export default UnumIDWidget;
 //# sourceMappingURL=index.d.ts.map

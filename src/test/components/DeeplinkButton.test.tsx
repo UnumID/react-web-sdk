@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import ActionButton from '../../components/ActionButton';
+import ActionButton from '../../components/DeeplinkButton';
 
 describe('ActionButton', () => {
   it('renders a link with children', () => {

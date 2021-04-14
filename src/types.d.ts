@@ -1,3 +1,5 @@
+import { PushToken } from '@unumid/types';
+
 export interface CredentialRequest {
   type: string;
   issuers: string[];
@@ -12,51 +14,21 @@ export interface Proof {
   proofPurpose: string;
 }
 
-export interface PresentationRequest {
-  uuid: string;
-  createdAt: Date;
-  updatedAt: Date;
-  expiresAt: Date;
-  verifier: string;
-  credentialRequests: CredentialRequest[];
-  holderAppUuid: string;
-  proof: Proof
-  metadata?: Record<string, unknown>;
-}
-
-export interface PresentationRequestResponse {
-  presentationRequest: PresentationRequest;
-  verifier: {
-    name: string;
-    did: string;
-    url: string;
-  };
-  issuers: {
-    [did: string]: {
-      name: string;
-      did: string;
-    }
-  },
-  deeplink: string;
-  qrCode: string;
-}
-
 export interface UserInfo {
-  email: string;
-  phone: string;
-}
-
-export interface SmsOptions {
-  to: string;
-  msg: string;
+  email?: string;
+  phone?: string;
+  pushToken?: PushToken;
 }
 
 export interface SuccessResponse {
   success: boolean;
 }
 
-export interface EmailOptions {
+export interface ExternalMessageInput {
   to: string;
-  subject: string;
-  htmlBody: string;
+  deeplink: string;
 }
+
+export type FallbackType = 'PUSH' | 'SMS' | 'EMAIL' | 'LOGIN';
+export type WidgetType = 'DEEPLINK' | 'FALLBACK_RESULT';
+export type SaasEnvironment = 'development' | 'sandbox' | 'production';

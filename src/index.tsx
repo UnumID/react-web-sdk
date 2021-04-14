@@ -1,10 +1,8 @@
-import WidgetHostAndController from 'components/WidgetHostAndController';
+import UnumIDWidget from 'components/UnumIDWidget';
 
 export type {
-  EmailOptions,
-  SmsOptions,
+  ExternalMessageInput,
   SuccessResponse,
-  PresentationRequestResponse,
 } from 'types';
 
-export default WidgetHostAndController;
+export default UnumIDWidget;

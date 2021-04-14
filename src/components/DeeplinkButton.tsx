@@ -1,7 +1,7 @@
 import React, { FC, PropsWithChildren } from 'react';
 import cc from 'classcat';
 
-import './ActionButton.css';
+import './DeeplinkButton.css';
 
 type Props = PropsWithChildren<{
   target?: string;
@@ -9,14 +9,18 @@ type Props = PropsWithChildren<{
   className?: string;
 }>
 
-const ActionButton: FC<Props> = ({
+/**
+ * Component responsible for displaying a deep link as a clickable button.
+ * Primarily intended for use in mobile browsers.
+ */
+const DeeplinkButton: FC<Props> = ({
   target,
   href,
   className,
   children,
 }) => (
   <a
-    className={cc(['action-button', className])}
+    className={cc(['deeplink-button', className])}
     href={href}
     target={target}
   >
@@ -24,4 +28,4 @@ const ActionButton: FC<Props> = ({
   </a>
 );
 
-export default ActionButton;
+export default DeeplinkButton;
