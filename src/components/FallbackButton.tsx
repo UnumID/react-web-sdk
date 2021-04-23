@@ -20,7 +20,7 @@ interface Props {
   presentationRequest: PresentationRequestPostDto;
   sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
   sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
-  sendPushNotification?: (options: PushNotificationOptions) => Promise<any>;
+  sendPushNotification?: (options: PushNotificationOptions) => Promise<SuccessResponse>;
   goToLogin?: () => void;
 }
 
@@ -108,7 +108,7 @@ const FallbackButton: FC<Props> = ({
       return;
     }
 
-    const { deeplink, verifier } = presentationRequest;
+    const { deeplink } = presentationRequest;
     const options: ExternalMessageInput = {
       to: userInfo?.email,
       deeplink,
@@ -148,7 +148,7 @@ const FallbackButton: FC<Props> = ({
       return;
     }
 
-    const { deeplink, verifier } = presentationRequest;
+    const { deeplink } = presentationRequest;
 
     const options: ExternalMessageInput = {
       to: userInfo.phone,

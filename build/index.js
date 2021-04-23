@@ -294,7 +294,7 @@ var FallbackButton = function (_a) {
                         console.log('email fallback not available');
                         return [2 /*return*/];
                     }
-                    deeplink = presentationRequest.deeplink, presentationRequest.verifier;
+                    deeplink = presentationRequest.deeplink;
                     options = {
                         to: userInfo === null || userInfo === void 0 ? void 0 : userInfo.email,
                         deeplink: deeplink,
@@ -345,7 +345,7 @@ var FallbackButton = function (_a) {
                         console.log('sms fallback not available');
                         return [2 /*return*/];
                     }
-                    deeplink = presentationRequest.deeplink, presentationRequest.verifier;
+                    deeplink = presentationRequest.deeplink;
                     options = {
                         to: userInfo.phone,
                         deeplink: deeplink,

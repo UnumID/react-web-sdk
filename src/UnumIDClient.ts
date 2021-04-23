@@ -20,7 +20,7 @@ export class UnumIDClient {
     });
   }
 
-  async sendPushNotification(options: PushNotificationOptions): Promise<any> {
+  async sendPushNotification(options: PushNotificationOptions): Promise<SuccessResponse> {
     try {
       return this.makeSaasCall('/pushNotification', 'POST', options);
     } catch (e) {

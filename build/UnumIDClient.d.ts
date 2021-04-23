@@ -5,7 +5,7 @@ export declare class UnumIDClient {
     axiosInstance: AxiosInstance;
     constructor(saasUrl: string, apiKey: string);
     makeSaasCall(path: string, method: Method, data: any): Promise<any>;
-    sendPushNotification(options: PushNotificationOptions): Promise<any>;
+    sendPushNotification(options: PushNotificationOptions): Promise<SuccessResponse>;
     sendEmail(options: ExternalMessageInput): Promise<SuccessResponse>;
     sendSms(options: ExternalMessageInput): Promise<SuccessResponse>;
 }
