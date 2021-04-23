@@ -1,10 +1,10 @@
 {
-  "name": "@unumid/web-sdk",
+  "name": "@unumid/react-web-sdk",
   "version": "1.0.0",
-  "description": "Verifier Client SDK",
+  "description": "UnumID React Web SDK",
   "author": "Subbu",
   "license": "MIT",
-  "repository": "git@github.com:UnumID/Verifier-Client-SDK.git",
+  "repository": "git@github.com:UnumID/react-web-sdk.git",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "engines": {

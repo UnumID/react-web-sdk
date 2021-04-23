@@ -1,40 +1,40 @@
-# Web SDK
-The Unum ID Web SDK is a library for adding Unum ID functionality and UI to a React application. It helps you create PresentationRequests and share them with an Unum ID-powered mobile app.
+# React Web SDK
+The Unum ID React Web SDK is a library for adding Unum ID functionality and UI to a React application. It helps you create PresentationRequests and share them with an Unum ID-powered mobile app.
 
 ## Installation
-The Web SDK is currently only available via GitHub, but will be available via the npm/yarn registries soon.
+The React Web SDK is currently only available via GitHub, but will be available via the npm/yarn registries soon.
 
 Using npm:
 ```
-npm install @unumid/web-sdk@https://github.com/UnumID/Verifier-Client-SDK.git
+npm install @unumid/web-sdk@https://github.com/UnumID/react-web-sdk.git
 ```
 
 Using yarn:
 ```
-yarn add @unumid/web-sdk@https://github.com/UnumID/Verifier-Client-SDK.git
+yarn add @unumid/web-sdk@https://github.com/UnumID/react-web-sdk.git
 ```
 
 or add the following to your `package.json` and run `npm/yarn install`
 ```
-"@unumid/web-sdk": "https://github.com/UnumID/Verifier-Client-SDK.git"
+"@unumid/web-sdk": "https://github.com/UnumID/react-web-sdk.git"
 ```
 
 ## Functionality
 ### Creating PresentationRequests
-By default, the Web SDK will create a PresentationRequest as soon as it is rendered, and will periodically regenerate the PresentationRequest (to ensure that it does not expire) until the user shares data or declines the request, or the widget is unmounted. You can use different combinations of props (see below) to choose how much control over PresentationRequest creation you want to have. For example, instead of automatically creating a PresentationRequest on load, you may want to trigger its creation based on a user interaction like a button click.
+By default, the React Web SDK will create a PresentationRequest as soon as it is rendered, and will periodically regenerate the PresentationRequest (to ensure that it does not expire) until the user shares data or declines the request, or the widget is unmounted. You can use different combinations of props (see below) to choose how much control over PresentationRequest creation you want to have. For example, instead of automatically creating a PresentationRequest on load, you may want to trigger its creation based on a user interaction like a button click.
 
 ### Displaying deeplinks
-PresentationRequests are shared to an Unum ID-powered mobile app a user's device via deep links. The Web SDK determines how it displays them based on the browser's userAgent.
+PresentationRequests are shared to an Unum ID-powered mobile app a user's device via deep links. The React Web SDK determines how it displays them based on the browser's userAgent.
 
 #### Button
-On mobile browsers, the Web SDK will default to displaying the deep link as a button, which can be tapped to open the deeplink in the mobile app.
+On mobile browsers, the React Web SDK will default to displaying the deep link as a button, which can be tapped to open the deeplink in the mobile app.
 
 #### QR Code
-On non-mobile browsers, the Web SDK will default to displaying the deep link as a QR code that users can scan with their mobile device.
+On non-mobile browsers, the React Web SDK will default to displaying the deep link as a QR code that users can scan with their mobile device.
 
 
 #### Fallback options
-In some situations, neither a QR code nor a button is convenient. The Web SDK offers the following fallback options for sending the deep link to the user's device.
+In some situations, neither a QR code nor a button is convenient. The React Web SDK offers the following fallback options for sending the deep link to the user's device.
 
 **push notification** Sends a push notification to the user's device. The user must have push notifications enabled for an Unum ID-powered mobile app in order to use this option. To use the default push notification service provided by Unum ID, you will need to upload the push notification credentials (Firebase Cloud Messaging and/or Apple Push Notification Service) for your app.
 
@@ -44,20 +44,20 @@ In some situations, neither a QR code nor a button is convenient. The Web SDK of
 
 **login**: If your client application doesn't have the information required to use the desired fallback options, we can redirect them to your existing login page. You must provide the `goToLogin` prop in order to use this option.
 
-**custom notifications** The Web SDK sends default push, sms, and email notifications using the Unum ID SaaS. If you want to customize your notifications, you may provide the `sendPushNotification`, `sendEmail` and/or `sendSms` props. If these props are provided, they will be used instead of the default.
+**custom notifications** The React Web SDK sends default push, sms, and email notifications using the Unum ID SaaS. If you want to customize your notifications, you may provide the `sendPushNotification`, `sendEmail` and/or `sendSms` props. If these props are provided, they will be used instead of the default.
 
 ## API
 ### UnumIDWidget Component
-The Web SDK default exports a single component, `UnumIDWidget`
-This component encapsulates all of the Web SDK's functionality.
+The React Web SDK default exports a single component, `UnumIDWidget`
+This component encapsulates all of the React Web SDK's functionality.
 
 
 #### Props
-**env** (string) _required_: The environment to run in ('development', 'sandbox', or 'production'). This determines which Unum ID SaaS environment the Web SDK will connect to.
+**env** (string) _required_: The environment to run in ('development', 'sandbox', or 'production'). This determines which Unum ID SaaS environment the React Web SDK will connect to.
 
-**apiKey** (string) _required_: Your Web SDK api key (obtained from Unum ID).
+**apiKey** (string) _required_: Your React Web SDK api key (obtained from Unum ID).
 
-**userInfo** (`UserInfo`) _optional_: Information about a logged in user of your application. The Web SDK will use this to determine which fallback options are available.
+**userInfo** (`UserInfo`) _optional_: Information about a logged in user of your application. The React Web SDK will use this to determine which fallback options are available.
 
 **presentationRequest** (`PresentationRequestResponse`) _optional_: a `PresentationRequestResponse` object, created on your server via the [Server SDK](https://github.com/UnumID/Server-SDK-TypeScript). You may provide this prop in combination with setting `createInitialPresentationRequest` (below) to `false` for more control over when the widget should display a PresentationRequest to the user.
 
@@ -184,9 +184,9 @@ const App = () => {
           value: 'my firebase cloud messaging token' // FCM token from the user's device
         }
       }}
-      presentationRequest={presentationRequest} // Provide the Web SDK with an already-created PresentationRequest.
-      createInitialPresentationRequest={false} // Prevent the Web SDK from immediately creating a new PresentationRequest on load.
-      createPresentationRequest={createPresentationRequest} // We still need to provide the Web SDK with a createPresentationRequest function so that it can create a new PresentationRequest before the current one expires.
+      presentationRequest={presentationRequest} // Provide the React Web SDK with an already-created PresentationRequest.
+      createInitialPresentationRequest={false} // Prevent the React Web SDK from immediately creating a new PresentationRequest on load.
+      createPresentationRequest={createPresentationRequest} // We still need to provide the React Web SDK with a createPresentationRequest function so that it can create a new PresentationRequest before the current one expires.
       sendEmail={sendEmail} // Will be used instead of the default email fallback
       sendSms={sendSms} // Will be used instead of the default sms fallback
       sendPushNotification={sendPushNotification} // Will be used instead of the default push notification fallback
@@ -197,7 +197,7 @@ const App = () => {
 };
 ```
 
-Applications using Redux and other similar state management libraries have some unique challenges, as side effects such as creating resources usually happen in action creator functions, which dispatch actions to the store rather than returning values. In this example, we're providing the Web SDK with our `createPresentationRequest` action creator to call, then selecting the created PresentationRequest from the store to provide separately.
+Applications using Redux and other similar state management libraries have some unique challenges, as side effects such as creating resources usually happen in action creator functions, which dispatch actions to the store rather than returning values. In this example, we're providing the React Web SDK with our `createPresentationRequest` action creator to call, then selecting the created PresentationRequest from the store to provide separately.
 ```jsx
 import { useSelector } from 'react-redux';
 
@@ -230,9 +230,9 @@ const App = () => {
           value: 'my firebase cloud messaging token' // FCM token from the user's device
         }
       }}
-      presentationRequest={presentationRequest} // Provide the Web SDK with an already-created PresentationRequest.
-      createInitialPresentationRequest={true} // The Web SDK should immediately create a PresentationRequest on load.
-      createPresentationRequest={createPresentationRequest} // We still need to provide the Web SDK with a createPresentationRequest function so that it can create a new PresentationRequest before the current one expires.
+      presentationRequest={presentationRequest} // Provide the React Web SDK with an already-created PresentationRequest.
+      createInitialPresentationRequest={true} // The React Web SDK should immediately create a PresentationRequest on load.
+      createPresentationRequest={createPresentationRequest} // We still need to provide the React Web SDK with a createPresentationRequest function so that it can create a new PresentationRequest before the current one expires.
       goToLogin={goToLogin}
     />
   );
@@ -240,10 +240,10 @@ const App = () => {
 ```
 
 ## Minimum Requirements
-The minimum supported version of React is v16.8.0. If you are using an older version of React, you will need to upgrade it to at least v16.8.0 in order to use the Web SDK.
+The minimum supported version of React is v16.8.0. If you are using an older version of React, you will need to upgrade it to at least v16.8.0 in order to use the React Web SDK.
 
 ## TypeScript support
-The Web SDK is written in TypeScript and exports relevant types. Some types are also pulled from our shared types library, [`@unumid/types`](https://github.com/UnumID/types). We recommend adding `@unumid/types` as a dependency to ensure full type support between the Web SDK and [Server SDK](https://github.com/UnumID/Server-SDK-TypeScript).
+The React Web SDK is written in TypeScript and exports relevant types. Some types are also pulled from our shared types library, [`@unumid/types`](https://github.com/UnumID/types). We recommend adding `@unumid/types` as a dependency to ensure full type support between the React Web SDK and [Server SDK](https://github.com/UnumID/Server-SDK-TypeScript).
 
 **Client reference application** is available at Git and can be cloned using 
 `git clone https://github.com/UnumID/Verifier-Client-SDK-Client-Reference-App.git`. 
