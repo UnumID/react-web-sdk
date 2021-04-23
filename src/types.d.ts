@@ -17,7 +17,7 @@ export interface Proof {
 export interface UserInfo {
   email?: string;
   phone?: string;
-  pushToken?: PushToken;
+  pushToken?: PushToken | PushToken[];
 }
 
 export interface SuccessResponse {
