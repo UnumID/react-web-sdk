@@ -64,7 +64,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           access: public
           registry: https://npm.pkg.github.com
-          dry-run: true
 
       # ref: https://github.com/marketplace/actions/delete-tag-and-release
       - name: Delete the v tag
