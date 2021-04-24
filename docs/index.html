@@ -1,0 +1,323 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@unumid/react-web-sdk</title>
+	<meta name="description" content="Documentation for @unumid/react-web-sdk">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@unumid/react-web-sdk</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>@unumid/react-web-sdk</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#react-web-sdk" id="react-web-sdk" style="color: inherit; text-decoration: none;">
+					<h1>React Web SDK</h1>
+				</a>
+				<p>The Unum ID React Web SDK is a library for adding Unum ID functionality and UI to a React application. It helps you create PresentationRequests and share them with an Unum ID-powered mobile app.</p>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h2>Installation</h2>
+				</a>
+				<p>The React Web SDK is currently only available via GitHub, but will be available via the npm/yarn registries soon.</p>
+				<p>Using npm:</p>
+				<pre><code><span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">install</span><span style="color: #000000"> @</span><span style="color: #001080">unumid</span><span style="color: #000000">/</span><span style="color: #001080">web</span><span style="color: #000000">-</span><span style="color: #001080">sdk</span><span style="color: #000000">@</span><span style="color: #001080">https</span><span style="color: #000000">:</span><span style="color: #008000">//github.com/UnumID/react-web-sdk.git</span>
+</code></pre>
+				<p>Using yarn:</p>
+				<pre><code><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">add</span><span style="color: #000000"> @</span><span style="color: #001080">unumid</span><span style="color: #000000">/</span><span style="color: #001080">web</span><span style="color: #000000">-</span><span style="color: #001080">sdk</span><span style="color: #000000">@</span><span style="color: #001080">https</span><span style="color: #000000">:</span><span style="color: #008000">//github.com/UnumID/react-web-sdk.git</span>
+</code></pre>
+				<p>or add the following to your <code>package.json</code> and run <code>npm/yarn install</code></p>
+				<pre><code><span style="color: #A31515">&quot;@unumid/web-sdk&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;https://github.com/UnumID/react-web-sdk.git&quot;</span>
+</code></pre>
+				<a href="#functionality" id="functionality" style="color: inherit; text-decoration: none;">
+					<h2>Functionality</h2>
+				</a>
+				<a href="#creating-presentationrequests" id="creating-presentationrequests" style="color: inherit; text-decoration: none;">
+					<h3>Creating PresentationRequests</h3>
+				</a>
+				<p>By default, the React Web SDK will create a PresentationRequest as soon as it is rendered, and will periodically regenerate the PresentationRequest (to ensure that it does not expire) until the user shares data or declines the request, or the widget is unmounted. You can use different combinations of props (see below) to choose how much control over PresentationRequest creation you want to have. For example, instead of automatically creating a PresentationRequest on load, you may want to trigger its creation based on a user interaction like a button click.</p>
+				<a href="#displaying-deeplinks" id="displaying-deeplinks" style="color: inherit; text-decoration: none;">
+					<h3>Displaying deeplinks</h3>
+				</a>
+				<p>PresentationRequests are shared to an Unum ID-powered mobile app a user&#39;s device via deep links. The React Web SDK determines how it displays them based on the browser&#39;s userAgent.</p>
+				<a href="#button" id="button" style="color: inherit; text-decoration: none;">
+					<h4>Button</h4>
+				</a>
+				<p>On mobile browsers, the React Web SDK will default to displaying the deep link as a button, which can be tapped to open the deeplink in the mobile app.</p>
+				<a href="#qr-code" id="qr-code" style="color: inherit; text-decoration: none;">
+					<h4>QR Code</h4>
+				</a>
+				<p>On non-mobile browsers, the React Web SDK will default to displaying the deep link as a QR code that users can scan with their mobile device.</p>
+				<a href="#fallback-options" id="fallback-options" style="color: inherit; text-decoration: none;">
+					<h4>Fallback options</h4>
+				</a>
+				<p>In some situations, neither a QR code nor a button is convenient. The React Web SDK offers the following fallback options for sending the deep link to the user&#39;s device.</p>
+				<p><strong>push notification</strong> Sends a push notification to the user&#39;s device. The user must have push notifications enabled for an Unum ID-powered mobile app in order to use this option. To use the default push notification service provided by Unum ID, you will need to upload the push notification credentials (Firebase Cloud Messaging and/or Apple Push Notification Service) for your app.</p>
+				<p><strong>sms</strong>: Sends the user an sms containing the deeplink, which they can open on their device. You must provide the user&#39;s mobile phone number in order to use this option.</p>
+				<p><strong>email</strong>: Sends the user an email containing the deeplink, which they can open on their device. You must provide The user&#39;s email address in order to use this option.</p>
+				<p><strong>login</strong>: If your client application doesn&#39;t have the information required to use the desired fallback options, we can redirect them to your existing login page. You must provide the <code>goToLogin</code> prop in order to use this option.</p>
+				<p><strong>custom notifications</strong> The React Web SDK sends default push, sms, and email notifications using the Unum ID SaaS. If you want to customize your notifications, you may provide the <code>sendPushNotification</code>, <code>sendEmail</code> and/or <code>sendSms</code> props. If these props are provided, they will be used instead of the default.</p>
+				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
+					<h2>API</h2>
+				</a>
+				<a href="#unumidwidget-component" id="unumidwidget-component" style="color: inherit; text-decoration: none;">
+					<h3>UnumIDWidget Component</h3>
+				</a>
+				<p>The React Web SDK default exports a single component, <code>UnumIDWidget</code>
+				This component encapsulates all of the React Web SDK&#39;s functionality.</p>
+				<a href="#props" id="props" style="color: inherit; text-decoration: none;">
+					<h4>Props</h4>
+				</a>
+				<p><strong>env</strong> (string) <em>required</em>: The environment to run in (&#39;development&#39;, &#39;sandbox&#39;, or &#39;production&#39;). This determines which Unum ID SaaS environment the React Web SDK will connect to.</p>
+				<p><strong>apiKey</strong> (string) <em>required</em>: Your React Web SDK api key (obtained from Unum ID).</p>
+				<p><strong>userInfo</strong> (<code>UserInfo</code>) <em>optional</em>: Information about a logged in user of your application. The React Web SDK will use this to determine which fallback options are available.</p>
+				<p><strong>presentationRequest</strong> (<code>PresentationRequestResponse</code>) <em>optional</em>: a <code>PresentationRequestResponse</code> object, created on your server via the <a href="https://github.com/UnumID/Server-SDK-TypeScript">Server SDK</a>. You may provide this prop in combination with setting <code>createInitialPresentationRequest</code> (below) to <code>false</code> for more control over when the widget should display a PresentationRequest to the user.</p>
+				<p><strong>createInitialPresentationRequest</strong> (boolean) <em>required</em>: Whether the widget should immediately call <code>createPresentationRequest</code> on load. You can combine this with the <code>presentationRequest</code> prop to gain control over when the initial PresentationRequest is created. By default, it is <code>false</code> if you provide the <code>presentationRequest</code> prop and <code>true</code> if you do not.</p>
+				<p><strong>createPresentationRequest</strong> (<code>() =&gt; Promise&lt;PresentationRequestResponse&gt; | void</code>) <em>optional</em>: A function which should call your Server SDK powered backend to create a PresentationRequest. If it returns a value, it is assumed that that value is a <code>PresentationRequestResponse</code>. If it does not return a value, you must provide the response via the <code>presentationRequest</code> prop in order for the widget to display the PresentationRequest. (As in a redux application, where <code>createPresentationRequest</code> will probably be an async action creator of some sort.) The widget will call this function on an interval in order to ensure that it never displays an expired PresentationRequest </p>
+				<p><strong>sendEmail</strong> (<code>(options: ExternalMessageInput) =&gt; Promise&lt;SuccessResponse&gt;</code>) <em>optional</em>: A function which takes an <code>EmailOptions</code> object and calls your backend to send a deeplink via email. You may use the <code>sendEmail</code> function from the Server SDK to send the email, or your own email provider.</p>
+				<p><strong>sendSms</strong> (<code>(options: ExternalMessageInput) =&gt; Promise&lt;SuccessResponse&gt;</code>) <em>optional</em>: A function which takes an <code>SmsOptions</code> object and calls your backend to send a deeplink via sms. You may use the <code>sendSMS</code> function from the Server SDK to send the SMS, or your own SMS provider.</p>
+				<p><strong>sendPushNotification</strong> (<code>options: PushNotificationOptions) =&gt; Promise&lt;SuccessResponse&gt;</code>) <em>optional</em>: A function which takes a <code>PushNotificationOptions</code> object and calls your backend to send a deeplink via push notification.</p>
+				<p><strong>goToLogin</strong> (<code>() =&gt; void</code>) <em>optional</em>: A function which redirects the user to your existing login page. You should provide this if you are using Unum ID as an additional authentication factor on top of your existing login. If this prop is not provided, the login fallback option will not be available.</p>
+				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
+					<h2>Examples</h2>
+				</a>
+				<p>The simplest possible use case. It allows the SDK to handle all PresentationRequest creation, and does not provide any additional fallback options.</p>
+				<pre><code class="language-jsx"><span style="color: #000000">import WidgetHostAndController from &#039;@unumid/web-sdk&#039;;</span>
+
+<span style="color: #000000">const App = () =&gt; {</span>
+<span style="color: #000000">  const createPresentationRequest = async () =&gt; {</span>
+<span style="color: #000000">    // Call your backend to create a PresentationRequest and return the response.</span>
+<span style="color: #000000">  };</span>
+
+<span style="color: #000000">  return (</span>
+<span style="color: #000000">    &lt;WidgetHostAndController createPresentationRequest={createPresentationRequest} /&gt;</span>
+<span style="color: #000000">  );</span>
+<span style="color: #000000">};</span>
+</code></pre>
+				<p>The simplest use case (above), using TypeScript.</p>
+				<pre><code class="language-tsx"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">FC</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;react&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">WidgetHostAndController</span><span style="color: #000000">, { </span><span style="color: #001080">PresentationRequestResponse</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@unumid/web-sdk&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">App</span><span style="color: #000000">: </span><span style="color: #267F99">FC</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">createPresentationRequest</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> (): </span><span style="color: #267F99">Promise</span><span style="color: #000000">&lt;</span><span style="color: #267F99">PresentationRequestResponse</span><span style="color: #000000">&gt; </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// Call your backend to create a PresentationRequest and return the response.</span>
+<span style="color: #000000">  };</span>
+
+<span style="color: #000000">  </span><span style="color: #AF00DB">return</span><span style="color: #000000"> (</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;</span><span style="color: #267F99">WidgetHostAndController</span><span style="color: #000000"> </span><span style="color: #FF0000">createPresentationRequest</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">createPresentationRequest</span><span style="color: #0000FF">}</span><span style="color: #000000"> </span><span style="color: #800000">/&gt;</span>
+<span style="color: #000000">  );</span>
+<span style="color: #000000">};</span>
+</code></pre>
+				<p>A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options by providing user info.</p>
+				<pre><code class="language-jsx"><span style="color: #000000">import WidgetHostAndController from &#039;@unumid/web-sdk&#039;;</span>
+
+<span style="color: #000000">const App = () =&gt; {</span>
+<span style="color: #000000">  const createPresentationRequest = async () =&gt; {</span>
+<span style="color: #000000">    // Call your backend to create a PresentationRequest and return the response.</span>
+<span style="color: #000000">  };</span>
+
+<span style="color: #000000">  return (</span>
+<span style="color: #000000">    &lt;WidgetHostAndController</span>
+<span style="color: #000000">      userInfo={{</span>
+<span style="color: #000000">        email: &#039;mrplow@gmail.com&#039;, // The user&#039;s email is required to enable the email fallback.</span>
+<span style="color: #000000">        phone: &#039;KL5-5555&#039;, // The user&#039;s mobile phone number is required to enable the sms fallback.</span>
+<span style="color: #000000">        pushToken: {</span>
+<span style="color: #000000">          provider: &#039;FCM&#039;, // this is a token for Firebase Cloud Messaging (FCM)</span>
+<span style="color: #000000">          value: &#039;my firebase cloud messaging token&#039; // FCM token from the user&#039;s device</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">      }}</span>
+<span style="color: #000000">      createPresentationRequest={createPresentationRequest}</span>
+<span style="color: #000000">    /&gt;</span>
+<span style="color: #000000">  );</span>
+<span style="color: #000000">};</span>
+</code></pre>
+				<p>Allows your application more control over when the initial PresentationRequest is created. Enables custom email, sms, and push notification fallbacks.</p>
+				<pre><code class="language-jsx"><span style="color: #000000">import { useState } from &#039;react&#039;;</span>
+
+<span style="color: #000000">import WidgetHostAndController from &#039;@unumid/web-sdk&#039;;</span>
+
+<span style="color: #000000">const App = () =&gt; {</span>
+<span style="color: #000000">  // Save the PresentationRequest in local component state.</span>
+<span style="color: #000000">  const [presentationRequest, setPresentationRequest] = useState();</span>
+
+<span style="color: #000000">  const createPresentationRequest = async () =&gt; {</span>
+<span style="color: #000000">    const options = {</span>
+<span style="color: #000000">      // Customizable PresentationRequest options.</span>
+<span style="color: #000000">      credentialRequests: [{</span>
+<span style="color: #000000">        type: &#039;LoginCredential&#039;,</span>
+<span style="color: #000000">        issuers: [&#039;did:unum:5235d82e-5aac-4df4-adf2-7c6cc0cbec95&#039;]</span>
+<span style="color: #000000">      }],</span>
+<span style="color: #000000">      verifier: &#039;did:unum:a74fce7c-7dfa-4702-b85f-f68a854c3cfe&#039;</span>
+<span style="color: #000000">    };</span>
+<span style="color: #000000">    // Call your backend to create a PresentationRequest and save in the component state.</span>
+<span style="color: #000000">    const response = await callBackend(options);</span>
+<span style="color: #000000">    setPresentationRequest(response);</span>
+<span style="color: #000000">  };</span>
+
+<span style="color: #000000">  const sendEmail = async (options) =&gt; {</span>
+<span style="color: #000000">    // Call your backend to send a deeplink via custom email and return the response.</span>
+<span style="color: #000000">  };</span>
+
+<span style="color: #000000">  const sendSms = async (options) =&gt; {</span>
+<span style="color: #000000">    // Call your backend to send a deeplink via custom sms and return the response.</span>
+<span style="color: #000000">  };</span>
+
+<span style="color: #000000">  const sendPushNotification = async (options) =&gt; {</span>
+<span style="color: #000000">    // Call your backend to send a deeplink via custom push notification and return the response.</span>
+<span style="color: #000000">  }</span>
+
+<span style="color: #000000">  const goToLogin = () =&gt; {</span>
+<span style="color: #000000">    // Navigate to your login page.</span>
+<span style="color: #000000">  };</span>
+
+<span style="color: #000000">  return (</span>
+<span style="color: #000000">    &lt;WidgetHostAndController</span>
+<span style="color: #000000">      applicationTitle=&quot;My Application&quot;</span>
+<span style="color: #000000">      userInfo={{</span>
+<span style="color: #000000">        email: &#039;mrplow@gmail.com&#039;, // The user&#039;s email is required to enable the email fallback.</span>
+<span style="color: #000000">        phone: &#039;KL5-5555&#039;, // The user&#039;s mobile phone number is required to enable the sms fallback.</span>
+<span style="color: #000000">        pushToken: {</span>
+<span style="color: #000000">          provider: &#039;FCM&#039;, // this is a token for Firebase Cloud Messaging (FCM)</span>
+<span style="color: #000000">          value: &#039;my firebase cloud messaging token&#039; // FCM token from the user&#039;s device</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">      }}</span>
+<span style="color: #000000">      presentationRequest={presentationRequest} // Provide the React Web SDK with an already-created PresentationRequest.</span>
+<span style="color: #000000">      createInitialPresentationRequest={false} // Prevent the React Web SDK from immediately creating a new PresentationRequest on load.</span>
+<span style="color: #000000">      createPresentationRequest={createPresentationRequest} // We still need to provide the React Web SDK with a createPresentationRequest function so that it can create a new PresentationRequest before the current one expires.</span>
+<span style="color: #000000">      sendEmail={sendEmail} // Will be used instead of the default email fallback</span>
+<span style="color: #000000">      sendSms={sendSms} // Will be used instead of the default sms fallback</span>
+<span style="color: #000000">      sendPushNotification={sendPushNotification} // Will be used instead of the default push notification fallback</span>
+<span style="color: #000000">      goToLogin={goToLogin}</span>
+
+<span style="color: #000000">    /&gt;</span>
+<span style="color: #000000">  );</span>
+<span style="color: #000000">};</span>
+</code></pre>
+				<p>Applications using Redux and other similar state management libraries have some unique challenges, as side effects such as creating resources usually happen in action creator functions, which dispatch actions to the store rather than returning values. In this example, we&#39;re providing the React Web SDK with our <code>createPresentationRequest</code> action creator to call, then selecting the created PresentationRequest from the store to provide separately.</p>
+				<pre><code class="language-jsx"><span style="color: #000000">import { useSelector } from &#039;react-redux&#039;;</span>
+
+<span style="color: #000000">import WidgetHostAndController from &#039;@unumid/web-sdk&#039;;</span>
+
+<span style="color: #000000">// Import your action creators. They have been wrapped in React hooks in this example, but your application may be different.</span>
+<span style="color: #000000">import { useActionCreators } from &#039;./hooks/actionCreators&#039;;</span>
+
+<span style="color: #000000">const App = () =&gt; {</span>
+<span style="color: #000000">  // These functions can be defined as async action creators using redux-thunk, redux-saga, or other libraries.</span>
+<span style="color: #000000">  const { createPresentationRequest } = useActionCreators();</span>
+
+<span style="color: #000000">  // Select a previously created PresentationRequest from state.</span>
+<span style="color: #000000">  const presentationRequest = useSelector(state =&gt; state.presentationRequest);</span>
+
+<span style="color: #000000">  // Select the logged in user from state.</span>
+<span style="color: #000000">  const loggedInUser = useSelector(state =&gt; state.loggedInUser);</span>
+
+<span style="color: #000000">  const goToLogin = () =&gt; {</span>
+<span style="color: #000000">    // Navigate to your login page.</span>
+<span style="color: #000000">  };</span>
+
+<span style="color: #000000">  return (</span>
+<span style="color: #000000">    &lt;WidgetHostAndController</span>
+<span style="color: #000000">      userInfo={{</span>
+<span style="color: #000000">        email: &#039;mrplow@gmail.com&#039;, // The user&#039;s email is required to enable the email fallback.</span>
+<span style="color: #000000">        phone: &#039;KL5-5555&#039;, // The user&#039;s mobile phone number is required to enable the sms fallback.</span>
+<span style="color: #000000">        pushToken: {</span>
+<span style="color: #000000">          provider: &#039;FCM&#039;, // this is a token for Firebase Cloud Messaging (FCM)</span>
+<span style="color: #000000">          value: &#039;my firebase cloud messaging token&#039; // FCM token from the user&#039;s device</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">      }}</span>
+<span style="color: #000000">      presentationRequest={presentationRequest} // Provide the React Web SDK with an already-created PresentationRequest.</span>
+<span style="color: #000000">      createInitialPresentationRequest={true} // The React Web SDK should immediately create a PresentationRequest on load.</span>
+<span style="color: #000000">      createPresentationRequest={createPresentationRequest} // We still need to provide the React Web SDK with a createPresentationRequest function so that it can create a new PresentationRequest before the current one expires.</span>
+<span style="color: #000000">      goToLogin={goToLogin}</span>
+<span style="color: #000000">    /&gt;</span>
+<span style="color: #000000">  );</span>
+<span style="color: #000000">};</span>
+</code></pre>
+				<a href="#minimum-requirements" id="minimum-requirements" style="color: inherit; text-decoration: none;">
+					<h2>Minimum Requirements</h2>
+				</a>
+				<p>The minimum supported version of React is v16.8.0. If you are using an older version of React, you will need to upgrade it to at least v16.8.0 in order to use the React Web SDK.</p>
+				<a href="#typescript-support" id="typescript-support" style="color: inherit; text-decoration: none;">
+					<h2>TypeScript support</h2>
+				</a>
+				<p>The React Web SDK is written in TypeScript and exports relevant types. Some types are also pulled from our shared types library, <a href="https://github.com/UnumID/types"><code>@unumid/types</code></a>. We recommend adding <code>@unumid/types</code> as a dependency to ensure full type support between the React Web SDK and <a href="https://github.com/UnumID/Server-SDK-TypeScript">Server SDK</a>.</p>
+				<p><strong>Client reference application</strong> is available at Git and can be cloned using
+				<code>git clone https://github.com/UnumID/Verifier-Client-SDK-Client-Reference-App.git</code>. </p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
