@@ -2,21 +2,25 @@
 The Unum ID React Web SDK is a library for adding Unum ID functionality and UI to a React application. It helps you create PresentationRequests and share them with an Unum ID-powered mobile app.
 
 ## Installation
-The React Web SDK is currently only available via GitHub, but will be available via the npm/yarn registries soon.
+The React Web SDK is available via NPM/Yarn or Github
 
 Using npm:
 ```
-npm install @unumid/web-sdk@https://github.com/UnumID/react-web-sdk.git
+npm install @unumid/react-web-sdk
 ```
 
 Using yarn:
 ```
-yarn add @unumid/web-sdk@https://github.com/UnumID/react-web-sdk.git
+yarn add @unumid/react-web-sdk
 ```
 
-or add the following to your `package.json` and run `npm/yarn install`
+From Github:
 ```
-"@unumid/web-sdk": "https://github.com/UnumID/react-web-sdk.git"
+npm install @unumid/react-web-sdk@https://github.com/UnumID/react-web-sdk.git
+```
+
+```
+yarn add @unumid/react-web-sdk@https://github.com/UnumID/react-web-sdk.git
 ```
 
 ## Functionality
