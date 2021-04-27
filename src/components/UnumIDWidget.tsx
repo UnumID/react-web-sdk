@@ -78,7 +78,15 @@ const UnumIDWidget: FC<Props> = ({
     const queue: FallbackType[] = [];
 
     if (pushToken) {
-      queue.push('PUSH');
+      // it's a single token
+      if (!Array.isArray(pushToken)) {
+        queue.push('PUSH');
+      }
+
+      // it's an array containing at least one token
+      if (Array.isArray(pushToken) && pushToken.length > 0) {
+        queue.push('PUSH');
+      }
     }
 
     if (phone) {
