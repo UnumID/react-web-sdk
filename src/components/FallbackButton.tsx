@@ -182,17 +182,30 @@ const FallbackButton: FC<Props> = ({
   const actuallySendPush = async () => {
     // Clear any previous fallback error message.
     setFallbackError(undefined);
+    if (!userInfo) {
+      // we can't send the user a push notification if we don't know who they are
+      console.log('push fallback not available.');
+      return;
+    }
 
-    if (!userInfo || !userInfo.pushToken) {
-      // We can't send the user a push notification if we don't have their device token.
-      console.log('push fallback not available');
+    const { pushToken } = userInfo;
+
+    if (!pushToken) {
+      // we can't send the user a push notification if we don't have their device token.
+      console.log('push fallback not available.');
+      return;
+    }
+
+    if (Array.isArray(pushToken) && pushToken.length === 0) {
+      // we can't send a push notification to an empty array
+      console.log('push fallback not available.');
       return;
     }
 
     const { deeplink, presentationRequest: { holderAppUuid } } = presentationRequest;
 
     const options: PushNotificationOptions = {
-      token: userInfo.pushToken,
+      token: pushToken,
       deeplink,
       holderAppUuid,
     };
