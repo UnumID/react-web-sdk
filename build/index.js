@@ -385,20 +385,31 @@ var FallbackButton = function (_a) {
    * Otherwise uses the default provided by the UnumIDClient.
    */
     var actuallySendPush = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deeplink, holderAppUuid, options, e_5, e_6;
+        var pushToken, deeplink, holderAppUuid, options, e_5, e_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     // Clear any previous fallback error message.
                     setFallbackError(undefined);
-                    if (!userInfo || !userInfo.pushToken) {
-                        // We can't send the user a push notification if we don't have their device token.
-                        console.log('push fallback not available');
+                    if (!userInfo) {
+                        // we can't send the user a push notification if we don't know who they are
+                        console.log('push fallback not available.');
+                        return [2 /*return*/];
+                    }
+                    pushToken = userInfo.pushToken;
+                    if (!pushToken) {
+                        // we can't send the user a push notification if we don't have their device token.
+                        console.log('push fallback not available.');
+                        return [2 /*return*/];
+                    }
+                    if (Array.isArray(pushToken) && pushToken.length === 0) {
+                        // we can't send a push notification to an empty array
+                        console.log('push fallback not available.');
                         return [2 /*return*/];
                     }
                     deeplink = presentationRequest.deeplink, holderAppUuid = presentationRequest.presentationRequest.holderAppUuid;
                     options = {
-                        token: userInfo.pushToken,
+                        token: pushToken,
                         deeplink: deeplink,
                         holderAppUuid: holderAppUuid,
                     };
@@ -4129,7 +4140,14 @@ var UnumIDWidget = function (_a) {
     React.useEffect(function () {
         var queue = [];
         if (pushToken) {
-            queue.push('PUSH');
+            // it's a single token
+            if (!Array.isArray(pushToken)) {
+                queue.push('PUSH');
+            }
+            // it's an array containing at least one token
+            if (Array.isArray(pushToken) && pushToken.length > 0) {
+                queue.push('PUSH');
+            }
         }
         if (phone) {
             queue.push('SMS');
