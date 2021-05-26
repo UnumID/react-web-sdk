@@ -26,9 +26,9 @@ import './UnumIDWidget.css';
 import FallbackResult from './FallbackResult';
 
 export interface Props {
-  apiKey: string;
+  apiKey?: string;
   env: SaasEnvironment;
-  createPresentationRequest: () => Promise<PresentationRequestPostDto>;
+  createPresentationRequest?: () => Promise<PresentationRequestPostDto>;
   sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
   sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
   sendPushNotification?: (options: PushNotificationOptions) => Promise<SuccessResponse>;
@@ -63,7 +63,9 @@ const UnumIDWidget: FC<Props> = ({
   const [fallbackResultType, setFallbackResultType] = useState<FallbackType>();
   const [fallbackError, setFallbackError] = useState<string | undefined>();
 
-  const [unumIdClient] = useState<UnumIDClient>(new UnumIDClient(saasUrls[env], apiKey));
+  const [unumIdClient] = useState<UnumIDClient | undefined>(
+    apiKey ? new UnumIDClient(saasUrls[env], apiKey) : undefined,
+  );
 
   // destructure userInfo properties so we can pass them to a useEffect dependency array
   // without worrying about object equality
@@ -77,7 +79,7 @@ const UnumIDWidget: FC<Props> = ({
   useEffect(() => {
     const queue: FallbackType[] = [];
 
-    if (pushToken) {
+    if (pushToken && (sendPushNotification || unumIdClient)) {
       // it's a single token
       if (!Array.isArray(pushToken)) {
         queue.push('PUSH');
@@ -89,11 +91,11 @@ const UnumIDWidget: FC<Props> = ({
       }
     }
 
-    if (phone) {
+    if (phone && (sendSms || unumIdClient)) {
       queue.push('SMS');
     }
 
-    if (email) {
+    if (email && (sendEmail || unumIdClient)) {
       queue.push('EMAIL');
     }
 
@@ -102,7 +104,17 @@ const UnumIDWidget: FC<Props> = ({
     }
 
     setFallbackOptions(queue);
-  }, [pushToken, phone, email, isLoggedIn, goToLogin]);
+  }, [
+    pushToken,
+    phone,
+    email,
+    isLoggedIn,
+    goToLogin,
+    unumIdClient,
+    sendPushNotification,
+    sendEmail,
+    sendSms,
+  ]);
 
   const nextFallback = () => {
     if (fallbackOptions.length === 0) {
@@ -121,6 +133,9 @@ const UnumIDWidget: FC<Props> = ({
    * If not, an updated presentationRequest prop must be provided when the function completes.
    */
   const triggerPresentationRequestCreation = async () => {
+    // If no createPresentationRequest function was provided, this function effectively does nothing
+    if (!createPresentationRequest) return;
+
     const response = await createPresentationRequest();
 
     if (response) {
