@@ -116,12 +116,12 @@
 				<a href="#props" id="props" style="color: inherit; text-decoration: none;">
 					<h4>Props</h4>
 				</a>
-				<p><strong>env</strong> (string) <em>required</em>: The environment to run in (&#39;development&#39;, &#39;sandbox&#39;, or &#39;production&#39;). This determines which Unum ID SaaS environment the React Web SDK will connect to.</p>
-				<p><strong>apiKey</strong> (string) <em>required</em>: Your React Web SDK api key (obtained from Unum ID).</p>
+				<p><strong>env</strong> (string) <em>optional</em>: The environment to run in (<code>&#39;sandbox&#39;</code> or <code>&#39;production&#39;</code>). This determines which Unum ID SaaS environment the React Web SDK will connect to. While this prop is technically optional, it is required for most use cases and should always be provided.</p>
+				<p><strong>apiKey</strong> (string) <em>optional</em>: Your React Web SDK api key (obtained from Unum ID). While this prop is technically optional, it is required for most use cases and should always be provided.</p>
 				<p><strong>userInfo</strong> (<code>UserInfo</code>) <em>optional</em>: Information about a logged in user of your application. The React Web SDK will use this to determine which fallback options are available.</p>
 				<p><strong>presentationRequest</strong> (<code>PresentationRequestResponse</code>) <em>optional</em>: a <code>PresentationRequestResponse</code> object, created on your server via the <a href="https://github.com/UnumID/Server-SDK-TypeScript">Server SDK</a>. You may provide this prop in combination with setting <code>createInitialPresentationRequest</code> (below) to <code>false</code> for more control over when the widget should display a PresentationRequest to the user.</p>
-				<p><strong>createInitialPresentationRequest</strong> (boolean) <em>required</em>: Whether the widget should immediately call <code>createPresentationRequest</code> on load. You can combine this with the <code>presentationRequest</code> prop to gain control over when the initial PresentationRequest is created. By default, it is <code>false</code> if you provide the <code>presentationRequest</code> prop and <code>true</code> if you do not.</p>
-				<p><strong>createPresentationRequest</strong> (<code>() =&gt; Promise&lt;PresentationRequestResponse&gt; | void</code>) <em>optional</em>: A function which should call your Server SDK powered backend to create a PresentationRequest. If it returns a value, it is assumed that that value is a <code>PresentationRequestResponse</code>. If it does not return a value, you must provide the response via the <code>presentationRequest</code> prop in order for the widget to display the PresentationRequest. (As in a redux application, where <code>createPresentationRequest</code> will probably be an async action creator of some sort.) The widget will call this function on an interval in order to ensure that it never displays an expired PresentationRequest </p>
+				<p><strong>createInitialPresentationRequest</strong> (boolean) <em>optional</em>: Whether the widget should immediately call <code>createPresentationRequest</code> on load. You can combine this with the <code>presentationRequest</code> prop to gain control over when the initial PresentationRequest is created. By default, it is <code>false</code> if you provide the <code>presentationRequest</code> prop and <code>true</code> if you do not.</p>
+				<p><strong>createPresentationRequest</strong> (<code>() =&gt; Promise&lt;PresentationRequestResponse&gt; | void</code>) <em>optional</em>: A function which should call your Server SDK powered backend to create a PresentationRequest. If it returns a value, it is assumed that that value is a <code>PresentationRequestResponse</code>. If it does not return a value, you must provide the response via the <code>presentationRequest</code> prop in order for the widget to display the PresentationRequest. (As in a redux application, where <code>createPresentationRequest</code> will probably be an async action creator of some sort.) The widget will call this function on an interval in order to ensure that it never displays an expired PresentationRequest. This prop is technically optional, but should always be provided unless you know that you will only ever be displaying previously existing PresentationRequests.</p>
 				<p><strong>sendEmail</strong> (<code>(options: ExternalMessageInput) =&gt; Promise&lt;SuccessResponse&gt;</code>) <em>optional</em>: A function which takes an <code>EmailOptions</code> object and calls your backend to send a deeplink via email. You may use the <code>sendEmail</code> function from the Server SDK to send the email, or your own email provider.</p>
 				<p><strong>sendSms</strong> (<code>(options: ExternalMessageInput) =&gt; Promise&lt;SuccessResponse&gt;</code>) <em>optional</em>: A function which takes an <code>SmsOptions</code> object and calls your backend to send a deeplink via sms. You may use the <code>sendSMS</code> function from the Server SDK to send the SMS, or your own SMS provider.</p>
 				<p><strong>sendPushNotification</strong> (<code>options: PushNotificationOptions) =&gt; Promise&lt;SuccessResponse&gt;</code>) <em>optional</em>: A function which takes a <code>PushNotificationOptions</code> object and calls your backend to send a deeplink via push notification.</p>
@@ -129,8 +129,8 @@
 				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
 					<h2>Examples</h2>
 				</a>
-				<p>The simplest possible use case. It allows the SDK to handle all PresentationRequest creation, and does not provide any additional fallback options.</p>
-				<pre><code class="language-jsx"><span style="color: #000000">import WidgetHostAndController from &#039;@unumid/web-sdk&#039;;</span>
+				<p>The simplest typical use case. It allows the SDK to handle all PresentationRequest creation, and does not provide any additional fallback options.</p>
+				<pre><code class="language-jsx"><span style="color: #000000">import UnumIDWidget from &#039;@unumid/react-web-sdk&#039;;</span>
 
 <span style="color: #000000">const App = () =&gt; {</span>
 <span style="color: #000000">  const createPresentationRequest = async () =&gt; {</span>
@@ -138,14 +138,18 @@
 <span style="color: #000000">  };</span>
 
 <span style="color: #000000">  return (</span>
-<span style="color: #000000">    &lt;WidgetHostAndController createPresentationRequest={createPresentationRequest} /&gt;</span>
+<span style="color: #000000">    &lt;UnumIDWidget</span>
+<span style="color: #000000">    env=&#039;sandbox&#039;</span>
+<span style="color: #000000">    apiKey=&#039;my_sandbox_api_key&#039;</span>
+<span style="color: #000000">    createPresentationRequest={createPresentationRequest}</span>
+<span style="color: #000000">  /&gt;</span>
 <span style="color: #000000">  );</span>
 <span style="color: #000000">};</span>
 </code></pre>
-				<p>The simplest use case (above), using TypeScript.</p>
+				<p>The simplest typical use case (above), using TypeScript.</p>
 				<pre><code class="language-tsx"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">FC</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;react&#039;</span><span style="color: #000000">;</span>
 
-<span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">WidgetHostAndController</span><span style="color: #000000">, { </span><span style="color: #001080">PresentationRequestResponse</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@unumid/web-sdk&#039;</span><span style="color: #000000">;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">UnumIDWidget</span><span style="color: #000000">, { </span><span style="color: #001080">PresentationRequestResponse</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@unumid/react-web-sdk&#039;</span><span style="color: #000000">;</span>
 
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">App</span><span style="color: #000000">: </span><span style="color: #267F99">FC</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">createPresentationRequest</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> (): </span><span style="color: #267F99">Promise</span><span style="color: #000000">&lt;</span><span style="color: #267F99">PresentationRequestResponse</span><span style="color: #000000">&gt; </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
@@ -153,12 +157,16 @@
 <span style="color: #000000">  };</span>
 
 <span style="color: #000000">  </span><span style="color: #AF00DB">return</span><span style="color: #000000"> (</span>
-<span style="color: #000000">    </span><span style="color: #800000">&lt;</span><span style="color: #267F99">WidgetHostAndController</span><span style="color: #000000"> </span><span style="color: #FF0000">createPresentationRequest</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">createPresentationRequest</span><span style="color: #0000FF">}</span><span style="color: #000000"> </span><span style="color: #800000">/&gt;</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;</span><span style="color: #267F99">UnumIDWidget</span>
+<span style="color: #000000">      </span><span style="color: #FF0000">env</span><span style="color: #000000">=</span><span style="color: #A31515">&#039;sandbox&#039;</span>
+<span style="color: #000000">      </span><span style="color: #FF0000">apiKey</span><span style="color: #000000">=</span><span style="color: #A31515">&#039;my_sandbox_api_key&#039;</span>
+<span style="color: #000000">      </span><span style="color: #FF0000">createPresentationRequest</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">createPresentationRequest</span><span style="color: #0000FF">}</span>
+<span style="color: #000000">    </span><span style="color: #800000">/&gt;</span>
 <span style="color: #000000">  );</span>
 <span style="color: #000000">};</span>
 </code></pre>
 				<p>A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options by providing user info.</p>
-				<pre><code class="language-jsx"><span style="color: #000000">import WidgetHostAndController from &#039;@unumid/web-sdk&#039;;</span>
+				<pre><code class="language-jsx"><span style="color: #000000">import UnumIDWidget from &#039;@unumid/react-web-sdk&#039;;</span>
 
 <span style="color: #000000">const App = () =&gt; {</span>
 <span style="color: #000000">  const createPresentationRequest = async () =&gt; {</span>
@@ -166,7 +174,9 @@
 <span style="color: #000000">  };</span>
 
 <span style="color: #000000">  return (</span>
-<span style="color: #000000">    &lt;WidgetHostAndController</span>
+<span style="color: #000000">    &lt;UnumIDWidget</span>
+<span style="color: #000000">      env=&#039;sandbox&#039;</span>
+<span style="color: #000000">      apiKey=&#039;my_sandbox_api_key&#039;</span>
 <span style="color: #000000">      userInfo={{</span>
 <span style="color: #000000">        email: &#039;mrplow@gmail.com&#039;, // The user&#039;s email is required to enable the email fallback.</span>
 <span style="color: #000000">        phone: &#039;KL5-5555&#039;, // The user&#039;s mobile phone number is required to enable the sms fallback.</span>
@@ -183,7 +193,7 @@
 				<p>Allows your application more control over when the initial PresentationRequest is created. Enables custom email, sms, and push notification fallbacks.</p>
 				<pre><code class="language-jsx"><span style="color: #000000">import { useState } from &#039;react&#039;;</span>
 
-<span style="color: #000000">import WidgetHostAndController from &#039;@unumid/web-sdk&#039;;</span>
+<span style="color: #000000">import UnumIDWidget from &#039;@unumid/react-web-sdk&#039;;</span>
 
 <span style="color: #000000">const App = () =&gt; {</span>
 <span style="color: #000000">  // Save the PresentationRequest in local component state.</span>
@@ -220,8 +230,9 @@
 <span style="color: #000000">  };</span>
 
 <span style="color: #000000">  return (</span>
-<span style="color: #000000">    &lt;WidgetHostAndController</span>
-<span style="color: #000000">      applicationTitle=&quot;My Application&quot;</span>
+<span style="color: #000000">    &lt;UnumIDWidget</span>
+<span style="color: #000000">      env=&#039;sandbox&#039;</span>
+<span style="color: #000000">      apiKey=&#039;my_sandbox_api_key&#039;</span>
 <span style="color: #000000">      userInfo={{</span>
 <span style="color: #000000">        email: &#039;mrplow@gmail.com&#039;, // The user&#039;s email is required to enable the email fallback.</span>
 <span style="color: #000000">        phone: &#039;KL5-5555&#039;, // The user&#039;s mobile phone number is required to enable the sms fallback.</span>
@@ -245,7 +256,7 @@
 				<p>Applications using Redux and other similar state management libraries have some unique challenges, as side effects such as creating resources usually happen in action creator functions, which dispatch actions to the store rather than returning values. In this example, we&#39;re providing the React Web SDK with our <code>createPresentationRequest</code> action creator to call, then selecting the created PresentationRequest from the store to provide separately.</p>
 				<pre><code class="language-jsx"><span style="color: #000000">import { useSelector } from &#039;react-redux&#039;;</span>
 
-<span style="color: #000000">import WidgetHostAndController from &#039;@unumid/web-sdk&#039;;</span>
+<span style="color: #000000">import UnumIDWidget from &#039;@unumid/react-web-sdk&#039;;</span>
 
 <span style="color: #000000">// Import your action creators. They have been wrapped in React hooks in this example, but your application may be different.</span>
 <span style="color: #000000">import { useActionCreators } from &#039;./hooks/actionCreators&#039;;</span>
@@ -265,7 +276,9 @@
 <span style="color: #000000">  };</span>
 
 <span style="color: #000000">  return (</span>
-<span style="color: #000000">    &lt;WidgetHostAndController</span>
+<span style="color: #000000">    &lt;UnumIDWidget</span>
+<span style="color: #000000">      env=&#039;sandbox&#039;</span>
+<span style="color: #000000">      apiKey=&#039;my_sandbox_api_key&#039;</span>
 <span style="color: #000000">      userInfo={{</span>
 <span style="color: #000000">        email: &#039;mrplow@gmail.com&#039;, // The user&#039;s email is required to enable the email fallback.</span>
 <span style="color: #000000">        phone: &#039;KL5-5555&#039;, // The user&#039;s mobile phone number is required to enable the sms fallback.</span>
@@ -281,6 +294,24 @@
 <span style="color: #000000">    /&gt;</span>
 <span style="color: #000000">  );</span>
 <span style="color: #000000">};</span>
+</code></pre>
+				<p>It is possible to use the sdk to simply display an existing PresentationRequest. In this example, a PresentationRequest is being gotten from the backend and displayed using the Web SDK with no fallback options or recreation on expiration. Using the Web SDK in this way will disable much of the functionality described above and is not recommended unless you&#39;re very sure this is the only use case you need to support.</p>
+				<pre><code class="language-jsx"><span style="color: #000000">import { useState, useEffect } from &#039;react&#039;;</span>
+<span style="color: #000000">import UnumIDWidget from &#039;@unumid/react-web-sdk&#039;;</span>
+
+<span style="color: #000000">const App = () =&gt; {</span>
+<span style="color: #000000">  const [presentationRequest, setPresentationRequest] = useState();</span>
+
+<span style="color: #000000">  useEffect(() =&gt; {</span>
+<span style="color: #000000">    const getPresentationRequest = async () =&gt; {</span>
+<span style="color: #000000">      // call your backend to get a presentationRequest using the server sdk</span>
+<span style="color: #000000">      const gottenRequest = await callBackend();</span>
+<span style="color: #000000">      setPresentationRequest(gottenRequest);</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">  }, []);</span>
+
+<span style="color: #000000">  return &lt;UnumIDWidget presentationRequest={presentationRequest}&gt;;</span>
+<span style="color: #000000">}</span>
 </code></pre>
 				<a href="#minimum-requirements" id="minimum-requirements" style="color: inherit; text-decoration: none;">
 					<h2>Minimum Requirements</h2>
