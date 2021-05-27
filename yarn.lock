@@ -1918,7 +1918,7 @@
     "@typescript-eslint/types" "4.22.0"
     eslint-visitor-keys "^2.0.0"
 
-"@unumid/types@https://git@github.com/UnumID/types#v2.1.1":
+"@unumid/types@https://git@github.com/UnumID/types#2.1.1":
   version "2.1.1"
   resolved "https://git@github.com/UnumID/types#237bd6484b5487cb65c177cf88c899d916cad187"
   dependencies:
