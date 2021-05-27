@@ -3,7 +3,7 @@ import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/typ
 import { FallbackType, ExternalMessageInput, SuccessResponse, UserInfo } from 'types';
 import { UnumIDClient } from 'UnumIDClient';
 interface Props {
-    client: UnumIDClient;
+    client?: UnumIDClient;
     fallbackType: FallbackType;
     nextFallback: () => void;
     setFallbackError: (err?: string) => void;

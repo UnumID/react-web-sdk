@@ -60,6 +60,11 @@ describe('UnumIDWidget', () => {
     expect(mockCreatePresentationRequest).not.toBeCalled();
   });
 
+  it('does not create a new PresentationRequest if no createPresentationRequest prop was provided', async () => {
+    renderWidget({ ...defaultProps, createPresentationRequest: undefined });
+    expect(mockCreatePresentationRequest).not.toBeCalled();
+  });
+
   it('sets a timeout to create a new presentationRequest before the old one expires', async () => {
     renderWidget();
     await act(async () => { await Promise.resolve(dummyPresentationRequestResponse); });

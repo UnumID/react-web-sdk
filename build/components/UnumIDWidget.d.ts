@@ -3,9 +3,9 @@ import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/typ
 import { ExternalMessageInput, SuccessResponse, UserInfo, SaasEnvironment } from 'types';
 import './UnumIDWidget.css';
 export interface Props {
-    apiKey: string;
-    env: SaasEnvironment;
-    createPresentationRequest: () => Promise<PresentationRequestPostDto>;
+    apiKey?: string;
+    env?: SaasEnvironment;
+    createPresentationRequest?: () => Promise<PresentationRequestPostDto>;
     sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
     sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
     sendPushNotification?: (options: PushNotificationOptions) => Promise<SuccessResponse>;

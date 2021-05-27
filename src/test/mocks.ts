@@ -1,4 +1,4 @@
-import { UserInfo } from 'types';
+import { UserInfo } from '../types';
 
 export const dummyHolderAppInfo = {
   name: 'ACME, Inc. Test App',

@@ -12,7 +12,7 @@ import { UnumIDClient } from 'UnumIDClient';
 import LinkButton from './LinkButton';
 
 interface Props {
-  client: UnumIDClient;
+  client?: UnumIDClient;
   fallbackType: FallbackType;
   nextFallback: () => void;
   setFallbackError: (err?: string) => void;
@@ -122,7 +122,7 @@ const FallbackButton: FC<Props> = ({
         console.log('error sending email', e);
         setFallbackError(`Error sending email to ${userInfo.email}.`);
       }
-    } else {
+    } else if (client) {
       // If no sendEmail function was provided, use the default UnumIDClient.sendEmail.
       try {
         await client.sendEmail(options);
@@ -163,7 +163,7 @@ const FallbackButton: FC<Props> = ({
         console.log('error sending sms', e);
         setFallbackError(`Error sending sms to ${userInfo.phone}.`);
       }
-    } else {
+    } else if (client) {
       // If no sendSms function was provided, use the default UnumIDClient.sendSms.
       try {
         await client.sendSms(options);
@@ -219,7 +219,7 @@ const FallbackButton: FC<Props> = ({
         console.log('error sending push notification', e);
         setFallbackError('Error sending push notification.');
       }
-    } else {
+    } else if (client) {
       // If a custom sendPushNotification was not provided,
       // use the default UnumIDClient.sendPushNotification.
       try {
