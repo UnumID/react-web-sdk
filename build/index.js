@@ -312,19 +312,22 @@ var FallbackButton = function (_a) {
                     console.log('error sending email', e_1);
                     setFallbackError("Error sending email to " + userInfo.email + ".");
                     return [3 /*break*/, 4];
-                case 4: return [3 /*break*/, 8];
+                case 4: return [3 /*break*/, 9];
                 case 5:
-                    _a.trys.push([5, 7, , 8]);
-                    return [4 /*yield*/, client.sendEmail(options)];
+                    if (!client) return [3 /*break*/, 9];
+                    _a.label = 6;
                 case 6:
-                    _a.sent();
-                    return [3 /*break*/, 8];
+                    _a.trys.push([6, 8, , 9]);
+                    return [4 /*yield*/, client.sendEmail(options)];
                 case 7:
+                    _a.sent();
+                    return [3 /*break*/, 9];
+                case 8:
                     e_2 = _a.sent();
                     console.log('error sending email', e_2);
                     setFallbackError("Error sending email to " + userInfo.email + ".");
-                    return [3 /*break*/, 8];
-                case 8: return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     }); };
@@ -363,19 +366,22 @@ var FallbackButton = function (_a) {
                     console.log('error sending sms', e_3);
                     setFallbackError("Error sending sms to " + userInfo.phone + ".");
                     return [3 /*break*/, 4];
-                case 4: return [3 /*break*/, 8];
+                case 4: return [3 /*break*/, 9];
                 case 5:
-                    _a.trys.push([5, 7, , 8]);
-                    return [4 /*yield*/, client.sendSms(options)];
+                    if (!client) return [3 /*break*/, 9];
+                    _a.label = 6;
                 case 6:
-                    _a.sent();
-                    return [3 /*break*/, 8];
+                    _a.trys.push([6, 8, , 9]);
+                    return [4 /*yield*/, client.sendSms(options)];
                 case 7:
+                    _a.sent();
+                    return [3 /*break*/, 9];
+                case 8:
                     e_4 = _a.sent();
                     console.log('error sending sms', e_4);
                     setFallbackError("Error sending sms to " + userInfo.phone + ".");
-                    return [3 /*break*/, 8];
-                case 8: return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     }); };
@@ -426,19 +432,22 @@ var FallbackButton = function (_a) {
                     console.log('error sending push notification', e_5);
                     setFallbackError('Error sending push notification.');
                     return [3 /*break*/, 4];
-                case 4: return [3 /*break*/, 8];
+                case 4: return [3 /*break*/, 9];
                 case 5:
-                    _a.trys.push([5, 7, , 8]);
-                    return [4 /*yield*/, client.sendPushNotification(options)];
+                    if (!client) return [3 /*break*/, 9];
+                    _a.label = 6;
                 case 6:
-                    _a.sent();
-                    return [3 /*break*/, 8];
+                    _a.trys.push([6, 8, , 9]);
+                    return [4 /*yield*/, client.sendPushNotification(options)];
                 case 7:
+                    _a.sent();
+                    return [3 /*break*/, 9];
+                case 8:
                     e_6 = _a.sent();
                     console.log('error sending push notification', e_6);
                     setFallbackError('Error sending push notification.');
-                    return [3 /*break*/, 8];
-                case 8: return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     }); };
@@ -4128,7 +4137,7 @@ var UnumIDWidget = function (_a) {
     var _f = React.useState([]), fallbackOptions = _f[0], setFallbackOptions = _f[1];
     var _g = React.useState(), fallbackResultType = _g[0], setFallbackResultType = _g[1];
     var _h = React.useState(), fallbackError = _h[0], setFallbackError = _h[1];
-    var unumIdClient = React.useState(new UnumIDClient(saasUrls[env], apiKey))[0];
+    var unumIdClient = React.useState((apiKey && env) ? new UnumIDClient(saasUrls[env], apiKey) : undefined)[0];
     // destructure userInfo properties so we can pass them to a useEffect dependency array
     // without worrying about object equality
     var pushToken = userInfo === null || userInfo === void 0 ? void 0 : userInfo.pushToken;
@@ -4139,7 +4148,7 @@ var UnumIDWidget = function (_a) {
     // based on the information we have about the user.
     React.useEffect(function () {
         var queue = [];
-        if (pushToken) {
+        if (pushToken && (sendPushNotification || unumIdClient)) {
             // it's a single token
             if (!Array.isArray(pushToken)) {
                 queue.push('PUSH');
@@ -4149,17 +4158,27 @@ var UnumIDWidget = function (_a) {
                 queue.push('PUSH');
             }
         }
-        if (phone) {
+        if (phone && (sendSms || unumIdClient)) {
             queue.push('SMS');
         }
-        if (email) {
+        if (email && (sendEmail || unumIdClient)) {
             queue.push('EMAIL');
         }
         if (!isLoggedIn && goToLogin) {
             queue.push('LOGIN');
         }
         setFallbackOptions(queue);
-    }, [pushToken, phone, email, isLoggedIn, goToLogin]);
+    }, [
+        pushToken,
+        phone,
+        email,
+        isLoggedIn,
+        goToLogin,
+        unumIdClient,
+        sendPushNotification,
+        sendEmail,
+        sendSms,
+    ]);
     var nextFallback = function () {
         if (fallbackOptions.length === 0) {
             return;
@@ -4178,7 +4197,11 @@ var UnumIDWidget = function (_a) {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, createPresentationRequest()];
+                case 0:
+                    // If no createPresentationRequest function was provided, this function effectively does nothing
+                    if (!createPresentationRequest)
+                        return [2 /*return*/];
+                    return [4 /*yield*/, createPresentationRequest()];
                 case 1:
                     response = _a.sent();
                     if (response) {
