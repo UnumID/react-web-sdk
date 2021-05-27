@@ -27,7 +27,7 @@ import FallbackResult from './FallbackResult';
 
 export interface Props {
   apiKey?: string;
-  env: SaasEnvironment;
+  env?: SaasEnvironment;
   createPresentationRequest?: () => Promise<PresentationRequestPostDto>;
   sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
   sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
@@ -64,7 +64,7 @@ const UnumIDWidget: FC<Props> = ({
   const [fallbackError, setFallbackError] = useState<string | undefined>();
 
   const [unumIdClient] = useState<UnumIDClient | undefined>(
-    apiKey ? new UnumIDClient(saasUrls[env], apiKey) : undefined,
+    (apiKey && env) ? new UnumIDClient(saasUrls[env], apiKey) : undefined,
   );
 
   // destructure userInfo properties so we can pass them to a useEffect dependency array
