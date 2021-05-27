@@ -57,7 +57,7 @@ This component encapsulates all of the React Web SDK's functionality.
 
 
 #### Props
-**env** (string) _optional): The environment to run in (`'sandbox'` or `'production'`). This determines which Unum ID SaaS environment the React Web SDK will connect to. While this prop is technically optional, it is required for most use cases and should always be provided.
+**env** (string) _optional_: The environment to run in (`'sandbox'` or `'production'`). This determines which Unum ID SaaS environment the React Web SDK will connect to. While this prop is technically optional, it is required for most use cases and should always be provided.
 
 **apiKey** (string) _optional_: Your React Web SDK api key (obtained from Unum ID). While this prop is technically optional, it is required for most use cases and should always be provided.
 
