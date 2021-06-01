@@ -4,10 +4,3 @@
 // learn more: https://github.com/testing-library/jest-dom
 // import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
-
-process.env.REACT_APP_PRESENTATION_END_POINT='http://localhost:8082/api/requestPresentation'
-process.env.REACT_APP_SMS_END_POINT='http://localhost:8082/api/sendSMS'
-process.env.REACT_APP_EMAIL_END_POINT='http://localhost:8082/api/sendEmail'
-process.env.REACT_APP_LOGIN_PAGE='#login'
-process.env.REACT_APP_APPLICATION_TITLE='ACME'
-process.env.REACT_APP_ENABLE_LOG='false'
