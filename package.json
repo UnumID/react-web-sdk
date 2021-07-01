@@ -1,10 +1,10 @@
 {
-  "name": "@unumid/react-web-sdk",
-  "version": "1.1.1",
+  "name": "@unumid/web-sdk-react",
+  "version": "1.1.2-test-publish",
   "description": "UnumID React Web SDK",
   "author": "Subbu",
   "license": "MIT",
-  "repository": "git@github.com:UnumID/react-web-sdk.git",
+  "repository": "git@github.com:UnumID/web-sdk-react.git",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "engines": {
