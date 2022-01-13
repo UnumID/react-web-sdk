@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/types';
-import { ExternalMessageInput, SuccessResponse, UserInfo, SaasEnvironment } from 'types';
+import { ExternalMessageInput, SuccessResponse, UserInfo, SaasEnvironment } from '../types';
 import './UnumIDWidget.css';
 export interface Props {
     apiKey?: string;

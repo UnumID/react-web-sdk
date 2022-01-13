@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/types';
-import { FallbackType, ExternalMessageInput, SuccessResponse, UserInfo } from 'types';
-import { UnumIDClient } from 'UnumIDClient';
+import { FallbackType, ExternalMessageInput, SuccessResponse, UserInfo } from '../types';
+import { UnumIDClient } from '../UnumIDClient';
 interface Props {
     client?: UnumIDClient;
     fallbackType: FallbackType;

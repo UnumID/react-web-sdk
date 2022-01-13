@@ -7,8 +7,8 @@ import {
   ExternalMessageInput,
   SuccessResponse,
   UserInfo,
-} from 'types';
-import { UnumIDClient } from 'UnumIDClient';
+} from '../types';
+import { UnumIDClient } from '../UnumIDClient';
 import LinkButton from './LinkButton';
 
 interface Props {

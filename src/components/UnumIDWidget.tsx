@@ -6,10 +6,10 @@ import React, {
 } from 'react';
 import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/types';
 
-import DeeplinkWidget from 'components/DeeplinkWidget';
-import Spinner from 'components/Spinner';
-import LinkButton from 'components/LinkButton';
-import FallbackButton from 'components/FallbackButton';
+import DeeplinkWidget from './DeeplinkWidget';
+import Spinner from './Spinner';
+import LinkButton from './LinkButton';
+import FallbackButton from './FallbackButton';
 import {
   ExternalMessageInput,
   FallbackType,
@@ -17,10 +17,10 @@ import {
   UserInfo,
   WidgetType,
   SaasEnvironment,
-} from 'types';
-import { saasUrls } from 'constants/saasUrls';
-import { useTimeout } from 'hooks/useTimeout';
-import { UnumIDClient } from 'UnumIDClient';
+} from '../types';
+import { saasUrls } from '../constants/saasUrls';
+import { useTimeout } from '../hooks/useTimeout';
+import { UnumIDClient } from '../UnumIDClient';
 
 import './UnumIDWidget.css';
 import FallbackResult from './FallbackResult';

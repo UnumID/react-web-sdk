@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { HolderApp } from '@unumid/types';
 
-import QRCode from 'components/QRCode';
-import DeeplinkButton from 'components/DeeplinkButton';
-import Branding from 'components/Branding';
+import QRCode from './QRCode';
+import DeeplinkButton from './DeeplinkButton';
+import Branding from './Branding';
 
 import './DeeplinkWidget.css';
 

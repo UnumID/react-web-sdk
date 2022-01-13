@@ -1,8 +1,8 @@
 import React, { useState, FunctionComponent } from 'react';
 
-import LinkButton from 'components/LinkButton';
-import Spinner from 'components/Spinner';
-import Branding from 'components/Branding';
+import LinkButton from './LinkButton';
+import Spinner from './Spinner';
+import Branding from './Branding';
 
 import './QRCode.css';
 
