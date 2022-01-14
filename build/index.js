@@ -3152,7 +3152,13 @@ var followRedirects = wrap({ http: http__default["default"], https: https__defau
 var wrap_1 = wrap;
 followRedirects.wrap = wrap_1;
 
-var _from = "axios@^0.21.1";
+var _args = [
+	[
+		"axios@0.21.4",
+		"/Users/jacobsinger/workspaces/unumid/react-web-sdk"
+	]
+];
+var _from = "axios@0.21.4";
 var _id = "axios@0.21.4";
 var _inBundle = false;
 var _integrity = "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==";
@@ -3160,21 +3166,20 @@ var _location = "/axios";
 var _phantomChildren = {
 };
 var _requested = {
-	type: "range",
+	type: "version",
 	registry: true,
-	raw: "axios@^0.21.1",
+	raw: "axios@0.21.4",
 	name: "axios",
 	escapedName: "axios",
-	rawSpec: "^0.21.1",
+	rawSpec: "0.21.4",
 	saveSpec: null,
-	fetchSpec: "^0.21.1"
+	fetchSpec: "0.21.4"
 };
 var _requiredBy = [
 	"/"
 ];
 var _resolved = "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz";
-var _shasum = "c67b90dc0568e5c1cf2b0b858c43ba28e2eda575";
-var _spec = "axios@^0.21.1";
+var _spec = "0.21.4";
 var _where = "/Users/jacobsinger/workspaces/unumid/react-web-sdk";
 var author = {
 	name: "Matt Zabriskie"
@@ -3185,7 +3190,6 @@ var browser = {
 var bugs = {
 	url: "https://github.com/axios/axios/issues"
 };
-var bundleDependencies = false;
 var bundlesize = [
 	{
 		path: "./dist/axios.min.js",
@@ -3195,7 +3199,6 @@ var bundlesize = [
 var dependencies = {
 	"follow-redirects": "^1.14.0"
 };
-var deprecated = false;
 var description = "Promise based HTTP client for the browser and node.js";
 var devDependencies = {
 	coveralls: "^3.0.0",
@@ -3263,6 +3266,7 @@ var typings = "./index.d.ts";
 var unpkg = "dist/axios.min.js";
 var version = "0.21.4";
 var pkg = {
+	_args: _args,
 	_from: _from,
 	_id: _id,
 	_inBundle: _inBundle,
@@ -3272,16 +3276,13 @@ var pkg = {
 	_requested: _requested,
 	_requiredBy: _requiredBy,
 	_resolved: _resolved,
-	_shasum: _shasum,
 	_spec: _spec,
 	_where: _where,
 	author: author,
 	browser: browser,
 	bugs: bugs,
-	bundleDependencies: bundleDependencies,
 	bundlesize: bundlesize,
 	dependencies: dependencies,
-	deprecated: deprecated,
 	description: description,
 	devDependencies: devDependencies,
 	homepage: homepage,
