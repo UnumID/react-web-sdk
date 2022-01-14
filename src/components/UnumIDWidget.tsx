@@ -4,23 +4,26 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/types';
-
-import DeeplinkWidget from 'components/DeeplinkWidget';
-import Spinner from 'components/Spinner';
-import LinkButton from 'components/LinkButton';
-import FallbackButton from 'components/FallbackButton';
 import {
-  ExternalMessageInput,
+  PresentationRequestPostDto,
+  PushNotificationOptions,
+  ExternalChannelMessageInput
+} from '@unumid/types';
+
+import DeeplinkWidget from './DeeplinkWidget';
+import Spinner from './Spinner';
+import LinkButton from './LinkButton';
+import FallbackButton from './FallbackButton';
+import {
   FallbackType,
   SuccessResponse,
   UserInfo,
   WidgetType,
   SaasEnvironment,
-} from 'types';
-import { saasUrls } from 'constants/saasUrls';
-import { useTimeout } from 'hooks/useTimeout';
-import { UnumIDClient } from 'UnumIDClient';
+} from '../types';
+import { saasUrls } from '../constants/saasUrls';
+import { useTimeout } from '../hooks/useTimeout';
+import { UnumIDClient } from '../UnumIDClient';
 
 import './UnumIDWidget.css';
 import FallbackResult from './FallbackResult';
@@ -28,9 +31,9 @@ import FallbackResult from './FallbackResult';
 export interface Props {
   apiKey?: string;
   env?: SaasEnvironment;
-  createPresentationRequest?: () => Promise<PresentationRequestPostDto>;
-  sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
-  sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
+  createPresentationRequest?: () => Promise<PresentationRequestPostDto | void>;
+  sendEmail?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
+  sendSms?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
   sendPushNotification?: (options: PushNotificationOptions) => Promise<SuccessResponse>;
   goToLogin?: () => void;
   userInfo?: UserInfo;

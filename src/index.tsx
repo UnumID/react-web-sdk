@@ -1,8 +1,7 @@
-import UnumIDWidget from 'components/UnumIDWidget';
+import UnumIDWidget from './components/UnumIDWidget';
 
 export type {
-  ExternalMessageInput,
   SuccessResponse,
-} from 'types';
+} from './types';
 
 export default UnumIDWidget;

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FallbackType, UserInfo } from 'types';
+import { FallbackType, UserInfo } from '../types';
 interface Props {
     userInfo?: UserInfo;
     error?: string;

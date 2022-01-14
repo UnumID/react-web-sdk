@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
-import { FallbackType, UserInfo } from 'types';
-import ErrorMessage from 'components/ErrorMessage';
+import { FallbackType, UserInfo } from '../types';
+import ErrorMessage from './ErrorMessage';
 
 interface Props {
   userInfo?: UserInfo;

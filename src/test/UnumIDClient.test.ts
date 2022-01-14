@@ -1,7 +1,7 @@
 import { PushNotificationOptions } from '@unumid/types';
 import axios from 'axios';
-import { saasUrls } from 'constants/saasUrls';
 
+import { saasUrls } from '../constants/saasUrls';
 import { UnumIDClient } from '../UnumIDClient';
 
 jest.mock('axios');
