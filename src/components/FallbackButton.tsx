@@ -1,10 +1,13 @@
 import React, { FC, MouseEventHandler } from 'react';
 
-import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/types';
+import {
+  PresentationRequestPostDto,
+  PushNotificationOptions,
+  ExternalChannelMessageInput,
+} from '@unumid/types';
 
 import {
   FallbackType,
-  ExternalMessageInput,
   SuccessResponse,
   UserInfo,
 } from '../types';
@@ -18,8 +21,8 @@ interface Props {
   setFallbackError: (err?: string) => void;
   userInfo?: UserInfo;
   presentationRequest: PresentationRequestPostDto;
-  sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
-  sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
+  sendEmail?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
+  sendSms?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
   sendPushNotification?: (options: PushNotificationOptions) => Promise<SuccessResponse>;
   goToLogin?: () => void;
 }
@@ -109,7 +112,7 @@ const FallbackButton: FC<Props> = ({
     }
 
     const { deeplink } = presentationRequest;
-    const options: ExternalMessageInput = {
+    const options: ExternalChannelMessageInput = {
       to: userInfo?.email,
       deeplink,
     };
@@ -150,7 +153,7 @@ const FallbackButton: FC<Props> = ({
 
     const { deeplink } = presentationRequest;
 
-    const options: ExternalMessageInput = {
+    const options: ExternalChannelMessageInput = {
       to: userInfo.phone,
       deeplink,
     };
