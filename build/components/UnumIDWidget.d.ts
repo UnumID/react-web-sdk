@@ -5,7 +5,7 @@ import './UnumIDWidget.css';
 export interface Props {
     apiKey?: string;
     env?: SaasEnvironment;
-    createPresentationRequest?: () => Promise<PresentationRequestPostDto>;
+    createPresentationRequest?: () => Promise<PresentationRequestPostDto | void>;
     sendEmail?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
     sendSms?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
     sendPushNotification?: (options: PushNotificationOptions) => Promise<SuccessResponse>;
