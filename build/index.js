@@ -8043,11 +8043,12 @@ formatters.j = function (v) {
 };
 });
 
-var hasFlag = (flag, argv = process.argv) => {
+var hasFlag = (flag, argv) => {
+	argv = argv || process.argv;
 	const prefix = flag.startsWith('-') ? '' : (flag.length === 1 ? '-' : '--');
-	const position = argv.indexOf(prefix + flag);
-	const terminatorPosition = argv.indexOf('--');
-	return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
+	const pos = argv.indexOf(prefix + flag);
+	const terminatorPos = argv.indexOf('--');
+	return pos !== -1 && (terminatorPos === -1 ? true : pos < terminatorPos);
 };
 
 const {env} = process;
@@ -8064,11 +8065,10 @@ if (hasFlag('no-color') ||
 	hasFlag('color=always')) {
 	forceColor = 1;
 }
-
 if ('FORCE_COLOR' in env) {
-	if (env.FORCE_COLOR === 'true') {
+	if (env.FORCE_COLOR === true || env.FORCE_COLOR === 'true') {
 		forceColor = 1;
-	} else if (env.FORCE_COLOR === 'false') {
+	} else if (env.FORCE_COLOR === false || env.FORCE_COLOR === 'false') {
 		forceColor = 0;
 	} else {
 		forceColor = env.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env.FORCE_COLOR, 10), 3);
@@ -8088,7 +8088,7 @@ function translateLevel(level) {
 	};
 }
 
-function supportsColor(haveStream, streamIsTTY) {
+function supportsColor(stream) {
 	if (forceColor === 0) {
 		return 0;
 	}
@@ -8103,7 +8103,7 @@ function supportsColor(haveStream, streamIsTTY) {
 		return 2;
 	}
 
-	if (haveStream && !streamIsTTY && forceColor === undefined) {
+	if (stream && !stream.isTTY && forceColor === undefined) {
 		return 0;
 	}
 
@@ -8114,10 +8114,15 @@ function supportsColor(haveStream, streamIsTTY) {
 	}
 
 	if (process.platform === 'win32') {
-		// Windows 10 build 10586 is the first Windows release that supports 256 colors.
-		// Windows 10 build 14931 is the first release that supports 16m/TrueColor.
+		// Node.js 7.5.0 is the first version of Node.js to include a patch to
+		// libuv that enables 256 color output on Windows. Anything earlier and it
+		// won't work. However, here we target Node.js 8 at minimum as it is an LTS
+		// release, and Node.js 7 is not. Windows 10 build 10586 is the first Windows
+		// release that supports 256 colors. Windows 10 build 14931 is the first release
+		// that supports 16m/TrueColor.
 		const osRelease = os__default["default"].release().split('.');
 		if (
+			Number(process.versions.node.split('.')[0]) >= 8 &&
 			Number(osRelease[0]) >= 10 &&
 			Number(osRelease[2]) >= 10586
 		) {
@@ -8128,7 +8133,7 @@ function supportsColor(haveStream, streamIsTTY) {
 	}
 
 	if ('CI' in env) {
-		if (['TRAVIS', 'CIRCLECI', 'APPVEYOR', 'GITLAB_CI', 'GITHUB_ACTIONS', 'BUILDKITE'].some(sign => sign in env) || env.CI_NAME === 'codeship') {
+		if (['TRAVIS', 'CIRCLECI', 'APPVEYOR', 'GITLAB_CI'].some(sign => sign in env) || env.CI_NAME === 'codeship') {
 			return 1;
 		}
 
@@ -8171,14 +8176,14 @@ function supportsColor(haveStream, streamIsTTY) {
 }
 
 function getSupportLevel(stream) {
-	const level = supportsColor(stream, stream && stream.isTTY);
+	const level = supportsColor(stream);
 	return translateLevel(level);
 }
 
 var supportsColor_1 = {
 	supportsColor: getSupportLevel,
-	stdout: translateLevel(supportsColor(true, tty__default["default"].isatty(1))),
-	stderr: translateLevel(supportsColor(true, tty__default["default"].isatty(2)))
+	stdout: getSupportLevel(process.stdout),
+	stderr: getSupportLevel(process.stderr)
 };
 
 var node = createCommonjsModule(function (module, exports) {
@@ -9046,54 +9051,38 @@ var followRedirects = wrap({ http: http__default["default"], https: https__defau
 var wrap_1 = wrap;
 followRedirects.wrap = wrap_1;
 
-var _args = [
-	[
-		"axios@0.21.4",
-		"/Users/jacobsinger/workspaces/unumid/react-web-sdk"
-	]
+var name = "axios";
+var version = "0.21.4";
+var description = "Promise based HTTP client for the browser and node.js";
+var main = "index.js";
+var scripts = {
+	test: "grunt test",
+	start: "node ./sandbox/server.js",
+	build: "NODE_ENV=production grunt build",
+	preversion: "npm test",
+	version: "npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json",
+	postversion: "git push && git push --tags",
+	examples: "node ./examples/server.js",
+	coveralls: "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+	fix: "eslint --fix lib/**/*.js"
+};
+var repository = {
+	type: "git",
+	url: "https://github.com/axios/axios.git"
+};
+var keywords = [
+	"xhr",
+	"http",
+	"ajax",
+	"promise",
+	"node"
 ];
-var _from = "axios@0.21.4";
-var _id = "axios@0.21.4";
-var _inBundle = false;
-var _integrity = "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==";
-var _location = "/axios";
-var _phantomChildren = {
-};
-var _requested = {
-	type: "version",
-	registry: true,
-	raw: "axios@0.21.4",
-	name: "axios",
-	escapedName: "axios",
-	rawSpec: "0.21.4",
-	saveSpec: null,
-	fetchSpec: "0.21.4"
-};
-var _requiredBy = [
-	"/"
-];
-var _resolved = "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz";
-var _spec = "0.21.4";
-var _where = "/Users/jacobsinger/workspaces/unumid/react-web-sdk";
-var author = {
-	name: "Matt Zabriskie"
-};
-var browser = {
-	"./lib/adapters/http.js": "./lib/adapters/xhr.js"
-};
+var author = "Matt Zabriskie";
+var license = "MIT";
 var bugs = {
 	url: "https://github.com/axios/axios/issues"
 };
-var bundlesize = [
-	{
-		path: "./dist/axios.min.js",
-		threshold: "5kB"
-	}
-];
-var dependencies = {
-	"follow-redirects": "^1.14.0"
-};
-var description = "Promise based HTTP client for the browser and node.js";
+var homepage = "https://axios-http.com";
 var devDependencies = {
 	coveralls: "^3.0.0",
 	"es6-promise": "^4.2.4",
@@ -9129,67 +9118,40 @@ var devDependencies = {
 	webpack: "^4.44.2",
 	"webpack-dev-server": "^3.11.0"
 };
-var homepage = "https://axios-http.com";
+var browser = {
+	"./lib/adapters/http.js": "./lib/adapters/xhr.js"
+};
 var jsdelivr = "dist/axios.min.js";
-var keywords = [
-	"xhr",
-	"http",
-	"ajax",
-	"promise",
-	"node"
-];
-var license = "MIT";
-var main = "index.js";
-var name = "axios";
-var repository = {
-	type: "git",
-	url: "git+https://github.com/axios/axios.git"
-};
-var scripts = {
-	build: "NODE_ENV=production grunt build",
-	coveralls: "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-	examples: "node ./examples/server.js",
-	fix: "eslint --fix lib/**/*.js",
-	postversion: "git push && git push --tags",
-	preversion: "npm test",
-	start: "node ./sandbox/server.js",
-	test: "grunt test",
-	version: "npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"
-};
-var typings = "./index.d.ts";
 var unpkg = "dist/axios.min.js";
-var version = "0.21.4";
+var typings = "./index.d.ts";
+var dependencies = {
+	"follow-redirects": "^1.14.0"
+};
+var bundlesize = [
+	{
+		path: "./dist/axios.min.js",
+		threshold: "5kB"
+	}
+];
 var pkg = {
-	_args: _args,
-	_from: _from,
-	_id: _id,
-	_inBundle: _inBundle,
-	_integrity: _integrity,
-	_location: _location,
-	_phantomChildren: _phantomChildren,
-	_requested: _requested,
-	_requiredBy: _requiredBy,
-	_resolved: _resolved,
-	_spec: _spec,
-	_where: _where,
-	author: author,
-	browser: browser,
-	bugs: bugs,
-	bundlesize: bundlesize,
-	dependencies: dependencies,
-	description: description,
-	devDependencies: devDependencies,
-	homepage: homepage,
-	jsdelivr: jsdelivr,
-	keywords: keywords,
-	license: license,
-	main: main,
 	name: name,
-	repository: repository,
+	version: version,
+	description: description,
+	main: main,
 	scripts: scripts,
-	typings: typings,
+	repository: repository,
+	keywords: keywords,
+	author: author,
+	license: license,
+	bugs: bugs,
+	homepage: homepage,
+	devDependencies: devDependencies,
+	browser: browser,
+	jsdelivr: jsdelivr,
 	unpkg: unpkg,
-	version: version
+	typings: typings,
+	dependencies: dependencies,
+	bundlesize: bundlesize
 };
 
 var httpFollow = followRedirects.http;
