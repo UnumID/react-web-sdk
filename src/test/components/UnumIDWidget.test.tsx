@@ -2,6 +2,7 @@ import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { clear as clearMockUserAgent, mockUserAgent } from 'jest-useragent-mock';
+import qrcode from 'qrcode';
 
 import UnumIDWidget, { Props } from '../../components/UnumIDWidget';
 import { useTimeout } from '../../hooks/useTimeout';
@@ -11,6 +12,7 @@ const mockStart = jest.fn();
 const mockStop = jest.fn();
 jest.mock('../../hooks/useTimeout');
 jest.mock('../../UnumIDClient');
+jest.mock('qrcode');
 
 const mockUseTimeout = useTimeout as jest.Mock;
 mockUseTimeout.mockReturnValue([mockStart, mockStop]);
@@ -42,6 +44,7 @@ describe('UnumIDWidget', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    clearMockUserAgent();
   });
 
   it('creates a PresentationRequest on load if one is not passed as a prop', async () => {
@@ -73,8 +76,8 @@ describe('UnumIDWidget', () => {
 
   it('renders a qr code on desktop', async () => {
     renderWidget();
-    const qrCode = await screen.findByAltText('qr code');
-    expect(qrCode).toBeInTheDocument();
+    const displayedQrCode = await screen.findByAltText('qr code');
+    expect(displayedQrCode).toBeInTheDocument();
   });
 
   it('renders a deeplink button on mobile', async () => {
@@ -83,11 +86,10 @@ describe('UnumIDWidget', () => {
     const button = await screen.findByAltText(`Verify with ${dummyPresentationRequestResponse.holderApp.name}`);
 
     expect(button).toBeDefined();
-    clearMockUserAgent();
   });
 
   it('renders the push notfication fallback option when appropriate', async () => {
-    const props = {
+    const props: Props = {
       ...defaultProps,
       userInfo: {
         pushToken: {
@@ -117,5 +119,38 @@ describe('UnumIDWidget', () => {
 
     fireEvent.click(emailButton);
     expect(await screen.findByText(`We emailed a link to ${dummyUserInfo.email}.`)).toBeInTheDocument();
+  });
+
+  it('adds a provided userCode to the deeplink as a query param', async () => {
+    mockUserAgent('iPhone');
+    const userCode = 'test-user-code';
+    renderWidget({
+      ...defaultProps,
+      presentationRequest: dummyPresentationRequestResponse,
+      userCode,
+    });
+
+    const button = await screen.findByAltText(`Verify with ${dummyPresentationRequestResponse.holderApp.name}`);
+    const anchor = button.closest('a');
+    expect(anchor.href).toEqual(`${dummyPresentationRequestResponse.deeplink}?userCode=${userCode}`);
+  });
+
+  it('generates and displays a new qr code containing the userCode', async () => {
+    const userCode = 'test-user-code';
+    const dummyQrCodeDataUrl = 'data:image/png;base64,test-qr-code';
+    (qrcode.toDataURL as jest.Mock).mockResolvedValueOnce(dummyQrCodeDataUrl);
+    renderWidget({
+      ...defaultProps,
+      presentationRequest: dummyPresentationRequestResponse,
+      userCode,
+    });
+
+    const displayedQrCode = await screen.findByAltText('qr code') as HTMLImageElement;
+    const deeplinkWithUserCode = `${dummyPresentationRequestResponse.deeplink}?userCode=${userCode}`;
+    expect(qrcode.toDataURL).toBeCalledWith(
+      deeplinkWithUserCode,
+      { color: { light: '#0000' } },
+    );
+    expect(displayedQrCode.src).toEqual(dummyQrCodeDataUrl);
   });
 });
