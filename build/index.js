@@ -10483,30 +10483,33 @@ var UnumIDWidget = function (_a) {
         return stopTimeout();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [presentationRequest]);
+    // if a userCode is provided, add it to the deeplink from the presentationRequest as a query param
+    // and generate a new qr code from the updated deeplink
     React.useEffect(function () {
         var addUserCodeToDeeplinkAndQr = function () { return __awaiter(void 0, void 0, void 0, function () {
             var updatedDeeplink, updatedQrCode;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(presentationRequest && userCode)) return [3 /*break*/, 2];
+                        if (!(presentationRequest && userCode)) return [3 /*break*/, 3];
                         updatedDeeplink = "".concat(presentationRequest.deeplink, "?userCode=").concat(userCode);
+                        setDeeplink(updatedDeeplink);
+                        if (!canScan) return [3 /*break*/, 2];
                         return [4 /*yield*/, lib.toDataURL(updatedDeeplink, { color: { light: '#0000' } })];
                     case 1:
                         updatedQrCode = _a.sent();
-                        console.log('updatedDeeplink', updatedDeeplink);
-                        setDeeplink(updatedDeeplink);
                         setQrCode(updatedQrCode);
-                        setIsReady(true);
                         _a.label = 2;
-                    case 2: return [2 /*return*/];
+                    case 2:
+                        setIsReady(true);
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
                 }
             });
         }); };
         addUserCodeToDeeplinkAndQr();
-    }, [presentationRequest, userCode]);
-    // This component can't display a presentationRequest if it doesn't have one.
-    // Show a spinner instead.
+    }, [presentationRequest, userCode, canScan]);
+    // display a spinner if the widget isn't ready yet
     if (!isReady) {
         return (React__default["default"].createElement("div", { className: "unumid-web-sdk-widget" },
             React__default["default"].createElement(Spinner, null)));

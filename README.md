@@ -105,10 +105,10 @@ The simplest typical use case (above), using TypeScript.
 ```tsx
 import { FC } from 'react';
 
-import UnumIDWidget, { PresentationRequestPostDto } from '@unumid/web-sdk-react';
+import UnumIDWidget, { PresentationRequestDto } from '@unumid/web-sdk-react';
 
 const App: FC = () => {
-  const createPresentationRequest = async (): Promise<PresentationRequestPostDto> => {
+  const createPresentationRequest = async (): Promise<PresentationRequestDto> => {
     // Call your backend to create a PresentationRequest and return the response.
   };
 
