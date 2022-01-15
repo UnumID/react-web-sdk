@@ -77,6 +77,8 @@ This component encapsulates all of the React Web SDK's functionality.
 
 **goToLogin** (`() => void`) _optional_: A function which redirects the user to your existing login page. You should provide this if you are using Unum ID as an additional authentication factor on top of your existing login. If this prop is not provided, the login fallback option will not be available.
 
+**userCode** (`string`) _optional_: A code which uniquely identifies a user in your system. If provided, it will allow the holder to call back to your api and enable functionality including just-in-time credential issuance.
+
 
 
 ## Examples
@@ -120,7 +122,8 @@ const App: FC = () => {
 };
 ```
 
-A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options by providing user info.
+A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options by providing user info,
+and just-in-time issuance by providing a user code
 ```jsx
 import UnumIDWidget from '@unumid/web-sdk-react';
 
@@ -142,6 +145,7 @@ const App = () => {
         }
       }}
       createPresentationRequest={createPresentationRequest}
+      userCode='my-user-code'
     />
   );
 };
