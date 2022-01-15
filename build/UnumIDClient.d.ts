@@ -1,6 +1,6 @@
 import { PushNotificationOptions, ExternalChannelMessageInput } from '@unumid/types';
 import { AxiosInstance, Method } from 'axios';
-import { SuccessResponse } from 'types';
+import { SuccessResponse } from './types';
 export declare class UnumIDClient {
     axiosInstance: AxiosInstance;
     constructor(saasUrl: string, apiKey: string);

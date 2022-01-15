@@ -1,18 +1,19 @@
 import { FC } from 'react';
-import { PresentationRequestPostDto, PushNotificationOptions, ExternalChannelMessageInput } from '@unumid/types';
+import { PushNotificationOptions, ExternalChannelMessageInput, PresentationRequestDto } from '@unumid/types';
 import { SuccessResponse, UserInfo, SaasEnvironment } from '../types';
 import './UnumIDWidget.css';
 export interface Props {
     apiKey?: string;
     env?: SaasEnvironment;
-    createPresentationRequest?: () => Promise<PresentationRequestPostDto | void>;
+    createPresentationRequest?: () => Promise<PresentationRequestDto | void>;
     sendEmail?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
     sendSms?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
     sendPushNotification?: (options: PushNotificationOptions) => Promise<SuccessResponse>;
     goToLogin?: () => void;
     userInfo?: UserInfo;
-    presentationRequest?: PresentationRequestPostDto;
+    presentationRequest?: PresentationRequestDto;
     createInitialPresentationRequest?: boolean;
+    userCode?: string;
 }
 /**
  * Our top-level component exported from this SDK.
