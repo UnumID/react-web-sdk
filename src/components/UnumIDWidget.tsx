@@ -282,18 +282,22 @@ const UnumIDWidget: FC<Props> = ({
            />
          )
       }
-      <FallbackButton
-        client={unumIdClient}
-        fallbackType={fallbackOptions[0]}
-        nextFallback={nextFallback}
-        setFallbackError={setFallbackError}
-        userInfo={userInfo}
-        presentationRequest={presentationRequest}
-        sendEmail={sendEmail}
-        sendSms={sendSms}
-        sendPushNotification={sendPushNotification}
-        goToLogin={goToLogin}
-      />
+      {
+        canScan && (
+          <FallbackButton
+            client={unumIdClient}
+            fallbackType={fallbackOptions[0]}
+            nextFallback={nextFallback}
+            setFallbackError={setFallbackError}
+            userInfo={userInfo}
+            presentationRequest={presentationRequest}
+            sendEmail={sendEmail}
+            sendSms={sendSms}
+            sendPushNotification={sendPushNotification}
+            goToLogin={goToLogin}
+          />
+        )
+      }
       {
         currentWidget !== 'DEEPLINK' && (
           <LinkButton onClick={() => setCurrentWidget('DEEPLINK')}>

@@ -88,6 +88,23 @@ describe('UnumIDWidget', () => {
     expect(button).toBeDefined();
   });
 
+  it('does not render fallbacks on mobile', async () => {
+    mockUserAgent('iPhone');
+    const props: Props = {
+      ...defaultProps,
+      userInfo: {
+        pushToken: {
+          provider: 'FCM',
+          value: 'test token',
+        },
+      },
+    };
+    renderWidget(props);
+    await screen.findByAltText(`Verify with ${dummyPresentationRequestResponse.holderApp.name}`);
+    screen.debug();
+    expect(screen.queryByText('Get a push notification instead')).not.toBeInTheDocument();
+  });
+
   it('renders the push notfication fallback option when appropriate', async () => {
     const props: Props = {
       ...defaultProps,
