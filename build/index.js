@@ -6131,8 +6131,12 @@ var shouldNeverHappen = function (message) { return "".concat(message, " THIS SH
  * Component responsible for rendering a button to trigger the current fallback method.
  */
 var FallbackButton = function (_a) {
-    var client = _a.client, fallbackType = _a.fallbackType, nextFallback = _a.nextFallback, setFallbackError = _a.setFallbackError, userInfo = _a.userInfo, presentationRequest = _a.presentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, sendPushNotification = _a.sendPushNotification, goToLogin = _a.goToLogin;
+    var client = _a.client, fallbackType = _a.fallbackType, canScan = _a.canScan, nextFallback = _a.nextFallback, setFallbackError = _a.setFallbackError, userInfo = _a.userInfo, presentationRequest = _a.presentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, sendPushNotification = _a.sendPushNotification, goToLogin = _a.goToLogin;
     if (!fallbackType) {
+        return null;
+    }
+    // only login fallback is available on mobile
+    if (!canScan && fallbackType !== 'LOGIN') {
         return null;
     }
     var handleClick = function () {
@@ -10523,7 +10527,7 @@ var UnumIDWidget = function (_a) {
     return (React__default["default"].createElement("div", { className: "unumid-web-sdk-widget" },
         (currentWidget === 'DEEPLINK') && (React__default["default"].createElement(DeeplinkWidget, { holderApp: presentationRequest.holderApp, deeplink: deeplink, qrCode: qrCode, canScan: canScan })),
         currentWidget === 'FALLBACK_RESULT' && fallbackResultType && (React__default["default"].createElement(FallbackResult, { userInfo: userInfo, fallbackType: fallbackResultType, error: fallbackError })),
-        canScan && (React__default["default"].createElement(FallbackButton, { client: unumIdClient, fallbackType: fallbackOptions[0], nextFallback: nextFallback, setFallbackError: setFallbackError, userInfo: userInfo, presentationRequest: presentationRequest, sendEmail: sendEmail, sendSms: sendSms, sendPushNotification: sendPushNotification, goToLogin: goToLogin })),
+        React__default["default"].createElement(FallbackButton, { client: unumIdClient, fallbackType: fallbackOptions[0], canScan: canScan, nextFallback: nextFallback, setFallbackError: setFallbackError, userInfo: userInfo, presentationRequest: presentationRequest, sendEmail: sendEmail, sendSms: sendSms, sendPushNotification: sendPushNotification, goToLogin: goToLogin }),
         currentWidget !== 'DEEPLINK' && (React__default["default"].createElement(LinkButton, { onClick: function () { return setCurrentWidget('DEEPLINK'); } },
             "Back to ",
             canScan ? 'QR Code' : 'Verification button',
