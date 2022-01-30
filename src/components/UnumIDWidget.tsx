@@ -285,6 +285,7 @@ const UnumIDWidget: FC<Props> = ({
       <FallbackButton
         client={unumIdClient}
         fallbackType={fallbackOptions[0]}
+        canScan={canScan}
         nextFallback={nextFallback}
         setFallbackError={setFallbackError}
         userInfo={userInfo}

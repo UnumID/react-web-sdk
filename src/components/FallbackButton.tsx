@@ -17,9 +17,10 @@ import LinkButton from './LinkButton';
 import { isDefined } from '../typeguards';
 import { shouldNeverHappen } from '../errors';
 
-interface Props {
+export interface Props {
   client?: UnumIDClient;
   fallbackType: FallbackType;
+  canScan: boolean;
   nextFallback: () => void;
   setFallbackError: (err?: string) => void;
   userInfo?: UserInfo;
@@ -36,6 +37,7 @@ interface Props {
 const FallbackButton: FC<Props> = ({
   client,
   fallbackType,
+  canScan,
   nextFallback,
   setFallbackError,
   userInfo,
@@ -46,6 +48,11 @@ const FallbackButton: FC<Props> = ({
   goToLogin,
 }) => {
   if (!fallbackType) {
+    return null;
+  }
+
+  // only login fallback is available on mobile
+  if (!canScan && fallbackType !== 'LOGIN') {
     return null;
   }
 

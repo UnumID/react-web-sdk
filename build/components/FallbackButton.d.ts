@@ -2,9 +2,10 @@ import { FC } from 'react';
 import { PushNotificationOptions, ExternalChannelMessageInput, PresentationRequestDto } from '@unumid/types';
 import { FallbackType, SuccessResponse, UserInfo } from '../types';
 import { UnumIDClient } from '../UnumIDClient';
-interface Props {
+export interface Props {
     client?: UnumIDClient;
     fallbackType: FallbackType;
+    canScan: boolean;
     nextFallback: () => void;
     setFallbackError: (err?: string) => void;
     userInfo?: UserInfo;
