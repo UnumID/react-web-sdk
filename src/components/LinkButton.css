@@ -16,3 +16,7 @@
 .link-button:focus {
   outline: none;
 }
+
+.continue-under-qr {
+  width: 60%;
+}

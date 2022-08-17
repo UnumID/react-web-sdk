@@ -250,7 +250,7 @@ const UnumIDWidget: FC<Props> = ({
   // the presentationRequest should be defined at this point
   invariant(
     isDefined<PresentationRequestDto>(presentationRequest),
-    shouldNeverHappen('<issing presentationRequest'),
+    shouldNeverHappen('Missing presentationRequest'),
   );
 
   // throw if the presentationRequest does not contain holderApp info
@@ -270,6 +270,8 @@ const UnumIDWidget: FC<Props> = ({
           deeplink={deeplink}
           qrCode={qrCode}
           canScan={canScan}
+          env={env}
+          presentationRequestId={presentationRequest.presentationRequest.id}
         />
       )
       }

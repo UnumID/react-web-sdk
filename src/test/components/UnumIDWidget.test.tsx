@@ -83,7 +83,7 @@ describe('UnumIDWidget', () => {
   it('renders a deeplink button on mobile', async () => {
     mockUserAgent('iPhone');
     renderWidget();
-    const button = await screen.findByAltText(`Verify with ${dummyPresentationRequestResponse.holderApp.name}`);
+    const button = await screen.findByAltText(`Verify with ${dummyPresentationRequestResponse.holderApp?.name}`);
 
     expect(button).toBeDefined();
   });
@@ -130,9 +130,9 @@ describe('UnumIDWidget', () => {
       userCode,
     });
 
-    const button = await screen.findByAltText(`Verify with ${dummyPresentationRequestResponse.holderApp.name}`);
+    const button = await screen.findByAltText(`Verify with ${dummyPresentationRequestResponse.holderApp?.name}`);
     const anchor = button.closest('a');
-    expect(anchor.href).toEqual(`${dummyPresentationRequestResponse.deeplink}?userCode=${userCode}`);
+    expect(anchor?.href).toEqual(`${dummyPresentationRequestResponse.deeplink}?userCode=${userCode}`);
   });
 
   it('generates and displays a new qr code containing the userCode', async () => {

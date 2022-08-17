@@ -1,31 +1,44 @@
-import React, { useState, FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 
 import LinkButton from './LinkButton';
 import Spinner from './Spinner';
 import Branding from './Branding';
 
 import './QRCode.css';
+import { walletUrls } from '../constants/saasUrls';
+import { SaasEnvironment } from '../types';
+import { HolderApp } from '@unumid/types';
+import DeeplinkButton from './DeeplinkButton';
 
 interface Props {
   qrCode: string;
   holderAppName: string;
+  holderApp: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
+  presentationRequestId?: string;
+  env?: SaasEnvironment
 }
 
 /**
  * Component responsible for rendering a QR code
  */
-const QRCode: FunctionComponent<Props> = ({ qrCode, holderAppName }) => {
+const QRCode: FunctionComponent<Props> = ({
+  qrCode, holderAppName, env, presentationRequestId, holderApp,
+}) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
+  const walletUrl = env ? walletUrls[env] : undefined;
+  const deeplinkHref = `${walletUrl}/request?presentationRequestId=${presentationRequestId}&autoClose=3`;
 
   const handleLinkButtonClick = (): void => {
     setShowNeedHelp(!showNeedHelp);
   };
 
   const renderQrCode = () => (
-    <div className="image-wrapper">
-      <img className="qr-code-img" alt="qr code" src={qrCode} />
+    <>
+      <a target="_blank" rel="noopener noreferrer" className="image-wrapper" href={`${deeplinkHref}?link=qr`}>
+        <img className="qr-code-img" alt="qr code" src={qrCode} />
+      </a>
       <Branding />
-    </div>
+    </>
   );
 
   return (
@@ -45,6 +58,16 @@ const QRCode: FunctionComponent<Props> = ({ qrCode, holderAppName }) => {
       <div className="qrcode-img-wrapper">
         {qrCode ? renderQrCode() : <Spinner />}
       </div>
+      { (walletUrl && presentationRequestId && holderApp)
+          && (
+          <DeeplinkButton
+            target="_blank"
+            href={deeplinkHref}
+            className="continue-under-qr"
+          >
+            <img src={holderApp.deeplinkButtonImg} alt={`Verify with ${holderApp.name}`} />
+          </DeeplinkButton>
+          )}
     </div>
   );
 };

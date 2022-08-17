@@ -1,1 +1,1 @@
-{"version":3,"file":"saasUrls.d.ts","sourceRoot":"","sources":["../../src/constants/saasUrls.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,UAAU,CAAC;AAE3C,eAAO,MAAM,QAAQ,EAAE,MAAM,CAAC,eAAe,EAAE,MAAM,CAIpD,CAAC"}
+{"version":3,"file":"saasUrls.d.ts","sourceRoot":"","sources":["../../src/constants/saasUrls.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,UAAU,CAAC;AAE3C,eAAO,MAAM,QAAQ,EAAE,MAAM,CAAC,eAAe,EAAE,MAAM,CAKpD,CAAC;AAGF,eAAO,MAAM,UAAU,EAAE,MAAM,CAAC,eAAe,EAAE,MAAM,CAKtD,CAAC"}

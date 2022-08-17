@@ -12,4 +12,4 @@ export interface SuccessResponse {
 
 export type FallbackType = 'PUSH' | 'SMS' | 'EMAIL' | 'LOGIN';
 export type WidgetType = 'DEEPLINK' | 'FALLBACK_RESULT';
-export type SaasEnvironment = 'development' | 'sandbox' | 'production';
+export type SaasEnvironment = 'local' | 'development' | 'sandbox' | 'production';
