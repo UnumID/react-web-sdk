@@ -100,15 +100,11 @@ describe('UnumIDWidget', () => {
     return continueToWebWalletButton;
   }
 
-  function queryQRCode(env: SaasEnvironment | undefined) {
+  function queryQRCode() {
     const qrCode = screen.queryByRole(QRCodeRole);
     if (qrCode) {
       const altText = `QR Code to Verify with ${dummyPresentationRequestResponse.holderApp?.name}`;
       const src = dummyPresentationRequestResponse.qrCode;
-      const href = webWalletLink(dummyPresentationRequestResponse, env, true);
-      if (env) {
-        expect(qrCode).toHaveAttribute('href', href);
-      }
       const img = qrCode.querySelector('img');
       expect(img).toBeInTheDocument();
       expect(img).toHaveAttribute('alt', altText);
@@ -126,9 +122,10 @@ describe('UnumIDWidget', () => {
   ) {
     await waitFor(() => {
       const expectations = [
-        // [expected, element, name] Dont know how to use name in error messages without jest throwing a fit
+        // [expected, element, name] Don't know how to use name
+        // in error messages without jest throwing a fit
         [deeplinkButton, queryDeeplinkButton(), 'DeepLink Button'],
-        [qrCode, queryQRCode(continueToWebWallet), 'QR Code'],
+        [qrCode, queryQRCode(), 'QR Code'],
         [Boolean(continueToWebWallet), queryContinueWithOneClickButton(continueToWebWallet), '1-Click to Web Wallet'],
       ] as [boolean, HTMLElement, string][];
       expectations.forEach(([expected, element]) => {
