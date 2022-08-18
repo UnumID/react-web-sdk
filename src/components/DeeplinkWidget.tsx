@@ -27,9 +27,9 @@ const DeeplinkWidget: FC<Props> = ({
   deeplink,
   canScan,
   env,
-  presentationRequestId
+  presentationRequestId,
 }) => {
-  const renderQrCode = () => <QRCode qrCode={qrCode} holderAppName={holderApp.name} env={env} presentationRequestId={presentationRequestId} holderApp={holderApp} />;
+  const renderQrCode = () => <QRCode qrCode={qrCode} env={env} presentationRequestId={presentationRequestId} holderApp={holderApp} />;
 
   const renderDeeplinkButton = () => (
     <div className="deeplink-button-wrapper">
@@ -44,8 +44,8 @@ const DeeplinkWidget: FC<Props> = ({
   );
 
   const widget = useMemo(
-    () => canScan ? renderQrCode() : renderDeeplinkButton(),
-    [canScan]
+    () => (canScan ? renderQrCode() : renderDeeplinkButton()),
+    [canScan],
   );
 
   return (

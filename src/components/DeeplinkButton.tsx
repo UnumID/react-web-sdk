@@ -7,7 +7,10 @@ type Props = PropsWithChildren<{
   target?: string;
   href: string;
   className?: string;
+  role?: string;
 }>
+
+export const DeepLinkButtonRole = 'DeepLinkButtonRole';
 
 /**
  * Component responsible for displaying a deep link as a clickable button.
@@ -18,11 +21,13 @@ const DeeplinkButton: FC<Props> = ({
   href,
   className,
   children,
+  role,
 }) => (
   <a
     className={cc(['deeplink-button', className])}
     href={href}
     target={target}
+    role={role || DeepLinkButtonRole}
   >
     {children}
   </a>
