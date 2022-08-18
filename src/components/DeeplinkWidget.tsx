@@ -9,12 +9,12 @@ import './DeeplinkWidget.css';
 import { SaasEnvironment } from '../types';
 
 export interface Props {
-  holderApp: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
+  holderApp?: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
   deeplink: string;
   qrCode: string;
   canScan: boolean;
   env?: SaasEnvironment;
-  presentationRequestId: string;
+  presentationRequestId?: string;
 }
 
 /**
@@ -29,7 +29,14 @@ const DeeplinkWidget: FC<Props> = ({
   env,
   presentationRequestId,
 }) => {
-  const renderQrCode = () => <QRCode qrCode={qrCode} env={env} presentationRequestId={presentationRequestId} holderApp={holderApp} />;
+  const renderQrCode = () => (
+    <QRCode
+      qrCode={qrCode}
+      env={env}
+      presentationRequestId={presentationRequestId}
+      holderApp={holderApp}
+    />
+  );
 
   const renderDeeplinkButton = () => (
     <div className="deeplink-button-wrapper">
@@ -37,7 +44,7 @@ const DeeplinkWidget: FC<Props> = ({
         target="_blank"
         href={deeplink}
       >
-        <img src={holderApp.deeplinkButtonImg} alt={`Verify with ${holderApp.name}`} />
+        <img src={holderApp?.deeplinkButtonImg} alt={`Verify with ${holderApp?.name}`} />
       </DeeplinkButton>
       <Branding />
     </div>

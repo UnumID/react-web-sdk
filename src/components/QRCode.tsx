@@ -12,7 +12,7 @@ import Branding from './Branding';
 
 interface Props {
   qrCode: string;
-  holderApp: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
+  holderApp?: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
   presentationRequestId?: string;
   env?: SaasEnvironment;
 }
@@ -32,7 +32,7 @@ const QRCode: FunctionComponent<Props> = ({
 }) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
   const walletUrl = env ? walletUrls[env] : undefined;
-  const deeplinkHref = walletUrl ? `${walletUrl}/request?presentationRequestId=${presentationRequestId}&autoClose=${deepLinkAutoCloseTimer}` : undefined;
+  const walletHref = walletUrl ? `${walletUrl}/request?presentationRequestId=${presentationRequestId}&autoClose=${deepLinkAutoCloseTimer}` : undefined;
 
   const handleLinkButtonClick = (): void => {
     setShowNeedHelp(!showNeedHelp);
@@ -40,15 +40,12 @@ const QRCode: FunctionComponent<Props> = ({
 
   const renderQrCode = () => (
     <>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
+      <div
         className="image-wrapper"
-        href={`${deeplinkHref}&link=qr`}
         role={QRCodeRole}
       >
-        <img className="qr-code-img" alt={`QR Code to Verify with ${holderApp.name}`} src={qrCode} />
-      </a>
+        <img className="qr-code-img" alt={`QR Code to Verify with ${holderApp?.name}`} src={qrCode} />
+      </div>
       <Branding />
     </>
   );
@@ -56,13 +53,13 @@ const QRCode: FunctionComponent<Props> = ({
   return (
     <div className="qr-code">
       <div className="bold">To continue, scan this QR code</div>
-      <div className="light">with your phone camera or {holderApp.name} app:</div>
+      <div className="light">with your phone camera or {holderApp?.name} app:</div>
       <LinkButton onClick={handleLinkButtonClick}>Need help scanning?</LinkButton>
       {
         showNeedHelp && (
           <div className="help">
-            <div className="help-item">1. Install the {holderApp.name} app from the app store.</div>
-            <div className="help-item">2. Open the {holderApp.name} app and click &quot;Scan a QR
+            <div className="help-item">1. Install the {holderApp?.name} app from the app store.</div>
+            <div className="help-item">2. Open the {holderApp?.name} app and click &quot;Scan a QR
               code&quot;.
             </div>
             <div className="help-item">3. Hover over the QR code.</div>
@@ -73,10 +70,10 @@ const QRCode: FunctionComponent<Props> = ({
         {qrCode ? renderQrCode() : <Spinner />}
       </div>
       {
-        (deeplinkHref && presentationRequestId && holderApp) && (
+        (walletHref && presentationRequestId && holderApp) && (
           <DeeplinkButton
             target="_blank"
-            href={deeplinkHref}
+            href={walletHref}
             className="continue-under-qr"
             role={ContinueToWebWalletRole}
           >

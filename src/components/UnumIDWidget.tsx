@@ -266,12 +266,12 @@ const UnumIDWidget: FC<Props> = ({
       {
       (currentWidget === 'DEEPLINK') && (
         <DeeplinkWidget
-          holderApp={presentationRequest.holderApp}
+          holderApp={presentationRequest?.holderApp}
           deeplink={deeplink}
           qrCode={qrCode}
           canScan={canScan}
           env={env}
-          presentationRequestId={presentationRequest.presentationRequest.id}
+          presentationRequestId={presentationRequest?.presentationRequest.id}
         />
       )
       }
