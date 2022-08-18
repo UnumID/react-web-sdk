@@ -3,6 +3,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import DeeplinkWidget, { Props } from '../../components/DeeplinkWidget';
 import { dummyHolderAppInfo, dummyPresentationRequestResponse } from '../mocks';
+import { QRCodeRole } from '../../components/QRCode';
 
 describe('DeeplinkWidget', () => {
   const dummyQrCode = dummyPresentationRequestResponse.qrCode;
@@ -21,9 +22,12 @@ describe('DeeplinkWidget', () => {
 
   it('renders a qr code if canScan is true', async () => {
     renderWidget();
-    const qrCode = await screen.findByAltText('qr code');
+    const qrCode = await screen.findByRole(QRCodeRole);
     expect(qrCode).toBeInTheDocument();
-    expect(qrCode).toHaveAttribute('src', dummyQrCode);
+
+    const qrImage = qrCode.querySelector('img');
+    expect(qrImage).toBeInTheDocument();
+    expect(qrImage).toHaveAttribute('src', dummyQrCode);
   });
 
   it('renders a deeplink button if canScan is false', async () => {

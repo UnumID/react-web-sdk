@@ -9,5 +9,5 @@ export interface SuccessResponse {
 }
 export declare type FallbackType = 'PUSH' | 'SMS' | 'EMAIL' | 'LOGIN';
 export declare type WidgetType = 'DEEPLINK' | 'FALLBACK_RESULT';
-export declare type SaasEnvironment = 'development' | 'sandbox' | 'production';
+export declare type SaasEnvironment = 'local' | 'development' | 'sandbox' | 'production';
 //# sourceMappingURL=types.d.ts.map
