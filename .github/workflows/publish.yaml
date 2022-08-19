@@ -88,13 +88,14 @@ jobs:
       # ref: https://github.com/actions/create-release
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@v1.10.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: ${{ env.RELEASE_VERSION }}
           release_name: ${{ env.RELEASE_VERSION }}
-          body: ${{ env.TAG_MESSAGE }}
+          generateReleaseNotes: true
+          # body: ${{ env.TAG_MESSAGE }}
           # body: |
           #   Changes in this Release
           #   - First Change
