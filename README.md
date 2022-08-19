@@ -23,6 +23,9 @@ npm install @unumid/react-web-sdk@https://github.com/UnumID/react-web-sdk.git
 yarn add @unumid/react-web-sdk@https://github.com/UnumID/react-web-sdk.git
 ```
 
+## Releases
+Releases of packages to the package repos, NPM and Github Packages, should be left to the Github actions CI job. The job is triggered by a tag push with a proceeding `v` followed by semver notation, i.e. v1.3.1. This will bumped the version defined in package.json and create a Github release on the semver version, 1.3.1. It will also handle publishing the package to each package repo with that same version. 
+
 ## Functionality
 ### Creating PresentationRequests
 By default, the React Web SDK will create a PresentationRequest as soon as it is rendered, and will periodically regenerate the PresentationRequest (to ensure that it does not expire) until the user shares data or declines the request, or the widget is unmounted. You can use different combinations of props (see below) to choose how much control over PresentationRequest creation you want to have. For example, instead of automatically creating a PresentationRequest on load, you may want to trigger its creation based on a user interaction like a button click.
