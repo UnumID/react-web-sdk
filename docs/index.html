@@ -80,7 +80,7 @@
 				<a href="#releases" id="releases" style="color: inherit; text-decoration: none;">
 					<h2>Releases</h2>
 				</a>
-				<p>Releases of packages to the package repos, NPM and Github Packages, should be left to the Github actions CI job. The job is triggered by a tag push with a proceeding <code>v</code> followed by semver notation, i.e. v1.3.1. This will bumped the version defined in package.json and create a Github release on the semver version, 1.3.1. It will also handle publishing the package to each package repo with that same version. </p>
+				<p>Releases and publishing to NPM is automated via Github Actions CI job. In order to trigger a release one should push a git tag with a preceding <code>v</code> with semver notation, ie <code>v1.1.1</code>, to the <code>main</code> branch. This will trigger the CI job to bump the package version, generate typedocs, publish to NPM, make a release commit, and make a Github Release. The message of the git tag will be the release message so please make it meaningful. For example, <code>git tag v1.1.1 -m &quot;Updated the SDK with a new CI job&quot; &amp;&amp; push origin v1.1.1</code>.</p>
 				<a href="#functionality" id="functionality" style="color: inherit; text-decoration: none;">
 					<h2>Functionality</h2>
 				</a>
