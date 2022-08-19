@@ -4,7 +4,7 @@ import { HolderApp } from '@unumid/types';
 import { SaasEnvironment } from '../types';
 interface Props {
     qrCode: string;
-    holderApp: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
+    holderApp?: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
     presentationRequestId?: string;
     env?: SaasEnvironment;
 }
