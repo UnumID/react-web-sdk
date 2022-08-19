@@ -6010,15 +6010,15 @@ styleInject(css_248z$7);
 
 var saasUrls = {
     local: 'http://localhost:6030',
-    development: 'https://api.dev-unum.id',
-    sandbox: 'https://api.sandbox-unum.id',
-    production: 'https://api.unum.id',
+    development: 'https://api.dev-unumid.co',
+    sandbox: 'https://api.sandbox-unumid.co',
+    production: 'https://api.unumid.co',
 };
 var walletUrls = {
     local: 'http://localhost:3000',
-    development: 'https://wallet.dev-unum.id',
-    sandbox: 'https://wallet.sandbox-unum.id',
-    production: 'https://wallet.unum.id',
+    development: 'https://wallet.dev-unumid.co',
+    sandbox: 'https://wallet.sandbox-unumid.co',
+    production: 'https://wallet.unumid.co',
 };
 
 var isArray$1 = Array.isArray;
@@ -6096,33 +6096,33 @@ var QRCode = function (_a) {
     var qrCode = _a.qrCode, env = _a.env, presentationRequestId = _a.presentationRequestId, holderApp = _a.holderApp;
     var _b = React.useState(false), showNeedHelp = _b[0], setShowNeedHelp = _b[1];
     var walletUrl = env ? walletUrls[env] : undefined;
-    var deeplinkHref = walletUrl ? "".concat(walletUrl, "/request?presentationRequestId=").concat(presentationRequestId, "&autoClose=").concat(deepLinkAutoCloseTimer) : undefined;
+    var walletHref = walletUrl ? "".concat(walletUrl, "/request?presentationRequestId=").concat(presentationRequestId, "&autoClose=").concat(deepLinkAutoCloseTimer) : undefined;
     var handleLinkButtonClick = function () {
         setShowNeedHelp(!showNeedHelp);
     };
     var renderQrCode = function () { return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement("a", { target: "_blank", rel: "noopener noreferrer", className: "image-wrapper", href: "".concat(deeplinkHref, "&link=qr"), role: QRCodeRole },
-            React__default["default"].createElement("img", { className: "qr-code-img", alt: "QR Code to Verify with ".concat(holderApp.name), src: qrCode })),
+        React__default["default"].createElement("div", { className: "image-wrapper", role: QRCodeRole },
+            React__default["default"].createElement("img", { className: "qr-code-img", alt: "QR Code to Verify with ".concat(holderApp === null || holderApp === void 0 ? void 0 : holderApp.name), src: qrCode })),
         React__default["default"].createElement(Branding, null))); };
     return (React__default["default"].createElement("div", { className: "qr-code" },
         React__default["default"].createElement("div", { className: "bold" }, "To continue, scan this QR code"),
         React__default["default"].createElement("div", { className: "light" },
-            "with your phone camera or ",
+            "with your phone camera or ", holderApp === null || holderApp === void 0 ? void 0 :
             holderApp.name,
             " app:"),
         React__default["default"].createElement(LinkButton, { onClick: handleLinkButtonClick }, "Need help scanning?"),
         showNeedHelp && (React__default["default"].createElement("div", { className: "help" },
             React__default["default"].createElement("div", { className: "help-item" },
-                "1. Install the ",
+                "1. Install the ", holderApp === null || holderApp === void 0 ? void 0 :
                 holderApp.name,
                 " app from the app store."),
             React__default["default"].createElement("div", { className: "help-item" },
-                "2. Open the ",
+                "2. Open the ", holderApp === null || holderApp === void 0 ? void 0 :
                 holderApp.name,
                 " app and click \"Scan a QR code\"."),
             React__default["default"].createElement("div", { className: "help-item" }, "3. Hover over the QR code."))),
         React__default["default"].createElement("div", { className: "qrcode-img-wrapper" }, qrCode ? renderQrCode() : React__default["default"].createElement(Spinner, null)),
-        (deeplinkHref && presentationRequestId && holderApp) && (React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: deeplinkHref, className: "continue-under-qr", role: ContinueToWebWalletRole },
+        (walletHref && presentationRequestId && holderApp) && (React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: walletHref, className: "continue-under-qr", role: ContinueToWebWalletRole },
             React__default["default"].createElement("img", { src: holderApp.deeplinkButtonImg, alt: "Verify with ".concat(holderApp.name) })))));
 };
 
@@ -6135,10 +6135,10 @@ styleInject(css_248z$2);
  */
 var DeeplinkWidget = function (_a) {
     var holderApp = _a.holderApp, qrCode = _a.qrCode, deeplink = _a.deeplink, canScan = _a.canScan, env = _a.env, presentationRequestId = _a.presentationRequestId;
-    var renderQrCode = function () { return React__default["default"].createElement(QRCode, { qrCode: qrCode, env: env, presentationRequestId: presentationRequestId, holderApp: holderApp }); };
+    var renderQrCode = function () { return (React__default["default"].createElement(QRCode, { qrCode: qrCode, env: env, presentationRequestId: presentationRequestId, holderApp: holderApp })); };
     var renderDeeplinkButton = function () { return (React__default["default"].createElement("div", { className: "deeplink-button-wrapper" },
         React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: deeplink },
-            React__default["default"].createElement("img", { src: holderApp.deeplinkButtonImg, alt: "Verify with ".concat(holderApp.name) })),
+            React__default["default"].createElement("img", { src: holderApp === null || holderApp === void 0 ? void 0 : holderApp.deeplinkButtonImg, alt: "Verify with ".concat(holderApp === null || holderApp === void 0 ? void 0 : holderApp.name) })),
         React__default["default"].createElement(Branding, null))); };
     var widget = React.useMemo(function () { return (canScan ? renderQrCode() : renderDeeplinkButton()); }, [canScan]);
     return (React__default["default"].createElement("div", { className: "deeplink-widget" }, widget));
@@ -10569,7 +10569,7 @@ var UnumIDWidget = function (_a) {
     // on the PresentationRequestDto type
     invariant(isDefined(presentationRequest.holderApp), 'Missing presentationRequest holder app info. THIS SHOULD NEVER HAPPEN.');
     return (React__default["default"].createElement("div", { className: "unumid-web-sdk-widget" },
-        (currentWidget === 'DEEPLINK') && (React__default["default"].createElement(DeeplinkWidget, { holderApp: presentationRequest.holderApp, deeplink: deeplink, qrCode: qrCode, canScan: canScan, env: env, presentationRequestId: presentationRequest.presentationRequest.id })),
+        (currentWidget === 'DEEPLINK') && (React__default["default"].createElement(DeeplinkWidget, { holderApp: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.holderApp, deeplink: deeplink, qrCode: qrCode, canScan: canScan, env: env, presentationRequestId: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.presentationRequest.id })),
         currentWidget === 'FALLBACK_RESULT' && fallbackResultType && (React__default["default"].createElement(FallbackResult, { userInfo: userInfo, fallbackType: fallbackResultType, error: fallbackError })),
         React__default["default"].createElement(FallbackButton, { client: unumIdClient, fallbackType: fallbackOptions[0], canScan: canScan, nextFallback: nextFallback, setFallbackError: setFallbackError, userInfo: userInfo, presentationRequest: presentationRequest, sendEmail: sendEmail, sendSms: sendSms, sendPushNotification: sendPushNotification, goToLogin: goToLogin }),
         currentWidget !== 'DEEPLINK' && (React__default["default"].createElement(LinkButton, { onClick: function () { return setCurrentWidget('DEEPLINK'); } },
