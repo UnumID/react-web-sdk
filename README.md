@@ -24,7 +24,7 @@ yarn add @unumid/react-web-sdk@https://github.com/UnumID/react-web-sdk.git
 ```
 
 ## Releases
-Releases of packages to the package repos, NPM and Github Packages, should be left to the Github actions CI job. The job is triggered by a tag push with a proceeding `v` followed by semver notation, i.e. v1.3.1. This will bumped the version defined in package.json and create a Github release on the semver version, 1.3.1. It will also handle publishing the package to each package repo with that same version. 
+Releases and publishing to NPM is automated via Github Actions CI job. In order to trigger a release one should push a git tag with a preceding `v` with semver notation, ie `v1.1.1`, to the `main` branch. This will trigger the CI job to bump the package version, generate typedocs, publish to NPM, make a release commit, and make a Github Release. The message of the git tag will be the release message so please make it meaningful. For example, `git tag v1.1.1 -m "Updated the SDK with a new CI job" && push origin v1.1.1`.
 
 ## Functionality
 ### Creating PresentationRequests
