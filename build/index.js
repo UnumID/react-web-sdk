@@ -6140,7 +6140,9 @@ var DeeplinkWidget = function (_a) {
         React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: deeplink },
             React__default["default"].createElement("img", { src: holderApp === null || holderApp === void 0 ? void 0 : holderApp.deeplinkButtonImg, alt: "Verify with ".concat(holderApp === null || holderApp === void 0 ? void 0 : holderApp.name) })),
         React__default["default"].createElement(Branding, null))); };
-    var widget = React.useMemo(function () { return (canScan ? renderQrCode() : renderDeeplinkButton()); }, [canScan]);
+    var widget = React.useMemo(function () { return (canScan ? renderQrCode() : renderDeeplinkButton()); }, 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [canScan]);
     return (React__default["default"].createElement("div", { className: "deeplink-widget" }, widget));
 };
 
@@ -9094,54 +9096,38 @@ var followRedirects = wrap({ http: http__default["default"], https: https__defau
 var wrap_1 = wrap;
 followRedirects.wrap = wrap_1;
 
-var _args = [
-	[
-		"axios@0.21.4",
-		"/Users/will/UnumID/web-sdk-react"
-	]
+var name = "axios";
+var version = "0.21.4";
+var description = "Promise based HTTP client for the browser and node.js";
+var main = "index.js";
+var scripts = {
+	test: "grunt test",
+	start: "node ./sandbox/server.js",
+	build: "NODE_ENV=production grunt build",
+	preversion: "npm test",
+	version: "npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json",
+	postversion: "git push && git push --tags",
+	examples: "node ./examples/server.js",
+	coveralls: "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+	fix: "eslint --fix lib/**/*.js"
+};
+var repository = {
+	type: "git",
+	url: "https://github.com/axios/axios.git"
+};
+var keywords = [
+	"xhr",
+	"http",
+	"ajax",
+	"promise",
+	"node"
 ];
-var _from = "axios@0.21.4";
-var _id = "axios@0.21.4";
-var _inBundle = false;
-var _integrity = "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==";
-var _location = "/axios";
-var _phantomChildren = {
-};
-var _requested = {
-	type: "version",
-	registry: true,
-	raw: "axios@0.21.4",
-	name: "axios",
-	escapedName: "axios",
-	rawSpec: "0.21.4",
-	saveSpec: null,
-	fetchSpec: "0.21.4"
-};
-var _requiredBy = [
-	"/"
-];
-var _resolved = "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz";
-var _spec = "0.21.4";
-var _where = "/Users/will/UnumID/web-sdk-react";
-var author = {
-	name: "Matt Zabriskie"
-};
-var browser = {
-	"./lib/adapters/http.js": "./lib/adapters/xhr.js"
-};
+var author = "Matt Zabriskie";
+var license = "MIT";
 var bugs = {
 	url: "https://github.com/axios/axios/issues"
 };
-var bundlesize = [
-	{
-		path: "./dist/axios.min.js",
-		threshold: "5kB"
-	}
-];
-var dependencies = {
-	"follow-redirects": "^1.14.0"
-};
-var description = "Promise based HTTP client for the browser and node.js";
+var homepage = "https://axios-http.com";
 var devDependencies = {
 	coveralls: "^3.0.0",
 	"es6-promise": "^4.2.4",
@@ -9177,67 +9163,46 @@ var devDependencies = {
 	webpack: "^4.44.2",
 	"webpack-dev-server": "^3.11.0"
 };
-var homepage = "https://axios-http.com";
+var browser = {
+	"./lib/adapters/http.js": "./lib/adapters/xhr.js"
+};
 var jsdelivr = "dist/axios.min.js";
-var keywords = [
-	"xhr",
-	"http",
-	"ajax",
-	"promise",
-	"node"
-];
-var license = "MIT";
-var main = "index.js";
-var name = "axios";
-var repository = {
-	type: "git",
-	url: "git+https://github.com/axios/axios.git"
-};
-var scripts = {
-	build: "NODE_ENV=production grunt build",
-	coveralls: "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-	examples: "node ./examples/server.js",
-	fix: "eslint --fix lib/**/*.js",
-	postversion: "git push && git push --tags",
-	preversion: "npm test",
-	start: "node ./sandbox/server.js",
-	test: "grunt test",
-	version: "npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"
-};
-var typings = "./index.d.ts";
 var unpkg = "dist/axios.min.js";
-var version = "0.21.4";
+var typings = "./index.d.ts";
+var dependencies = {
+	"follow-redirects": "^1.14.0"
+};
+var bundlesize = [
+	{
+		path: "./dist/axios.min.js",
+		threshold: "5kB"
+	}
+];
+var _resolved = "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz";
+var _integrity = "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==";
+var _from = "axios@0.21.4";
 var pkg = {
-	_args: _args,
-	_from: _from,
-	_id: _id,
-	_inBundle: _inBundle,
-	_integrity: _integrity,
-	_location: _location,
-	_phantomChildren: _phantomChildren,
-	_requested: _requested,
-	_requiredBy: _requiredBy,
-	_resolved: _resolved,
-	_spec: _spec,
-	_where: _where,
-	author: author,
-	browser: browser,
-	bugs: bugs,
-	bundlesize: bundlesize,
-	dependencies: dependencies,
-	description: description,
-	devDependencies: devDependencies,
-	homepage: homepage,
-	jsdelivr: jsdelivr,
-	keywords: keywords,
-	license: license,
-	main: main,
 	name: name,
-	repository: repository,
+	version: version,
+	description: description,
+	main: main,
 	scripts: scripts,
-	typings: typings,
+	repository: repository,
+	keywords: keywords,
+	author: author,
+	license: license,
+	bugs: bugs,
+	homepage: homepage,
+	devDependencies: devDependencies,
+	browser: browser,
+	jsdelivr: jsdelivr,
 	unpkg: unpkg,
-	version: version
+	typings: typings,
+	dependencies: dependencies,
+	bundlesize: bundlesize,
+	_resolved: _resolved,
+	_integrity: _integrity,
+	_from: _from
 };
 
 var httpFollow = followRedirects.http;
