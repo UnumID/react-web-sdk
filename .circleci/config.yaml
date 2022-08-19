@@ -1,0 +1,43 @@
+version: 2.1
+
+jobs:
+  lint-and-test-job:
+    docker:
+      - image: circleci/node:14.15.0
+    steps:
+      - checkout
+      - restore_cache: # ref: https://circleci.com/docs/2.0/caching/#restoring-cache
+          keys: 
+            # Find a cache corresponding to this specific package-lock.json checksum
+            # when this file is changed, this key will fail
+            - v4-npm-deps-{{ checksum "package-lock.json" }}
+            # Find the most recently generated cache used from any branch
+            - v4-npm-deps-
+
+      - restore_cache:
+          key: node-v4-{{ checksum "package.json" }}
+
+      - run: npm ci
+
+      - save_cache:
+          key: v4-npm-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
+      - save_cache:
+          key: node-v4-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+      - run: npm run lint
+
+      - run: npm run build
+
+      - run:
+          name: Jest Tests
+          command: npm run test
+
+workflows:              
+  lint-and-test:
+    jobs:
+      - lint-and-test-job
