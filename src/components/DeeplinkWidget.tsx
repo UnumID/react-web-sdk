@@ -52,6 +52,7 @@ const DeeplinkWidget: FC<Props> = ({
 
   const widget = useMemo(
     () => (canScan ? renderQrCode() : renderDeeplinkButton()),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [canScan],
   );
 
