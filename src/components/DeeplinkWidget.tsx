@@ -1,17 +1,20 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { HolderApp } from '@unumid/types';
 
-import QRCode from 'components/QRCode';
-import DeeplinkButton from 'components/DeeplinkButton';
-import Branding from 'components/Branding';
+import QRCode from './QRCode';
+import DeeplinkButton from './DeeplinkButton';
+import Branding from './Branding';
 
 import './DeeplinkWidget.css';
+import { SaasEnvironment } from '../types';
 
 export interface Props {
-  holderApp: Pick<HolderApp, 'name' | 'deeplinkButtonImg'>;
+  holderApp?: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
   deeplink: string;
   qrCode: string;
   canScan: boolean;
+  env?: SaasEnvironment;
+  presentationRequestId?: string;
 }
 
 /**
@@ -23,8 +26,17 @@ const DeeplinkWidget: FC<Props> = ({
   qrCode,
   deeplink,
   canScan,
+  env,
+  presentationRequestId,
 }) => {
-  const renderQrCode = () => <QRCode qrCode={qrCode} holderAppName={holderApp.name} />;
+  const renderQrCode = () => (
+    <QRCode
+      qrCode={qrCode}
+      env={env}
+      presentationRequestId={presentationRequestId}
+      holderApp={holderApp}
+    />
+  );
 
   const renderDeeplinkButton = () => (
     <div className="deeplink-button-wrapper">
@@ -32,18 +44,20 @@ const DeeplinkWidget: FC<Props> = ({
         target="_blank"
         href={deeplink}
       >
-        <img src={holderApp.deeplinkButtonImg} alt={`Verify with ${holderApp.name}`} />
+        <img src={holderApp?.deeplinkButtonImg} alt={`Verify with ${holderApp?.name}`} />
       </DeeplinkButton>
       <Branding />
     </div>
+  );
 
+  const widget = useMemo(
+    () => (canScan ? renderQrCode() : renderDeeplinkButton()),
+    [canScan],
   );
 
   return (
     <div className="deeplink-widget">
-      { canScan && renderQrCode() }
-      { !canScan && renderDeeplinkButton() }
-
+      {widget}
     </div>
   );
 };

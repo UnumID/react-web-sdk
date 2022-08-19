@@ -4,38 +4,47 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/types';
-
-import DeeplinkWidget from 'components/DeeplinkWidget';
-import Spinner from 'components/Spinner';
-import LinkButton from 'components/LinkButton';
-import FallbackButton from 'components/FallbackButton';
 import {
-  ExternalMessageInput,
+  PushNotificationOptions,
+  ExternalChannelMessageInput,
+  PresentationRequestDto,
+  HolderApp,
+} from '@unumid/types';
+import QRCode from 'qrcode';
+import invariant from 'tiny-invariant';
+
+import DeeplinkWidget from './DeeplinkWidget';
+import Spinner from './Spinner';
+import LinkButton from './LinkButton';
+import FallbackButton from './FallbackButton';
+import {
   FallbackType,
   SuccessResponse,
   UserInfo,
   WidgetType,
   SaasEnvironment,
-} from 'types';
-import { saasUrls } from 'constants/saasUrls';
-import { useTimeout } from 'hooks/useTimeout';
-import { UnumIDClient } from 'UnumIDClient';
+} from '../types';
+import { saasUrls } from '../constants/saasUrls';
+import { useTimeout } from '../hooks/useTimeout';
+import { UnumIDClient } from '../UnumIDClient';
 
 import './UnumIDWidget.css';
 import FallbackResult from './FallbackResult';
+import { isDefined } from '../typeguards';
+import { shouldNeverHappen } from '../errors';
 
 export interface Props {
   apiKey?: string;
   env?: SaasEnvironment;
-  createPresentationRequest?: () => Promise<PresentationRequestPostDto>;
-  sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
-  sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
+  createPresentationRequest?: () => Promise<PresentationRequestDto | void>;
+  sendEmail?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
+  sendSms?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
   sendPushNotification?: (options: PushNotificationOptions) => Promise<SuccessResponse>;
   goToLogin?: () => void;
   userInfo?: UserInfo;
-  presentationRequest?: PresentationRequestPostDto;
+  presentationRequest?: PresentationRequestDto;
   createInitialPresentationRequest?: boolean;
+  userCode?: string;
 }
 
 /**
@@ -53,6 +62,7 @@ const UnumIDWidget: FC<Props> = ({
   userInfo,
   presentationRequest: presentationRequestProp,
   createInitialPresentationRequest = !presentationRequestProp,
+  userCode,
 }: Props) => {
   // determines whether to initially show a qr code or a button
   const [canScan] = useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent));
@@ -62,10 +72,14 @@ const UnumIDWidget: FC<Props> = ({
   const [fallbackOptions, setFallbackOptions] = useState<FallbackType[]>([]);
   const [fallbackResultType, setFallbackResultType] = useState<FallbackType>();
   const [fallbackError, setFallbackError] = useState<string | undefined>();
+  const [deeplink, setDeeplink] = useState(presentationRequestProp?.deeplink || '');
+  const [qrCode, setQrCode] = useState(presentationRequestProp?.qrCode || '');
 
   const [unumIdClient] = useState<UnumIDClient | undefined>(
     (apiKey && env) ? new UnumIDClient(saasUrls[env], apiKey) : undefined,
   );
+
+  const [isReady, setIsReady] = useState(!!(presentationRequestProp && !userCode));
 
   // destructure userInfo properties so we can pass them to a useEffect dependency array
   // without worrying about object equality
@@ -140,6 +154,12 @@ const UnumIDWidget: FC<Props> = ({
 
     if (response) {
       setPresentationRequest(response);
+
+      if (!userCode) {
+        setDeeplink(response.deeplink || '');
+        setQrCode(response.qrCode || '');
+        setIsReady(true);
+      }
     }
   };
 
@@ -148,7 +168,7 @@ const UnumIDWidget: FC<Props> = ({
   // and can be reliably passed to other hooks.
   const memoizedTriggerPresentationRequestCreation = useCallback(
     triggerPresentationRequestCreation,
-    [createPresentationRequest],
+    [createPresentationRequest, userCode],
   );
 
   // Determine the delay after which a new presentationRequest should be created,
@@ -167,6 +187,12 @@ const UnumIDWidget: FC<Props> = ({
       // When this component is rendered with a new presentationRequest prop,
       // update the presentationRequest state.
       setPresentationRequest(presentationRequestProp);
+
+      if (!userCode) {
+        setDeeplink(presentationRequestProp.deeplink || '');
+        setQrCode(presentationRequestProp.qrCode || '');
+        setIsReady(true);
+      }
     } else if (createInitialPresentationRequest) {
       // When this component is rendered without a presentationRequest prop,
       // trigger presentationRequest creation if the createInitialPresentationRequest prop is true.
@@ -176,6 +202,7 @@ const UnumIDWidget: FC<Props> = ({
     presentationRequestProp,
     memoizedTriggerPresentationRequestCreation,
     createInitialPresentationRequest,
+    userCode,
   ]);
 
   useEffect(() => {
@@ -190,9 +217,29 @@ const UnumIDWidget: FC<Props> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presentationRequest]);
 
-  // This component can't display a presentationRequest if it doesn't have one.
-  // Show a spinner instead.
-  if (!presentationRequest) {
+  // if a userCode is provided, add it to the deeplink from the presentationRequest as a query param
+  // and generate a new qr code from the updated deeplink
+  useEffect(() => {
+    const addUserCodeToDeeplinkAndQr = async () => {
+      if (presentationRequest && userCode) {
+        const updatedDeeplink = `${presentationRequest.deeplink}?userCode=${userCode}`;
+        setDeeplink(updatedDeeplink);
+
+        // only generate the qr code if it's going to be displayed
+        if (canScan) {
+          const updatedQrCode = await QRCode.toDataURL(updatedDeeplink, { color: { light: '#0000' } });
+          setQrCode(updatedQrCode);
+        }
+
+        setIsReady(true);
+      }
+    };
+
+    addUserCodeToDeeplinkAndQr();
+  }, [presentationRequest, userCode, canScan]);
+
+  // display a spinner if the widget isn't ready yet
+  if (!isReady) {
     return (
       <div className="unumid-web-sdk-widget">
         <Spinner />
@@ -200,15 +247,31 @@ const UnumIDWidget: FC<Props> = ({
     );
   }
 
+  // the presentationRequest should be defined at this point
+  invariant(
+    isDefined<PresentationRequestDto>(presentationRequest),
+    shouldNeverHappen('Missing presentationRequest'),
+  );
+
+  // throw if the presentationRequest does not contain holderApp info
+  // this should never happen, but the holderApp property is technically optional
+  // on the PresentationRequestDto type
+  invariant(
+    isDefined <Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>>(presentationRequest.holderApp),
+    'Missing presentationRequest holder app info. THIS SHOULD NEVER HAPPEN.',
+  );
+
   return (
     <div className="unumid-web-sdk-widget">
       {
       (currentWidget === 'DEEPLINK') && (
         <DeeplinkWidget
           holderApp={presentationRequest?.holderApp}
-          deeplink={presentationRequest?.deeplink}
-          qrCode={presentationRequest?.qrCode}
+          deeplink={deeplink}
+          qrCode={qrCode}
           canScan={canScan}
+          env={env}
+          presentationRequestId={presentationRequest?.presentationRequest.id}
         />
       )
       }
@@ -224,6 +287,7 @@ const UnumIDWidget: FC<Props> = ({
       <FallbackButton
         client={unumIdClient}
         fallbackType={fallbackOptions[0]}
+        canScan={canScan}
         nextFallback={nextFallback}
         setFallbackError={setFallbackError}
         userInfo={userInfo}

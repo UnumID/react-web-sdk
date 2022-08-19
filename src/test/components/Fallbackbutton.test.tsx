@@ -2,18 +2,20 @@ import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import FallbackButton from '../../components/FallbackButton';
+import FallbackButton, { Props } from '../../components/FallbackButton';
 import { dummyPresentationRequestResponse } from '../mocks';
+import { UnumIDClient } from '../../UnumIDClient';
 
 describe('FallbackButton component', () => {
   const mockClient = {
-    sendEmail: jest.fn(),
-    sendSms: jest.fn(),
-    sendPushNotification: jest.fn(),
-  };
+    sendEmail: jest.fn(() => ({ success: true })),
+    sendSms: jest.fn(() => ({ success: true })),
+    sendPushNotification: jest.fn(() => ({ success: true })),
+  } as unknown as UnumIDClient;
 
-  const defaultProps = {
+  const defaultProps: Props = {
     fallbackType: 'PUSH',
+    canScan: true,
     client: mockClient,
     nextFallback: jest.fn(),
     setFallbackError: jest.fn(),
@@ -34,19 +36,19 @@ describe('FallbackButton component', () => {
   });
 
   it('renders sms text', () => {
-    const props = { ...defaultProps, fallbackType: 'SMS' };
+    const props: Props = { ...defaultProps, fallbackType: 'SMS' };
     render(<FallbackButton {...props} />);
     expect(screen.getByText('Get an SMS instead.')).toBeInTheDocument();
   });
 
   it('renders email text', () => {
-    const props = { ...defaultProps, fallbackType: 'EMAIL' };
+    const props: Props = { ...defaultProps, fallbackType: 'EMAIL' };
     render(<FallbackButton {...props} />);
     expect(screen.getByText('Get an email instead.')).toBeInTheDocument();
   });
 
   it('renders login text', () => {
-    const props = { ...defaultProps, fallbackType: 'LOGIN' };
+    const props: Props = { ...defaultProps, fallbackType: 'LOGIN' };
     render(<FallbackButton {...props} />);
     expect(screen.getByText('Log in for more verification options.')).toBeInTheDocument();
   });
@@ -65,7 +67,7 @@ describe('FallbackButton component', () => {
   });
 
   it('uses a custom sendSms function if available', () => {
-    const props = { ...defaultProps, fallbackType: 'SMS', sendSms: jest.fn() };
+    const props: Props = { ...defaultProps, fallbackType: 'SMS', sendSms: jest.fn() };
     render(<FallbackButton {...props} />);
     const button = screen.getByRole('button');
     userEvent.click(button);
@@ -77,7 +79,7 @@ describe('FallbackButton component', () => {
   });
 
   it('uses a custom sendEmail function if available', () => {
-    const props = { ...defaultProps, fallbackType: 'EMAIL', sendEmail: jest.fn() };
+    const props: Props = { ...defaultProps, fallbackType: 'EMAIL', sendEmail: jest.fn() };
     render(<FallbackButton {...props} />);
     const button = screen.getByRole('button');
     userEvent.click(button);
@@ -89,7 +91,7 @@ describe('FallbackButton component', () => {
   });
 
   it('redirects the user to login', () => {
-    const props = { ...defaultProps, fallbackType: 'LOGIN', goToLogin: jest.fn() };
+    const props: Props = { ...defaultProps, fallbackType: 'LOGIN', goToLogin: jest.fn() };
     render(<FallbackButton {...props} />);
     const button = screen.getByRole('button');
     userEvent.click(button);
@@ -109,7 +111,7 @@ describe('FallbackButton component', () => {
   });
 
   it('sends an sms via the UnumIDClient if no custom function', () => {
-    const props = { ...defaultProps, fallbackType: 'SMS' };
+    const props: Props = { ...defaultProps, fallbackType: 'SMS' };
     render(<FallbackButton {...props} />);
     const button = screen.getByRole('button');
     userEvent.click(button);
@@ -121,7 +123,7 @@ describe('FallbackButton component', () => {
   });
 
   it('sends an email via the UnumIDClient if no custom function', () => {
-    const props = { ...defaultProps, fallbackType: 'EMAIL' };
+    const props: Props = { ...defaultProps, fallbackType: 'EMAIL' };
     render(<FallbackButton {...props} />);
     const button = screen.getByRole('button');
     userEvent.click(button);
@@ -144,7 +146,7 @@ describe('FallbackButton component', () => {
   });
 
   it('sets fallback error if there is an error sending a push notification with client.sendPushNotification', async () => {
-    defaultProps.client.sendPushNotification.mockRejectedValueOnce(new Error());
+    (defaultProps.client.sendPushNotification as jest.Mock).mockRejectedValueOnce(new Error());
     render(<FallbackButton {...defaultProps} />);
     userEvent.click(screen.getByRole('button'));
     await act(async () => defaultProps.client.sendPushNotification());
@@ -152,7 +154,7 @@ describe('FallbackButton component', () => {
   });
 
   it('sets fallback error if there is an error sending an sms with the sendSms prop', async () => {
-    const props = {
+    const props: Props = {
       ...defaultProps,
       fallbackType: 'SMS',
       sendSms: jest.fn().mockRejectedValueOnce(new Error()),
@@ -166,11 +168,11 @@ describe('FallbackButton component', () => {
   });
 
   it('sets fallback error if there is an error sending an sms with client.sendSms', async () => {
-    const props = {
+    const props: Props = {
       ...defaultProps,
       fallbackType: 'SMS',
     };
-    props.client.sendSms.mockRejectedValueOnce(new Error());
+    (props.client.sendSms as jest.Mock).mockRejectedValueOnce(new Error());
     render(<FallbackButton {...props} />);
     userEvent.click(screen.getByRole('button'));
     await act(async () => props.client.sendSms());
@@ -178,7 +180,7 @@ describe('FallbackButton component', () => {
   });
 
   it('sets fallback error if there is an error sending an email with the sendEmail prop', async () => {
-    const props = {
+    const props: Props = {
       ...defaultProps,
       fallbackType: 'EMAIL',
       sendEmail: jest.fn().mockRejectedValueOnce(new Error()),
@@ -191,14 +193,34 @@ describe('FallbackButton component', () => {
   });
 
   it('sets fallback error if there is an error sending an email with client.sendEmail', async () => {
-    const props = {
+    const props: Props = {
       ...defaultProps,
       fallbackType: 'EMAIL',
     };
-    props.client.sendEmail.mockRejectedValueOnce(new Error());
+    (props.client.sendEmail as jest.Mock).mockRejectedValueOnce(new Error());
     render(<FallbackButton {...props} />);
     userEvent.click(screen.getByRole('button'));
     await act(async () => props.client.sendEmail());
     expect(props.setFallbackError).toBeCalledWith(`Error sending email to ${props.userInfo.email}.`);
+  });
+
+  it('shows login fallback if canScan is false', async () => {
+    const props: Props = {
+      ...defaultProps,
+      canScan: false,
+      fallbackType: 'LOGIN',
+    };
+    render(<FallbackButton {...props} />);
+    expect(screen.getByText('Log in for more verification options.')).toBeInTheDocument();
+  });
+
+  it('does not show other fallbacks if canScan is false', async () => {
+    const props: Props = {
+      ...defaultProps,
+      canScan: false,
+      fallbackType: 'PUSH',
+    };
+    const { container } = render(<FallbackButton {...props} />);
+    expect(container.innerHTML).toEqual('');
   });
 });

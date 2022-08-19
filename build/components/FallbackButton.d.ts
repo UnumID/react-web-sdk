@@ -1,16 +1,17 @@
 import { FC } from 'react';
-import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/types';
-import { FallbackType, ExternalMessageInput, SuccessResponse, UserInfo } from 'types';
-import { UnumIDClient } from 'UnumIDClient';
-interface Props {
+import { PushNotificationOptions, ExternalChannelMessageInput, PresentationRequestDto } from '@unumid/types';
+import { FallbackType, SuccessResponse, UserInfo } from '../types';
+import { UnumIDClient } from '../UnumIDClient';
+export interface Props {
     client?: UnumIDClient;
     fallbackType: FallbackType;
+    canScan: boolean;
     nextFallback: () => void;
     setFallbackError: (err?: string) => void;
     userInfo?: UserInfo;
-    presentationRequest: PresentationRequestPostDto;
-    sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
-    sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
+    presentationRequest: PresentationRequestDto;
+    sendEmail?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
+    sendSms?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
     sendPushNotification?: (options: PushNotificationOptions) => Promise<SuccessResponse>;
     goToLogin?: () => void;
 }

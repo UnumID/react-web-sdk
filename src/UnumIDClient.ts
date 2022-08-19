@@ -1,6 +1,6 @@
-import { PushNotificationOptions } from '@unumid/types';
+import { PushNotificationOptions, ExternalChannelMessageInput } from '@unumid/types';
 import axios, { AxiosInstance, Method } from 'axios';
-import { ExternalMessageInput, SuccessResponse } from 'types';
+import { SuccessResponse } from './types';
 
 export class UnumIDClient {
   axiosInstance: AxiosInstance;
@@ -29,7 +29,7 @@ export class UnumIDClient {
     }
   }
 
-  async sendEmail(options: ExternalMessageInput): Promise<SuccessResponse> {
+  async sendEmail(options: ExternalChannelMessageInput): Promise<SuccessResponse> {
     try {
       return this.makeSaasCall('/email', 'POST', options);
     } catch (e) {
@@ -38,7 +38,7 @@ export class UnumIDClient {
     }
   }
 
-  async sendSms(options: ExternalMessageInput): Promise<SuccessResponse> {
+  async sendSms(options: ExternalChannelMessageInput): Promise<SuccessResponse> {
     try {
       return this.makeSaasCall('/sms', 'POST', options);
     } catch (e) {

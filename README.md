@@ -6,21 +6,21 @@ The React Web SDK is available via NPM/Yarn or Github
 
 Using npm:
 ```
-npm install @unumid/react-web-sdk
+npm install @unumid/web-sdk-react
 ```
 
 Using yarn:
 ```
-yarn add @unumid/react-web-sdk
+yarn add @unumid/web-sdk-react
 ```
 
 From Github:
 ```
-npm install @unumid/react-web-sdk@https://github.com/UnumID/react-web-sdk.git
+npm install @unumid/web-sdk-react@https://github.com/UnumID/web-sdk-react.git
 ```
 
 ```
-yarn add @unumid/react-web-sdk@https://github.com/UnumID/react-web-sdk.git
+yarn add @unumid/web-sdk-react@https://github.com/UnumID/web-sdk-react.git
 ```
 
 ## Releases
@@ -62,15 +62,15 @@ This component encapsulates all of the React Web SDK's functionality.
 #### Props
 **env** (string) _optional_: The environment to run in (`'sandbox'` or `'production'`). This determines which Unum ID SaaS environment the React Web SDK will connect to. While this prop is technically optional, it is required for most use cases and should always be provided.
 
-**apiKey** (string) _optional_: Your React Web SDK api key (obtained from Unum ID). While this prop is technically optional, it is required for most use cases and should always be provided.
+**apiKey** (string) _optional_: Your Web SDK api key (obtained from Unum ID). While this prop is technically optional, it is required for most use cases and should always be provided.
 
 **userInfo** (`UserInfo`) _optional_: Information about a logged in user of your application. The React Web SDK will use this to determine which fallback options are available.
 
-**presentationRequest** (`PresentationRequestResponse`) _optional_: a `PresentationRequestResponse` object, created on your server via the [Server SDK](https://github.com/UnumID/Server-SDK-TypeScript). You may provide this prop in combination with setting `createInitialPresentationRequest` (below) to `false` for more control over when the widget should display a PresentationRequest to the user.
+**presentationRequest** (`PresentationRequestPostDto`) _optional_: a `PresentationRequestPostDto` object, created on your server via the [Server SDK](https://github.com/UnumID/Server-SDK-TypeScript). You may provide this prop in combination with setting `createInitialPresentationRequest` (below) to `false` for more control over when the widget should display a PresentationRequest to the user.
 
 **createInitialPresentationRequest** (boolean) _optional_: Whether the widget should immediately call `createPresentationRequest` on load. You can combine this with the `presentationRequest` prop to gain control over when the initial PresentationRequest is created. By default, it is `false` if you provide the `presentationRequest` prop and `true` if you do not.
 
-**createPresentationRequest** (`() => Promise<PresentationRequestResponse> | void`) _optional_: A function which should call your Server SDK powered backend to create a PresentationRequest. If it returns a value, it is assumed that that value is a `PresentationRequestResponse`. If it does not return a value, you must provide the response via the `presentationRequest` prop in order for the widget to display the PresentationRequest. (As in a redux application, where `createPresentationRequest` will probably be an async action creator of some sort.) The widget will call this function on an interval in order to ensure that it never displays an expired PresentationRequest. This prop is technically optional, but should always be provided unless you know that you will only ever be displaying previously existing PresentationRequests.
+**createPresentationRequest** (`() => Promise<PresentationRequestPostDto> | void`) _optional_: A function which should call your Server SDK powered backend to create a PresentationRequest. If it returns a value, it is assumed that that value is a `PresentationRequestPostDto`. If it does not return a value, you must provide the response via the `presentationRequest` prop in order for the widget to display the PresentationRequest. (As in a redux application, where `createPresentationRequest` will probably be an async action creator of some sort.) The widget will call this function on an interval in order to ensure that it never displays an expired PresentationRequest. This prop is technically optional, but should always be provided unless you know that you will only ever be displaying previously existing PresentationRequests.
 
 **sendEmail** (`(options: ExternalMessageInput) => Promise<SuccessResponse>`) _optional_: A function which takes an `EmailOptions` object and calls your backend to send a deeplink via email. You may use the `sendEmail` function from the Server SDK to send the email, or your own email provider.
 
@@ -80,12 +80,14 @@ This component encapsulates all of the React Web SDK's functionality.
 
 **goToLogin** (`() => void`) _optional_: A function which redirects the user to your existing login page. You should provide this if you are using Unum ID as an additional authentication factor on top of your existing login. If this prop is not provided, the login fallback option will not be available.
 
+**userCode** (`string`) _optional_: A code which uniquely identifies a user in your system. If provided, it will allow the holder to call back to your api and enable functionality including just-in-time credential issuance.
+
 
 
 ## Examples
 The simplest typical use case. It allows the SDK to handle all PresentationRequest creation, and does not provide any additional fallback options.
 ```jsx
-import UnumIDWidget from '@unumid/react-web-sdk';
+import UnumIDWidget from '@unumid/web-sdk-react';
 
 const App = () => {
   const createPresentationRequest = async () => {
@@ -106,10 +108,10 @@ The simplest typical use case (above), using TypeScript.
 ```tsx
 import { FC } from 'react';
 
-import UnumIDWidget, { PresentationRequestResponse } from '@unumid/react-web-sdk';
+import UnumIDWidget, { PresentationRequestDto } from '@unumid/web-sdk-react';
 
 const App: FC = () => {
-  const createPresentationRequest = async (): Promise<PresentationRequestResponse> => {
+  const createPresentationRequest = async (): Promise<PresentationRequestDto> => {
     // Call your backend to create a PresentationRequest and return the response.
   };
 
@@ -123,9 +125,10 @@ const App: FC = () => {
 };
 ```
 
-A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options by providing user info.
+A slightly more complex use case which allows the SDK to handle PresentationRequest creation, but enables fallback options by providing user info,
+and just-in-time issuance by providing a user code
 ```jsx
-import UnumIDWidget from '@unumid/react-web-sdk';
+import UnumIDWidget from '@unumid/web-sdk-react';
 
 const App = () => {
   const createPresentationRequest = async () => {
@@ -145,6 +148,7 @@ const App = () => {
         }
       }}
       createPresentationRequest={createPresentationRequest}
+      userCode='my-user-code'
     />
   );
 };
@@ -154,7 +158,7 @@ Allows your application more control over when the initial PresentationRequest i
 ```jsx
 import { useState } from 'react';
 
-import UnumIDWidget from '@unumid/react-web-sdk';
+import UnumIDWidget from '@unumid/web-sdk-react';
 
 const App = () => {
   // Save the PresentationRequest in local component state.
@@ -219,7 +223,7 @@ Applications using Redux and other similar state management libraries have some 
 ```jsx
 import { useSelector } from 'react-redux';
 
-import UnumIDWidget from '@unumid/react-web-sdk';
+import UnumIDWidget from '@unumid/web-sdk-react';
 
 // Import your action creators. They have been wrapped in React hooks in this example, but your application may be different.
 import { useActionCreators } from './hooks/actionCreators';
@@ -262,7 +266,7 @@ const App = () => {
 It is possible to use the sdk to simply display an existing PresentationRequest. In this example, a PresentationRequest is being gotten from the backend and displayed using the Web SDK with no fallback options or recreation on expiration. Using the Web SDK in this way will disable much of the functionality described above and is not recommended unless you're very sure this is the only use case you need to support.
 ```jsx
 import { useState, useEffect } from 'react';
-import UnumIDWidget from '@unumid/react-web-sdk';
+import UnumIDWidget from '@unumid/web-sdk-react';
 
 const App = () => {
   const [presentationRequest, setPresentationRequest] = useState();

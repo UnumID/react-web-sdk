@@ -1,25 +1,32 @@
 import React, { FC, MouseEventHandler } from 'react';
 
-import { PresentationRequestPostDto, PushNotificationOptions } from '@unumid/types';
+import {
+  PushNotificationOptions,
+  ExternalChannelMessageInput,
+  PresentationRequestDto,
+} from '@unumid/types';
+import invariant from 'tiny-invariant';
 
 import {
   FallbackType,
-  ExternalMessageInput,
   SuccessResponse,
   UserInfo,
-} from 'types';
-import { UnumIDClient } from 'UnumIDClient';
+} from '../types';
+import { UnumIDClient } from '../UnumIDClient';
 import LinkButton from './LinkButton';
+import { isDefined } from '../typeguards';
+import { shouldNeverHappen } from '../errors';
 
-interface Props {
+export interface Props {
   client?: UnumIDClient;
   fallbackType: FallbackType;
+  canScan: boolean;
   nextFallback: () => void;
   setFallbackError: (err?: string) => void;
   userInfo?: UserInfo;
-  presentationRequest: PresentationRequestPostDto;
-  sendEmail?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
-  sendSms?: (options: ExternalMessageInput) => Promise<SuccessResponse>;
+  presentationRequest: PresentationRequestDto;
+  sendEmail?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
+  sendSms?: (options: ExternalChannelMessageInput) => Promise<SuccessResponse>;
   sendPushNotification?: (options: PushNotificationOptions) => Promise<SuccessResponse>;
   goToLogin?: () => void;
 }
@@ -30,6 +37,7 @@ interface Props {
 const FallbackButton: FC<Props> = ({
   client,
   fallbackType,
+  canScan,
   nextFallback,
   setFallbackError,
   userInfo,
@@ -40,6 +48,11 @@ const FallbackButton: FC<Props> = ({
   goToLogin,
 }) => {
   if (!fallbackType) {
+    return null;
+  }
+
+  // only login fallback is available on mobile
+  if (!canScan && fallbackType !== 'LOGIN') {
     return null;
   }
 
@@ -109,7 +122,10 @@ const FallbackButton: FC<Props> = ({
     }
 
     const { deeplink } = presentationRequest;
-    const options: ExternalMessageInput = {
+
+    invariant(isDefined<string>(deeplink), shouldNeverHappen('deeplink is missing.'));
+
+    const options: ExternalChannelMessageInput = {
       to: userInfo?.email,
       deeplink,
     };
@@ -150,7 +166,9 @@ const FallbackButton: FC<Props> = ({
 
     const { deeplink } = presentationRequest;
 
-    const options: ExternalMessageInput = {
+    invariant(isDefined<string>(deeplink), shouldNeverHappen('deeplink is missing.'));
+
+    const options: ExternalChannelMessageInput = {
       to: userInfo.phone,
       deeplink,
     };
@@ -203,6 +221,8 @@ const FallbackButton: FC<Props> = ({
     }
 
     const { deeplink, presentationRequest: { holderAppUuid } } = presentationRequest;
+
+    invariant(isDefined<string>(deeplink), shouldNeverHappen('deeplink is missing.'));
 
     const options: PushNotificationOptions = {
       token: pushToken,
