@@ -1,4 +1,7 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, {
+  FC,
+  FunctionComponent, PropsWithChildren, useEffect, useMemo, useState,
+} from 'react';
 
 import './QRCode.css';
 import { HolderApp } from '@unumid/types';
@@ -21,6 +24,14 @@ export const deepLinkAutoCloseTimer = 3;
 export const ContinueToWebWalletRole = 'ContinueToWebWalletRole';
 export const QRCodeRole = 'QRCodeRole';
 
+export const detectHasPlatformAuthenticator: () => Promise<boolean> = () =>
+  window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(() => false);
+
+type QRCodeState = {
+  walletHref: string|undefined,
+  hasPlatformAuthenticator: boolean
+}
+
 /**
  * Component responsible for rendering a QR code
  */
@@ -31,21 +42,69 @@ const QRCode: FunctionComponent<Props> = ({
   holderApp,
 }) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
-  const walletUrl = env ? walletUrls[env] : undefined;
-  const walletHref = walletUrl ? `${walletUrl}/request?presentationRequestId=${presentationRequestId}&autoClose=${deepLinkAutoCloseTimer}` : undefined;
+  const [hasPlatformAuthenticator, setHasPlatformAuthenticator] = useState<boolean>(false);
+  const walletHref = useMemo<string|undefined>(() => {
+    const walletUrl = env ? walletUrls[env] : undefined;
+    return walletUrl ? `${walletUrl}/request?presentationRequestId=${presentationRequestId}&autoClose=${deepLinkAutoCloseTimer}` : undefined;
+  }, [env, presentationRequestId]);
 
   const handleLinkButtonClick = (): void => {
     setShowNeedHelp(!showNeedHelp);
   };
 
+  useEffect(() => {
+    let mounted = true;
+
+    detectHasPlatformAuthenticator()
+      .then((hasAuthenticator) => {
+        if (mounted) setHasPlatformAuthenticator(hasAuthenticator);
+      })
+      .catch(() => { /* do nothing */ });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const LinkWrapper: FC<PropsWithChildren<{ className: string, role: string }>> = ({
+    children,
+    className,
+    role,
+  }) => {
+    const props = {
+      className,
+      role,
+    };
+
+    if (walletHref && holderApp) {
+      return (
+        <a
+          {...props}
+          target="_blank"
+          rel="noopener noreferrer"
+          href={walletHref}
+        >
+          {children}
+        </a>
+      );
+    }
+    return (
+      <div
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  };
+
   const renderQrCode = () => (
     <>
-      <div
+      <LinkWrapper
         className="image-wrapper"
         role={QRCodeRole}
       >
         <img className="qr-code-img" alt={`QR Code to Verify with ${holderApp?.name}`} src={qrCode} />
-      </div>
+      </LinkWrapper>
       <Branding />
     </>
   );
@@ -70,7 +129,7 @@ const QRCode: FunctionComponent<Props> = ({
         {qrCode ? renderQrCode() : <Spinner />}
       </div>
       {
-        (walletHref && presentationRequestId && holderApp) && (
+        (hasPlatformAuthenticator && walletHref && holderApp) && (
           <DeeplinkButton
             target="_blank"
             href={walletHref}

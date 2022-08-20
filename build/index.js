@@ -43,6 +43,17 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
 function __awaiter(thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -6089,19 +6100,48 @@ var Branding = function () { return (React__default["default"].createElement("a"
 var deepLinkAutoCloseTimer = 3;
 var ContinueToWebWalletRole = 'ContinueToWebWalletRole';
 var QRCodeRole = 'QRCodeRole';
+var detectHasPlatformAuthenticator = function () {
+    return window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(function () { return false; });
+};
 /**
  * Component responsible for rendering a QR code
  */
 var QRCode = function (_a) {
     var qrCode = _a.qrCode, env = _a.env, presentationRequestId = _a.presentationRequestId, holderApp = _a.holderApp;
     var _b = React.useState(false), showNeedHelp = _b[0], setShowNeedHelp = _b[1];
-    var walletUrl = env ? walletUrls[env] : undefined;
-    var walletHref = walletUrl ? "".concat(walletUrl, "/request?presentationRequestId=").concat(presentationRequestId, "&autoClose=").concat(deepLinkAutoCloseTimer) : undefined;
+    var _c = React.useState(false), hasPlatformAuthenticator = _c[0], setHasPlatformAuthenticator = _c[1];
+    var walletHref = React.useMemo(function () {
+        var walletUrl = env ? walletUrls[env] : undefined;
+        return walletUrl ? "".concat(walletUrl, "/request?presentationRequestId=").concat(presentationRequestId, "&autoClose=").concat(deepLinkAutoCloseTimer) : undefined;
+    }, [env, presentationRequestId]);
     var handleLinkButtonClick = function () {
         setShowNeedHelp(!showNeedHelp);
     };
+    React.useEffect(function () {
+        var mounted = true;
+        detectHasPlatformAuthenticator()
+            .then(function (hasAuthenticator) {
+            if (mounted)
+                setHasPlatformAuthenticator(hasAuthenticator);
+        })
+            .catch(function () { });
+        return function () {
+            mounted = false;
+        };
+    }, []);
+    var LinkWrapper = function (_a) {
+        var children = _a.children, className = _a.className, role = _a.role;
+        var props = {
+            className: className,
+            role: role,
+        };
+        if (walletHref && holderApp) {
+            return (React__default["default"].createElement("a", __assign({}, props, { target: "_blank", rel: "noopener noreferrer", href: walletHref }), children));
+        }
+        return (React__default["default"].createElement("div", __assign({}, props), children));
+    };
     var renderQrCode = function () { return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement("div", { className: "image-wrapper", role: QRCodeRole },
+        React__default["default"].createElement(LinkWrapper, { className: "image-wrapper", role: QRCodeRole },
             React__default["default"].createElement("img", { className: "qr-code-img", alt: "QR Code to Verify with ".concat(holderApp === null || holderApp === void 0 ? void 0 : holderApp.name), src: qrCode })),
         React__default["default"].createElement(Branding, null))); };
     return (React__default["default"].createElement("div", { className: "qr-code" },
@@ -6122,7 +6162,7 @@ var QRCode = function (_a) {
                 " app and click \"Scan a QR code\"."),
             React__default["default"].createElement("div", { className: "help-item" }, "3. Hover over the QR code."))),
         React__default["default"].createElement("div", { className: "qrcode-img-wrapper" }, qrCode ? renderQrCode() : React__default["default"].createElement(Spinner, null)),
-        (walletHref && presentationRequestId && holderApp) && (React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: walletHref, className: "continue-under-qr", role: ContinueToWebWalletRole },
+        (hasPlatformAuthenticator && walletHref && holderApp) && (React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: walletHref, className: "continue-under-qr", role: ContinueToWebWalletRole },
             React__default["default"].createElement("img", { src: holderApp.deeplinkButtonImg, alt: "Verify with ".concat(holderApp.name) })))));
 };
 
@@ -9096,38 +9136,54 @@ var followRedirects = wrap({ http: http__default["default"], https: https__defau
 var wrap_1 = wrap;
 followRedirects.wrap = wrap_1;
 
-var name = "axios";
-var version = "0.21.4";
-var description = "Promise based HTTP client for the browser and node.js";
-var main = "index.js";
-var scripts = {
-	test: "grunt test",
-	start: "node ./sandbox/server.js",
-	build: "NODE_ENV=production grunt build",
-	preversion: "npm test",
-	version: "npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json",
-	postversion: "git push && git push --tags",
-	examples: "node ./examples/server.js",
-	coveralls: "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-	fix: "eslint --fix lib/**/*.js"
-};
-var repository = {
-	type: "git",
-	url: "https://github.com/axios/axios.git"
-};
-var keywords = [
-	"xhr",
-	"http",
-	"ajax",
-	"promise",
-	"node"
+var _args = [
+	[
+		"axios@0.21.4",
+		"/Users/will/UnumID/web-sdk-react"
+	]
 ];
-var author = "Matt Zabriskie";
-var license = "MIT";
+var _from = "axios@0.21.4";
+var _id = "axios@0.21.4";
+var _inBundle = false;
+var _integrity = "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==";
+var _location = "/axios";
+var _phantomChildren = {
+};
+var _requested = {
+	type: "version",
+	registry: true,
+	raw: "axios@0.21.4",
+	name: "axios",
+	escapedName: "axios",
+	rawSpec: "0.21.4",
+	saveSpec: null,
+	fetchSpec: "0.21.4"
+};
+var _requiredBy = [
+	"/"
+];
+var _resolved = "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz";
+var _spec = "0.21.4";
+var _where = "/Users/will/UnumID/web-sdk-react";
+var author = {
+	name: "Matt Zabriskie"
+};
+var browser = {
+	"./lib/adapters/http.js": "./lib/adapters/xhr.js"
+};
 var bugs = {
 	url: "https://github.com/axios/axios/issues"
 };
-var homepage = "https://axios-http.com";
+var bundlesize = [
+	{
+		path: "./dist/axios.min.js",
+		threshold: "5kB"
+	}
+];
+var dependencies = {
+	"follow-redirects": "^1.14.0"
+};
+var description = "Promise based HTTP client for the browser and node.js";
 var devDependencies = {
 	coveralls: "^3.0.0",
 	"es6-promise": "^4.2.4",
@@ -9163,46 +9219,67 @@ var devDependencies = {
 	webpack: "^4.44.2",
 	"webpack-dev-server": "^3.11.0"
 };
-var browser = {
-	"./lib/adapters/http.js": "./lib/adapters/xhr.js"
-};
+var homepage = "https://axios-http.com";
 var jsdelivr = "dist/axios.min.js";
-var unpkg = "dist/axios.min.js";
-var typings = "./index.d.ts";
-var dependencies = {
-	"follow-redirects": "^1.14.0"
-};
-var bundlesize = [
-	{
-		path: "./dist/axios.min.js",
-		threshold: "5kB"
-	}
+var keywords = [
+	"xhr",
+	"http",
+	"ajax",
+	"promise",
+	"node"
 ];
-var _resolved = "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz";
-var _integrity = "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==";
-var _from = "axios@0.21.4";
+var license = "MIT";
+var main = "index.js";
+var name = "axios";
+var repository = {
+	type: "git",
+	url: "git+https://github.com/axios/axios.git"
+};
+var scripts = {
+	build: "NODE_ENV=production grunt build",
+	coveralls: "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+	examples: "node ./examples/server.js",
+	fix: "eslint --fix lib/**/*.js",
+	postversion: "git push && git push --tags",
+	preversion: "npm test",
+	start: "node ./sandbox/server.js",
+	test: "grunt test",
+	version: "npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"
+};
+var typings = "./index.d.ts";
+var unpkg = "dist/axios.min.js";
+var version = "0.21.4";
 var pkg = {
-	name: name,
-	version: version,
-	description: description,
-	main: main,
-	scripts: scripts,
-	repository: repository,
-	keywords: keywords,
-	author: author,
-	license: license,
-	bugs: bugs,
-	homepage: homepage,
-	devDependencies: devDependencies,
-	browser: browser,
-	jsdelivr: jsdelivr,
-	unpkg: unpkg,
-	typings: typings,
-	dependencies: dependencies,
-	bundlesize: bundlesize,
-	_resolved: _resolved,
+	_args: _args,
+	_from: _from,
+	_id: _id,
+	_inBundle: _inBundle,
 	_integrity: _integrity,
-	_from: _from
+	_location: _location,
+	_phantomChildren: _phantomChildren,
+	_requested: _requested,
+	_requiredBy: _requiredBy,
+	_resolved: _resolved,
+	_spec: _spec,
+	_where: _where,
+	author: author,
+	browser: browser,
+	bugs: bugs,
+	bundlesize: bundlesize,
+	dependencies: dependencies,
+	description: description,
+	devDependencies: devDependencies,
+	homepage: homepage,
+	jsdelivr: jsdelivr,
+	keywords: keywords,
+	license: license,
+	main: main,
+	name: name,
+	repository: repository,
+	scripts: scripts,
+	typings: typings,
+	unpkg: unpkg,
+	version: version
 };
 
 var httpFollow = followRedirects.http;
