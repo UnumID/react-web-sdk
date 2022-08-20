@@ -16,8 +16,11 @@ import {
   ContinueToWebWalletRole,
   deepLinkAutoCloseTimer,
   QRCodeRole,
+  queryParam, queryParams,
 } from '../../components/QRCode';
 import { SaasEnvironment } from '../../types';
+import * as hasPlatformAuthenticatorHooks from '../../hooks/useHasPlatformAuthenticator';
+import MockedFunction = jest.MockedFunction;
 
 const mockStart = jest.fn();
 const mockStop = jest.fn();
@@ -56,10 +59,17 @@ describe('UnumIDWidget', () => {
 
   function webWalletLink(
     presentationRequest: PresentationRequestDto,
+    hasPlatformAuthenticator: boolean,
     env: SaasEnvironment | undefined,
     qrLink?: boolean,
   ): string|undefined {
-    return env ? `${walletUrls[env]}/request?presentationRequestId=${presentationRequest.presentationRequest.id}&autoClose=${deepLinkAutoCloseTimer}${qrLink ? '&link=qr' : ''}` : undefined;
+    const expectedParams = queryParams({
+      presentationRequestId: presentationRequest.presentationRequest.id,
+      autoClose: deepLinkAutoCloseTimer.toString(),
+      skipQRCode: !hasPlatformAuthenticator ? 'true' : undefined,
+      link: qrLink ? 'qr' : undefined,
+    });
+    return env ? `${walletUrls[env]}/request?${expectedParams}` : undefined;
   }
 
   function queryDeeplinkButton() {
@@ -86,7 +96,7 @@ describe('UnumIDWidget', () => {
       expect(continueToWebWalletButton).toBeInTheDocument();
       const altText = `Verify with ${dummyPresentationRequestResponse.holderApp?.name}`;
       const src = dummyPresentationRequestResponse.holderApp?.deeplinkButtonImg;
-      const href = webWalletLink(dummyPresentationRequestResponse, env);
+      const href = webWalletLink(dummyPresentationRequestResponse, true, env);
       expect(href).not.toBeUndefined();
       expect(continueToWebWalletButton).toHaveAttribute('href', href);
 
@@ -94,21 +104,28 @@ describe('UnumIDWidget', () => {
       expect(img).toBeInTheDocument();
       expect(img).toHaveAttribute('alt', altText);
       expect(img).toHaveAttribute('src', src);
-    } else {
-      expect(continueToWebWalletButton).not.toBeInTheDocument();
     }
     return continueToWebWalletButton;
   }
 
-  function queryQRCode() {
+  function queryQRCode(hasPlatformAuthenticator: boolean, env: SaasEnvironment | undefined) {
     const qrCode = screen.queryByRole(QRCodeRole);
     if (qrCode) {
       const altText = `QR Code to Verify with ${dummyPresentationRequestResponse.holderApp?.name}`;
       const src = dummyPresentationRequestResponse.qrCode;
       const img = qrCode.querySelector('img');
+
       expect(img).toBeInTheDocument();
       expect(img).toHaveAttribute('alt', altText);
       expect(img).toHaveAttribute('src', src);
+
+      if (env) {
+        const href = `${webWalletLink(dummyPresentationRequestResponse, hasPlatformAuthenticator, env)}&${queryParam('link', 'qr')}`;
+        expect(qrCode).toBeInstanceOf(HTMLAnchorElement);
+        expect((qrCode as HTMLAnchorElement).href).toEqual(href);
+      } else {
+        expect(qrCode).toBeInstanceOf(HTMLDivElement);
+      }
     }
     return qrCode;
   }
@@ -116,17 +133,19 @@ describe('UnumIDWidget', () => {
   // Expects these elements to be displayed on the screen
   // Checks for each element if the element is being displayed correctly too
   async function expectOnScreen(
+    hasPlatformAuthenticator: boolean,
     deeplinkButton: boolean,
     qrCode: boolean,
-    continueToWebWallet: SaasEnvironment | undefined,
+    continueToWebWallet: boolean,
+    env: SaasEnvironment | undefined,
   ) {
     await waitFor(() => {
       const expectations = [
         // [expected, element, name] Don't know how to use name
         // in error messages without jest throwing a fit
         [deeplinkButton, queryDeeplinkButton(), 'DeepLink Button'],
-        [qrCode, queryQRCode(), 'QR Code'],
-        [Boolean(continueToWebWallet), queryContinueWithOneClickButton(continueToWebWallet), '1-Click to Web Wallet'],
+        [qrCode, queryQRCode(hasPlatformAuthenticator, env), 'QR Code'],
+        [continueToWebWallet, queryContinueWithOneClickButton(continueToWebWallet ? env : undefined), '1-Click to Web Wallet'],
       ] as [boolean, HTMLElement, string][];
       expectations.forEach(([expected, element]) => {
         const toExpect = expect(element);
@@ -135,6 +154,14 @@ describe('UnumIDWidget', () => {
       });
     });
   }
+
+  function setHasPlatformAuthenticator(value: boolean|undefined = true) {
+    jest.spyOn(hasPlatformAuthenticatorHooks, 'useHasPlatformAuthenticator').mockImplementation(() => value);
+  }
+
+  beforeEach(() => {
+    setHasPlatformAuthenticator(false);
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -176,23 +203,56 @@ describe('UnumIDWidget', () => {
         env,
       });
     });
-    await expectOnScreen(false, true, env);
+    await expectOnScreen(false, false, true, false, env);
+  });
+
+  it('renders a qr code on desktop with platform authenticator', async () => {
+    setHasPlatformAuthenticator();
+    const testEnv = 'production';
+    act(() => {
+      renderWidget({
+        ...defaultProps,
+        env: testEnv,
+      });
+    });
+    await expectOnScreen(true, false, true, true, testEnv);
   });
 
   it('renders a qr code without web wallet link if no environment is provided', async () => {
+    setHasPlatformAuthenticator();
     act(() => {
       renderWidget({
         ...defaultProps,
         env: undefined,
       });
     });
-    await expectOnScreen(false, true, undefined);
+    await expectOnScreen(true, false, true, false, undefined);
+  });
+
+  it('renders a qr code without web wallet link if invalid environment is provided', async () => {
+    setHasPlatformAuthenticator();
+    act(() => {
+      renderWidget({
+        ...defaultProps,
+        env: 'test-env' as SaasEnvironment,
+      });
+    });
+    await expectOnScreen(true, false, true, false, undefined);
   });
 
   it('renders a deeplink button on mobile and not a QR code', async () => {
     mockUserAgent('iPhone');
     renderWidget();
-    await expectOnScreen(true, false, undefined);
+    await expectOnScreen(true, true, false, false, undefined);
+    await expectOnScreen(false, true, false, false, undefined);
+  });
+
+  it('renders the same a deeplink button on mobile and not a QR code with platform authenticator', async () => {
+    setHasPlatformAuthenticator();
+    mockUserAgent('iPhone');
+    renderWidget();
+    await expectOnScreen(true, true, false, false, undefined);
+    await expectOnScreen(false, true, false, false, undefined);
   });
 
   it('renders the push notification fallback option when appropriate', async () => {

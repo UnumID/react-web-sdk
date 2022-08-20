@@ -12,6 +12,7 @@ import DeeplinkButton from './DeeplinkButton';
 import LinkButton from './LinkButton';
 import Spinner from './Spinner';
 import Branding from './Branding';
+import { useHasPlatformAuthenticator } from '../hooks/useHasPlatformAuthenticator';
 
 interface Props {
   qrCode: string;
@@ -24,12 +25,14 @@ export const deepLinkAutoCloseTimer = 3;
 export const ContinueToWebWalletRole = 'ContinueToWebWalletRole';
 export const QRCodeRole = 'QRCodeRole';
 
-export const detectHasPlatformAuthenticator: () => Promise<boolean> = () =>
-  window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(() => false);
-
-type QRCodeState = {
-  walletHref: string|undefined,
-  hasPlatformAuthenticator: boolean
+export function queryParam(key: string, value: string): string {
+  return `${key}=${value}`;
+}
+export function queryParams(params: Record<string, string|undefined>): string {
+  return (Object.entries(params)
+    .filter(([, value]) => Boolean(value)) as [string, string][])
+    .map(([key, value]) => queryParam(key, value))
+    .join('&');
 }
 
 /**
@@ -42,31 +45,23 @@ const QRCode: FunctionComponent<Props> = ({
   holderApp,
 }) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
-  const [hasPlatformAuthenticator, setHasPlatformAuthenticator] = useState<boolean>(false);
+  const hasPlatformAuthenticator = useHasPlatformAuthenticator();
   const walletHref = useMemo<string|undefined>(() => {
-    const walletUrl = env ? walletUrls[env] : undefined;
-    return walletUrl ? `${walletUrl}/request?presentationRequestId=${presentationRequestId}&autoClose=${deepLinkAutoCloseTimer}` : undefined;
-  }, [env, presentationRequestId]);
+    if (!presentationRequestId || !env) return undefined;
+    const walletUrl = walletUrls[env];
+    const urlParams = queryParams({
+      presentationRequestId,
+      autoClose: deepLinkAutoCloseTimer.toString(),
+      skipQRCode: !hasPlatformAuthenticator ? 'true' : undefined,
+    });
+    return walletUrl ? `${walletUrl}/request?${urlParams}` : undefined;
+  }, [env, presentationRequestId, hasPlatformAuthenticator]);
 
   const handleLinkButtonClick = (): void => {
     setShowNeedHelp(!showNeedHelp);
   };
 
-  useEffect(() => {
-    let mounted = true;
-
-    detectHasPlatformAuthenticator()
-      .then((hasAuthenticator) => {
-        if (mounted) setHasPlatformAuthenticator(hasAuthenticator);
-      })
-      .catch(() => { /* do nothing */ });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const LinkWrapper: FC<PropsWithChildren<{ className: string, role: string }>> = ({
+  const QRLinkWrapper: FC<PropsWithChildren<{ className: string, role: string }>> = ({
     children,
     className,
     role,
@@ -82,7 +77,7 @@ const QRCode: FunctionComponent<Props> = ({
           {...props}
           target="_blank"
           rel="noopener noreferrer"
-          href={walletHref}
+          href={`${walletHref}&${queryParam('link', 'qr')}`}
         >
           {children}
         </a>
@@ -99,12 +94,12 @@ const QRCode: FunctionComponent<Props> = ({
 
   const renderQrCode = () => (
     <>
-      <LinkWrapper
+      <QRLinkWrapper
         className="image-wrapper"
         role={QRCodeRole}
       >
         <img className="qr-code-img" alt={`QR Code to Verify with ${holderApp?.name}`} src={qrCode} />
-      </LinkWrapper>
+      </QRLinkWrapper>
       <Branding />
     </>
   );
