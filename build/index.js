@@ -6016,7 +6016,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z$7 = ".qr-code {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 20px;\n}\n\n.qr-code .help {\n  margin-bottom: 6px;\n}\n\n.qr-code .help-item {\n  text-align: left;\n  font-size: 12px;\n}\n\n.qrcode-img-wrapper {\n  margin-bottom: 1rem;\n}\n\n.qr-code .bold {\n  font-weight: 700;\n}\n\n.qr-code .light {\n  font-weight: 300;\n}\n\n.qr-code .btn.focus, .btn:focus {\n  box-shadow: none;\n}\n\n.qr-code .image-wrapper {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  margin-bottom: -15px;\n}\n\n.qr-code .qr-code-img {\n  width: 220px;\n  height: auto;\n}\n\n@media screen and (max-width: 600px) {\n  .qrcode-content {\n    flex-direction: column;\n    align-items: center;\n  }\n\n  .description {\n    margin-left: 0;\n    margin-top: 24px;\n  }\n}\n";
+var css_248z$7 = ".qr-code {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 20px;\n  text-align: center;\n}\n\n.qr-code .help {\n  margin-bottom: 6px;\n}\n\n.qr-code .help-item {\n  text-align: left;\n  font-size: 12px;\n}\n\n.qrcode-img-wrapper {\n  margin-bottom: 1rem;\n}\n\n.qr-code .bold {\n  font-weight: 700;\n}\n\n.qr-code .light {\n  font-weight: 300;\n}\n\n.qr-code .btn.focus, .btn:focus {\n  box-shadow: none;\n}\n\n.qr-code .image-wrapper {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  margin-bottom: -15px;\n}\n\n.qr-code .qr-code-img {\n  width: 220px;\n  height: auto;\n}\n\n@media screen and (max-width: 600px) {\n  .qrcode-content {\n    flex-direction: column;\n    align-items: center;\n  }\n\n  .description {\n    margin-left: 0;\n    margin-top: 24px;\n  }\n}\n";
 styleInject(css_248z$7);
 
 var saasUrls = {
@@ -6097,26 +6097,11 @@ styleInject(css_248z$3);
 var Branding = function () { return (React__default["default"].createElement("a", { className: "branding", target: "_blank", rel: "noopener noreferrer", href: "https://unumid.org" },
     React__default["default"].createElement("img", { alt: "Powered by Unum ID", src: img }))); };
 
-var deepLinkAutoCloseTimer = 3;
-var ContinueToWebWalletRole = 'ContinueToWebWalletRole';
-var QRCodeRole = 'QRCodeRole';
-var detectHasPlatformAuthenticator = function () {
-    return window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(function () { return false; });
-};
-/**
- * Component responsible for rendering a QR code
- */
-var QRCode = function (_a) {
-    var qrCode = _a.qrCode, env = _a.env, presentationRequestId = _a.presentationRequestId, holderApp = _a.holderApp;
-    var _b = React.useState(false), showNeedHelp = _b[0], setShowNeedHelp = _b[1];
-    var _c = React.useState(false), hasPlatformAuthenticator = _c[0], setHasPlatformAuthenticator = _c[1];
-    var walletHref = React.useMemo(function () {
-        var walletUrl = env ? walletUrls[env] : undefined;
-        return walletUrl ? "".concat(walletUrl, "/request?presentationRequestId=").concat(presentationRequestId, "&autoClose=").concat(deepLinkAutoCloseTimer) : undefined;
-    }, [env, presentationRequestId]);
-    var handleLinkButtonClick = function () {
-        setShowNeedHelp(!showNeedHelp);
-    };
+var detectHasPlatformAuthenticator = function () { return (window.PublicKeyCredential
+    ? window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(function () { return false; })
+    : Promise.resolve(false)); };
+function useHasPlatformAuthenticator() {
+    var _a = React.useState(false), hasPlatformAuthenticator = _a[0], setHasPlatformAuthenticator = _a[1];
     React.useEffect(function () {
         var mounted = true;
         detectHasPlatformAuthenticator()
@@ -6129,19 +6114,61 @@ var QRCode = function (_a) {
             mounted = false;
         };
     }, []);
-    var LinkWrapper = function (_a) {
+    return hasPlatformAuthenticator;
+}
+
+var deepLinkAutoCloseTimer = 3;
+var ContinueToWebWalletRole = 'ContinueToWebWalletRole';
+var QRCodeRole = 'QRCodeRole';
+function queryParam(key, value) {
+    return "".concat(key, "=").concat(value);
+}
+function queryParams(params) {
+    return Object.entries(params)
+        .filter(function (_a) {
+        var value = _a[1];
+        return Boolean(value);
+    })
+        .map(function (_a) {
+        var key = _a[0], value = _a[1];
+        return queryParam(key, value);
+    })
+        .join('&');
+}
+/**
+ * Component responsible for rendering a QR code
+ */
+var QRCode = function (_a) {
+    var qrCode = _a.qrCode, env = _a.env, presentationRequestId = _a.presentationRequestId, holderApp = _a.holderApp;
+    var _b = React.useState(false), showNeedHelp = _b[0], setShowNeedHelp = _b[1];
+    var hasPlatformAuthenticator = useHasPlatformAuthenticator();
+    var walletHref = React.useMemo(function () {
+        if (!presentationRequestId || !env)
+            return undefined;
+        var walletUrl = walletUrls[env];
+        var urlParams = queryParams({
+            presentationRequestId: presentationRequestId,
+            autoClose: deepLinkAutoCloseTimer.toString(),
+            skipQRCode: !hasPlatformAuthenticator ? 'true' : undefined,
+        });
+        return walletUrl ? "".concat(walletUrl, "/request?").concat(urlParams) : undefined;
+    }, [env, presentationRequestId, hasPlatformAuthenticator]);
+    var handleLinkButtonClick = function () {
+        setShowNeedHelp(!showNeedHelp);
+    };
+    var QRLinkWrapper = function (_a) {
         var children = _a.children, className = _a.className, role = _a.role;
         var props = {
             className: className,
             role: role,
         };
         if (walletHref && holderApp) {
-            return (React__default["default"].createElement("a", __assign({}, props, { target: "_blank", rel: "noopener noreferrer", href: walletHref }), children));
+            return (React__default["default"].createElement("a", __assign({}, props, { target: "_blank", rel: "noopener noreferrer", href: "".concat(walletHref, "&").concat(queryParam('link', 'qr')) }), children));
         }
         return (React__default["default"].createElement("div", __assign({}, props), children));
     };
     var renderQrCode = function () { return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement(LinkWrapper, { className: "image-wrapper", role: QRCodeRole },
+        React__default["default"].createElement(QRLinkWrapper, { className: "image-wrapper", role: QRCodeRole },
             React__default["default"].createElement("img", { className: "qr-code-img", alt: "QR Code to Verify with ".concat(holderApp === null || holderApp === void 0 ? void 0 : holderApp.name), src: qrCode })),
         React__default["default"].createElement(Branding, null))); };
     return (React__default["default"].createElement("div", { className: "qr-code" },

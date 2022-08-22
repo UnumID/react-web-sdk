@@ -11,7 +11,8 @@ interface Props {
 export declare const deepLinkAutoCloseTimer = 3;
 export declare const ContinueToWebWalletRole = "ContinueToWebWalletRole";
 export declare const QRCodeRole = "QRCodeRole";
-export declare const detectHasPlatformAuthenticator: () => Promise<boolean>;
+export declare function queryParam(key: string, value: string): string;
+export declare function queryParams(params: Record<string, string | undefined>): string;
 /**
  * Component responsible for rendering a QR code
  */
