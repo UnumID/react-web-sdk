@@ -12,7 +12,7 @@ import DeeplinkButton from './DeeplinkButton';
 import LinkButton from './LinkButton';
 import Spinner from './Spinner';
 import Branding from './Branding';
-import { useHasPlatformAuthenticator } from '../hooks/useHasPlatformAuthenticator';
+import { useAuthenticatorProfile } from '../hooks/useAuthenticatorProfile';
 
 interface Props {
   qrCode: string;
@@ -45,17 +45,29 @@ const QRCode: FunctionComponent<Props> = ({
   holderApp,
 }) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
-  const hasPlatformAuthenticator = useHasPlatformAuthenticator();
-  const walletHref = useMemo<string|undefined>(() => {
-    if (!presentationRequestId || !env) return undefined;
+  const {
+    hasPlatformAuthenticator: hasAnAuthenticator,
+    authenticatorType,
+  } = useAuthenticatorProfile() || {};
+
+  const {
+    walletHref,
+    hasSupportedPlatformAuthenticator,
+  } = useMemo<{ walletHref?: string, hasSupportedPlatformAuthenticator?: boolean }>(() => {
+    if (!presentationRequestId || !env) return { };
+    const hasAnAuthenticatorAndIsSupported = hasAnAuthenticator && (authenticatorType === 'platform');
     const walletUrl = walletUrls[env];
     const urlParams = queryParams({
       presentationRequestId,
       autoClose: deepLinkAutoCloseTimer.toString(),
-      skipQRCode: !hasPlatformAuthenticator ? 'true' : undefined,
+      skipQRCode: !hasAnAuthenticatorAndIsSupported ? 'true' : undefined,
     });
-    return walletUrl ? `${walletUrl}/request?${urlParams}` : undefined;
-  }, [env, presentationRequestId, hasPlatformAuthenticator]);
+
+    return {
+      hasSupportedPlatformAuthenticator: hasAnAuthenticatorAndIsSupported,
+      walletHref: walletUrl ? `${walletUrl}/request?${urlParams}` : undefined,
+    };
+  }, [env, presentationRequestId, hasAnAuthenticator, authenticatorType]) || {};
 
   const handleLinkButtonClick = (): void => {
     setShowNeedHelp(!showNeedHelp);
@@ -124,7 +136,7 @@ const QRCode: FunctionComponent<Props> = ({
         {qrCode ? renderQrCode() : <Spinner />}
       </div>
       {
-        (hasPlatformAuthenticator && walletHref && holderApp) && (
+        (hasSupportedPlatformAuthenticator && walletHref && holderApp) && (
           <DeeplinkButton
             target="_blank"
             href={walletHref}

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  render, RenderResult, fireEvent, act, waitFor,
+  render, RenderResult, fireEvent, waitFor, act,
 } from '@testing-library/react';
 
 import QRCode, { QRCodeRole } from '../../components/QRCode';
@@ -11,8 +11,11 @@ describe('QRCode', () => {
   let component: RenderResult;
 
   describe('render', () => {
-    it('renders a QRCode component with its contents', () => {
-      component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
+    it('renders a QRCode component with its contents', async () => {
+      await act(() => {
+        component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
+      });
+
       expect(component.getByText('To continue, scan this QR code')).toBeInTheDocument();
       expect(component.getByText(`with your phone camera or ${dummyHolderAppInfo.name} app:`)).toBeInTheDocument();
       expect(component.getByText('Need help scanning?')).toBeInTheDocument();
@@ -20,15 +23,21 @@ describe('QRCode', () => {
   });
 
   it('hides the help content initially', () => {
-    component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
+    act(() => {
+      component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
+    });
     expect(component.queryByText(`1. Install the ${dummyHolderAppInfo.name} app from the app store.`)).not.toBeInTheDocument();
   });
 
   it('shows the help content when the user clicks need help', async () => {
     await act(async () => {
       component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
+    });
 
-      const helpButton = await waitFor(() => component.getByText('Need help scanning?'));
+    const helpButton = await waitFor(() => component.getByText('Need help scanning?'));
+    expect(helpButton).toBeInTheDocument();
+
+    await act(async () => {
       fireEvent.click(helpButton);
     });
 
@@ -38,15 +47,21 @@ describe('QRCode', () => {
   });
 
   it('renders a spinner instead of a qr code when the qr code has not been loaded', () => {
-    component = render(<QRCode qrCode="" holderApp={dummyHolderAppInfo} />);
+    act(() => {
+      component = render(<QRCode qrCode="" holderApp={dummyHolderAppInfo} />);
+    });
+
     expect(component.queryByAltText('qr code')).not.toBeInTheDocument();
+
     const spinner = component.getByLabelText('spinner');
     expect(spinner).toBeInTheDocument();
     expect(spinner).toHaveClass('spinner');
   });
 
   it('renders the qr code image', () => {
-    component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
+    act(() => {
+      component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
+    });
     const image = component.getByRole(QRCodeRole);
     expect(image).toBeInTheDocument();
 
@@ -56,7 +71,9 @@ describe('QRCode', () => {
   });
 
   it('renders Unum ID branding', () => {
-    component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
+    act(() => {
+      component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
+    });
     const branding = component.getByAltText('Powered by Unum ID');
     expect(branding).toBeInTheDocument();
   });
