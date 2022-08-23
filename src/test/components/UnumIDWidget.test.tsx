@@ -19,8 +19,8 @@ import {
   queryParam, queryParams,
 } from '../../components/QRCode';
 import { SaasEnvironment } from '../../types';
-import * as hasPlatformAuthenticatorHooks from '../../hooks/useHasPlatformAuthenticator';
-import MockedFunction = jest.MockedFunction;
+import * as hasPlatformAuthenticatorHooks from '../../hooks/useAuthenticatorProfile';
+import { AuthenticatorProfile } from '../../hooks/useAuthenticatorProfile';
 
 const mockStart = jest.fn();
 const mockStop = jest.fn();
@@ -156,7 +156,20 @@ describe('UnumIDWidget', () => {
   }
 
   function setHasPlatformAuthenticator(value: boolean|undefined = true) {
-    jest.spyOn(hasPlatformAuthenticatorHooks, 'useHasPlatformAuthenticator').mockImplementation(() => value);
+    jest.spyOn(hasPlatformAuthenticatorHooks, 'useAuthenticatorProfile').mockImplementation(() => (value
+      ? {
+        hasWebauthn: true,
+        hasPlatformAuthenticator: true,
+        hasSupportedPlatformAuthenticator: true,
+        isWindows: false,
+        authenticatorType: 'platform',
+      } as AuthenticatorProfile
+      : {
+        hasWebauthn: false,
+        hasPlatformAuthenticator: false,
+        hasSupportedPlatformAuthenticator: false,
+      } as AuthenticatorProfile
+    ));
   }
 
   beforeEach(() => {

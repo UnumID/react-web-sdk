@@ -1,6 +1,6 @@
 import React, {
   FC,
-  FunctionComponent, PropsWithChildren, useEffect, useMemo, useState,
+  FunctionComponent, PropsWithChildren, useMemo, useState,
 } from 'react';
 
 import './QRCode.css';
@@ -12,7 +12,7 @@ import DeeplinkButton from './DeeplinkButton';
 import LinkButton from './LinkButton';
 import Spinner from './Spinner';
 import Branding from './Branding';
-import { useHasPlatformAuthenticator } from '../hooks/useHasPlatformAuthenticator';
+import { useAuthenticatorProfile } from '../hooks/useAuthenticatorProfile';
 
 interface Props {
   qrCode: string;
@@ -45,17 +45,22 @@ const QRCode: FunctionComponent<Props> = ({
   holderApp,
 }) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
-  const hasPlatformAuthenticator = useHasPlatformAuthenticator();
+  const {
+    hasSupportedPlatformAuthenticator,
+    authenticatorType,
+  } = useAuthenticatorProfile() || {};
+
   const walletHref = useMemo<string|undefined>(() => {
     if (!presentationRequestId || !env) return undefined;
     const walletUrl = walletUrls[env];
     const urlParams = queryParams({
       presentationRequestId,
       autoClose: deepLinkAutoCloseTimer.toString(),
-      skipQRCode: !hasPlatformAuthenticator ? 'true' : undefined,
+      skipQRCode: !hasSupportedPlatformAuthenticator ? 'true' : undefined,
     });
+
     return walletUrl ? `${walletUrl}/request?${urlParams}` : undefined;
-  }, [env, presentationRequestId, hasPlatformAuthenticator]);
+  }, [env, presentationRequestId, hasSupportedPlatformAuthenticator]);
 
   const handleLinkButtonClick = (): void => {
     setShowNeedHelp(!showNeedHelp);
@@ -124,7 +129,7 @@ const QRCode: FunctionComponent<Props> = ({
         {qrCode ? renderQrCode() : <Spinner />}
       </div>
       {
-        (hasPlatformAuthenticator && walletHref && holderApp) && (
+        (hasSupportedPlatformAuthenticator && walletHref && holderApp) && (
           <DeeplinkButton
             target="_blank"
             href={walletHref}
