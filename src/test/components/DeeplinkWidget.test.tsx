@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  act, fireEvent, render, screen,
+} from '@testing-library/react';
 import DeeplinkWidget, { Props } from '../../components/DeeplinkWidget';
 import { dummyHolderAppInfo, dummyPresentationRequestResponse } from '../mocks';
 import { QRCodeRole } from '../../components/QRCode';
@@ -21,7 +23,9 @@ describe('DeeplinkWidget', () => {
   };
 
   it('renders a qr code if canScan is true', async () => {
-    renderWidget();
+    await act(async () => {
+      renderWidget();
+    });
     const qrCode = await screen.findByRole(QRCodeRole);
     expect(qrCode).toBeInTheDocument();
 
