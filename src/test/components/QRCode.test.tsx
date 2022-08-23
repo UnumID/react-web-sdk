@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, RenderResult, fireEvent } from '@testing-library/react';
+import {
+  render, RenderResult, fireEvent, act, waitFor,
+} from '@testing-library/react';
 
 import QRCode, { QRCodeRole } from '../../components/QRCode';
 import { dummyHolderAppInfo } from '../mocks';
@@ -22,11 +24,14 @@ describe('QRCode', () => {
     expect(component.queryByText(`1. Install the ${dummyHolderAppInfo.name} app from the app store.`)).not.toBeInTheDocument();
   });
 
-  it('shows the help content when the user clicks need help', () => {
-    component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
-    const helpButton = component.getByText('Need help scanning?');
+  it('shows the help content when the user clicks need help', async () => {
+    await act(async () => {
+      component = render(<QRCode qrCode={sampleQrCode} holderApp={dummyHolderAppInfo} />);
 
-    fireEvent.click(helpButton);
+      const helpButton = await waitFor(() => component.getByText('Need help scanning?'));
+      fireEvent.click(helpButton);
+    });
+
     expect(component.getByText(`1. Install the ${dummyHolderAppInfo.name} app from the app store.`)).toBeInTheDocument();
     expect(component.getByText(`2. Open the ${dummyHolderAppInfo.name} app and click "Scan a QR code".`)).toBeInTheDocument();
     expect(component.getByText('3. Hover over the QR code.')).toBeInTheDocument();
