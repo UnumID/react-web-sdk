@@ -19,6 +19,7 @@ interface Props {
   holderApp?: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
   presentationRequestId?: string;
   env?: SaasEnvironment;
+  userCode?: string
 }
 
 export const deepLinkAutoCloseTimer = 3;
@@ -43,6 +44,7 @@ const QRCode: FunctionComponent<Props> = ({
   env,
   presentationRequestId,
   holderApp,
+  userCode = undefined,
 }) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
   const {
@@ -57,10 +59,11 @@ const QRCode: FunctionComponent<Props> = ({
       presentationRequestId,
       autoClose: deepLinkAutoCloseTimer.toString(),
       skipQRCode: !hasSupportedPlatformAuthenticator ? 'true' : undefined,
+      userCode,
     });
 
     return walletUrl ? `${walletUrl}/request?${urlParams}` : undefined;
-  }, [env, presentationRequestId, hasSupportedPlatformAuthenticator]);
+  }, [env, presentationRequestId, hasSupportedPlatformAuthenticator, userCode]);
 
   const handleLinkButtonClick = (): void => {
     setShowNeedHelp(!showNeedHelp);

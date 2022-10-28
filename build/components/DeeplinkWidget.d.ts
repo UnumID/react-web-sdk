@@ -9,6 +9,7 @@ export interface Props {
     canScan: boolean;
     env?: SaasEnvironment;
     presentationRequestId?: string;
+    userCode?: string;
 }
 /**
  * Component responsible for rendering a deep link referencing a PresentationRequest,

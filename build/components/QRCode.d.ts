@@ -7,6 +7,7 @@ interface Props {
     holderApp?: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
     presentationRequestId?: string;
     env?: SaasEnvironment;
+    userCode?: string;
 }
 export declare const deepLinkAutoCloseTimer = 3;
 export declare const ContinueToWebWalletRole = "ContinueToWebWalletRole";

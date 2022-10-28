@@ -15,6 +15,7 @@ export interface Props {
   canScan: boolean;
   env?: SaasEnvironment;
   presentationRequestId?: string;
+  userCode?: string;
 }
 
 /**
@@ -28,6 +29,7 @@ const DeeplinkWidget: FC<Props> = ({
   canScan,
   env,
   presentationRequestId,
+  userCode = undefined,
 }) => {
   const renderQrCode = () => (
     <QRCode
@@ -35,6 +37,7 @@ const DeeplinkWidget: FC<Props> = ({
       env={env}
       presentationRequestId={presentationRequestId}
       holderApp={holderApp}
+      userCode={userCode}
     />
   );
 
