@@ -8,6 +8,7 @@ interface Props {
     presentationRequestId?: string;
     env?: SaasEnvironment;
     userCode?: string;
+    notUsingUnumWebWalletHolderApp: boolean;
 }
 export declare const deepLinkAutoCloseTimer = 3;
 export declare const ContinueToWebWalletRole = "ContinueToWebWalletRole";

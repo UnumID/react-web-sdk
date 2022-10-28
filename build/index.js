@@ -7051,9 +7051,9 @@ function queryParams(params) {
  * Component responsible for rendering a QR code
  */
 var QRCode = function (_a) {
-    var qrCode = _a.qrCode, env = _a.env, presentationRequestId = _a.presentationRequestId, holderApp = _a.holderApp, _b = _a.userCode, userCode = _b === void 0 ? undefined : _b;
-    var _c = React.useState(false), showNeedHelp = _c[0], setShowNeedHelp = _c[1];
-    var _d = useAuthenticatorProfile() || {}, hasSupportedPlatformAuthenticator = _d.hasSupportedPlatformAuthenticator; _d.authenticatorType;
+    var qrCode = _a.qrCode, env = _a.env, presentationRequestId = _a.presentationRequestId, holderApp = _a.holderApp, _b = _a.userCode, userCode = _b === void 0 ? undefined : _b, _c = _a.notUsingUnumWebWalletHolderApp, notUsingUnumWebWalletHolderApp = _c === void 0 ? false : _c;
+    var _d = React.useState(false), showNeedHelp = _d[0], setShowNeedHelp = _d[1];
+    var _e = useAuthenticatorProfile() || {}, hasSupportedPlatformAuthenticator = _e.hasSupportedPlatformAuthenticator; _e.authenticatorType;
     var walletHref = React.useMemo(function () {
         if (!presentationRequestId || !env)
             return undefined;
@@ -7102,7 +7102,7 @@ var QRCode = function (_a) {
                 " app and click \"Scan a QR code\"."),
             React__default["default"].createElement("div", { className: "help-item" }, "3. Hover over the QR code."))),
         React__default["default"].createElement("div", { className: "qrcode-img-wrapper" }, qrCode ? renderQrCode() : React__default["default"].createElement(Spinner, null)),
-        (hasSupportedPlatformAuthenticator && walletHref && holderApp) && (React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: walletHref, className: "continue-under-qr", role: ContinueToWebWalletRole },
+        (hasSupportedPlatformAuthenticator && walletHref && holderApp && notUsingUnumWebWalletHolderApp === false) && (React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: walletHref, className: "continue-under-qr", role: ContinueToWebWalletRole },
             React__default["default"].createElement("img", { src: holderApp.deeplinkButtonImg, alt: "Verify with " + holderApp.name })))));
 };
 
@@ -7114,8 +7114,8 @@ styleInject(css_248z$2);
  * either as a QR code (default on desktop) or a button (default on mobile).
  */
 var DeeplinkWidget = function (_a) {
-    var holderApp = _a.holderApp, qrCode = _a.qrCode, deeplink = _a.deeplink, canScan = _a.canScan, env = _a.env, presentationRequestId = _a.presentationRequestId, _b = _a.userCode, userCode = _b === void 0 ? undefined : _b;
-    var renderQrCode = function () { return (React__default["default"].createElement(QRCode, { qrCode: qrCode, env: env, presentationRequestId: presentationRequestId, holderApp: holderApp, userCode: userCode })); };
+    var holderApp = _a.holderApp, qrCode = _a.qrCode, deeplink = _a.deeplink, canScan = _a.canScan, env = _a.env, presentationRequestId = _a.presentationRequestId, _b = _a.userCode, userCode = _b === void 0 ? undefined : _b, _c = _a.notUsingUnumWebWalletHolderApp, notUsingUnumWebWalletHolderApp = _c === void 0 ? false : _c;
+    var renderQrCode = function () { return (React__default["default"].createElement(QRCode, { qrCode: qrCode, env: env, presentationRequestId: presentationRequestId, holderApp: holderApp, userCode: userCode, notUsingUnumWebWalletHolderApp: notUsingUnumWebWalletHolderApp })); };
     var renderDeeplinkButton = function () { return (React__default["default"].createElement("div", { className: "deeplink-button-wrapper" },
         React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: deeplink },
             React__default["default"].createElement("img", { src: holderApp === null || holderApp === void 0 ? void 0 : holderApp.deeplinkButtonImg, alt: "Verify with " + (holderApp === null || holderApp === void 0 ? void 0 : holderApp.name) })),
@@ -11377,19 +11377,19 @@ var FallbackResult = function (_a) {
  */
 var UnumIDWidget = function (_a) {
     var _b;
-    var apiKey = _a.apiKey, env = _a.env, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, sendPushNotification = _a.sendPushNotification, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequestProp = _a.presentationRequest, _c = _a.createInitialPresentationRequest, createInitialPresentationRequest = _c === void 0 ? !presentationRequestProp : _c, userCode = _a.userCode;
+    var apiKey = _a.apiKey, env = _a.env, createPresentationRequest = _a.createPresentationRequest, sendEmail = _a.sendEmail, sendSms = _a.sendSms, sendPushNotification = _a.sendPushNotification, goToLogin = _a.goToLogin, userInfo = _a.userInfo, presentationRequestProp = _a.presentationRequest, _c = _a.createInitialPresentationRequest, createInitialPresentationRequest = _c === void 0 ? !presentationRequestProp : _c, userCode = _a.userCode, _d = _a.notUsingUnumWebWalletHolderApp, notUsingUnumWebWalletHolderApp = _d === void 0 ? false : _d;
     // determines whether to initially show a qr code or a button
     var canScan = React.useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent))[0];
-    var _d = React.useState('DEEPLINK'), currentWidget = _d[0], setCurrentWidget = _d[1];
+    var _e = React.useState('DEEPLINK'), currentWidget = _e[0], setCurrentWidget = _e[1];
     // The PresentationRequest to display
-    var _e = React.useState(presentationRequestProp), presentationRequest = _e[0], setPresentationRequest = _e[1];
-    var _f = React.useState([]), fallbackOptions = _f[0], setFallbackOptions = _f[1];
-    var _g = React.useState(), fallbackResultType = _g[0], setFallbackResultType = _g[1];
-    var _h = React.useState(), fallbackError = _h[0], setFallbackError = _h[1];
-    var _j = React.useState((presentationRequestProp === null || presentationRequestProp === void 0 ? void 0 : presentationRequestProp.deeplink) || ''), deeplink = _j[0], setDeeplink = _j[1];
-    var _k = React.useState((presentationRequestProp === null || presentationRequestProp === void 0 ? void 0 : presentationRequestProp.qrCode) || ''), qrCode = _k[0], setQrCode = _k[1];
+    var _f = React.useState(presentationRequestProp), presentationRequest = _f[0], setPresentationRequest = _f[1];
+    var _g = React.useState([]), fallbackOptions = _g[0], setFallbackOptions = _g[1];
+    var _h = React.useState(), fallbackResultType = _h[0], setFallbackResultType = _h[1];
+    var _j = React.useState(), fallbackError = _j[0], setFallbackError = _j[1];
+    var _k = React.useState((presentationRequestProp === null || presentationRequestProp === void 0 ? void 0 : presentationRequestProp.deeplink) || ''), deeplink = _k[0], setDeeplink = _k[1];
+    var _l = React.useState((presentationRequestProp === null || presentationRequestProp === void 0 ? void 0 : presentationRequestProp.qrCode) || ''), qrCode = _l[0], setQrCode = _l[1];
     var unumIdClient = React.useState((apiKey && env) ? new UnumIDClient(saasUrls[env], apiKey) : undefined)[0];
-    var _l = React.useState(!!(presentationRequestProp && !userCode)), isReady = _l[0], setIsReady = _l[1];
+    var _m = React.useState(!!(presentationRequestProp && !userCode)), isReady = _m[0], setIsReady = _m[1];
     // destructure userInfo properties so we can pass them to a useEffect dependency array
     // without worrying about object equality
     var pushToken = userInfo === null || userInfo === void 0 ? void 0 : userInfo.pushToken;
@@ -11480,7 +11480,7 @@ var UnumIDWidget = function (_a) {
     var oneMinuteBeforeExpiration = timeUntilExpiration && (timeUntilExpiration - 60 * 1000);
     var nineMinutesFromNow = 9 * 60 * 1000;
     var delay = oneMinuteBeforeExpiration || nineMinutesFromNow;
-    var _m = useTimeout(memoizedTriggerPresentationRequestCreation), startTimeout = _m[0], stopTimeout = _m[1];
+    var _o = useTimeout(memoizedTriggerPresentationRequestCreation), startTimeout = _o[0], stopTimeout = _o[1];
     React.useEffect(function () {
         if (presentationRequestProp) {
             // When this component is rendered with a new presentationRequest prop,
@@ -11551,7 +11551,7 @@ var UnumIDWidget = function (_a) {
     // on the PresentationRequestDto type
     invariant(isDefined(presentationRequest.holderApp), 'Missing presentationRequest holder app info. THIS SHOULD NEVER HAPPEN.');
     return (React__default["default"].createElement("div", { className: "unumid-web-sdk-widget" },
-        (currentWidget === 'DEEPLINK') && (React__default["default"].createElement(DeeplinkWidget, { holderApp: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.holderApp, deeplink: deeplink, qrCode: qrCode, canScan: canScan, env: env, presentationRequestId: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.presentationRequest.id, userCode: userCode })),
+        (currentWidget === 'DEEPLINK') && (React__default["default"].createElement(DeeplinkWidget, { holderApp: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.holderApp, deeplink: deeplink, qrCode: qrCode, canScan: canScan, env: env, presentationRequestId: presentationRequest === null || presentationRequest === void 0 ? void 0 : presentationRequest.presentationRequest.id, userCode: userCode, notUsingUnumWebWalletHolderApp: notUsingUnumWebWalletHolderApp })),
         currentWidget === 'FALLBACK_RESULT' && fallbackResultType && (React__default["default"].createElement(FallbackResult, { userInfo: userInfo, fallbackType: fallbackResultType, error: fallbackError })),
         React__default["default"].createElement(FallbackButton, { client: unumIdClient, fallbackType: fallbackOptions[0], canScan: canScan, nextFallback: nextFallback, setFallbackError: setFallbackError, userInfo: userInfo, presentationRequest: presentationRequest, sendEmail: sendEmail, sendSms: sendSms, sendPushNotification: sendPushNotification, goToLogin: goToLogin }),
         currentWidget !== 'DEEPLINK' && (React__default["default"].createElement(LinkButton, { onClick: function () { return setCurrentWidget('DEEPLINK'); } },

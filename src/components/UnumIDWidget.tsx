@@ -45,6 +45,7 @@ export interface Props {
   presentationRequest?: PresentationRequestDto;
   createInitialPresentationRequest?: boolean;
   userCode?: string;
+  notUsingUnumWebWalletHolderApp: boolean;
 }
 
 /**
@@ -63,6 +64,7 @@ const UnumIDWidget: FC<Props> = ({
   presentationRequest: presentationRequestProp,
   createInitialPresentationRequest = !presentationRequestProp,
   userCode,
+  notUsingUnumWebWalletHolderApp = false,
 }: Props) => {
   // determines whether to initially show a qr code or a button
   const [canScan] = useState(!/Mobi|Android|iPhone/i.test(navigator.userAgent));
@@ -273,6 +275,7 @@ const UnumIDWidget: FC<Props> = ({
           env={env}
           presentationRequestId={presentationRequest?.presentationRequest.id}
           userCode={userCode}
+          notUsingUnumWebWalletHolderApp={notUsingUnumWebWalletHolderApp}
         />
       )
       }

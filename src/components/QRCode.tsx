@@ -19,7 +19,8 @@ interface Props {
   holderApp?: Pick<HolderApp, 'name' | 'deeplinkButtonImg' | 'appStoreUrl' | 'playStoreUrl'>;
   presentationRequestId?: string;
   env?: SaasEnvironment;
-  userCode?: string
+  userCode?: string;
+  notUsingUnumWebWalletHolderApp: boolean;
 }
 
 export const deepLinkAutoCloseTimer = 3;
@@ -45,6 +46,7 @@ const QRCode: FunctionComponent<Props> = ({
   presentationRequestId,
   holderApp,
   userCode = undefined,
+  notUsingUnumWebWalletHolderApp = false,
 }) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
   const {
@@ -132,7 +134,7 @@ const QRCode: FunctionComponent<Props> = ({
         {qrCode ? renderQrCode() : <Spinner />}
       </div>
       {
-        (hasSupportedPlatformAuthenticator && walletHref && holderApp) && (
+        (hasSupportedPlatformAuthenticator && walletHref && holderApp && notUsingUnumWebWalletHolderApp === false) && (
           <DeeplinkButton
             target="_blank"
             href={walletHref}

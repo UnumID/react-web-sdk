@@ -16,6 +16,7 @@ export interface Props {
   env?: SaasEnvironment;
   presentationRequestId?: string;
   userCode?: string;
+  notUsingUnumWebWalletHolderApp: boolean;
 }
 
 /**
@@ -30,6 +31,7 @@ const DeeplinkWidget: FC<Props> = ({
   env,
   presentationRequestId,
   userCode = undefined,
+  notUsingUnumWebWalletHolderApp = false,
 }) => {
   const renderQrCode = () => (
     <QRCode
@@ -38,6 +40,7 @@ const DeeplinkWidget: FC<Props> = ({
       presentationRequestId={presentationRequestId}
       holderApp={holderApp}
       userCode={userCode}
+      notUsingUnumWebWalletHolderApp={notUsingUnumWebWalletHolderApp}
     />
   );
 
