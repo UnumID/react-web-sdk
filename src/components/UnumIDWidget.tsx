@@ -272,6 +272,7 @@ const UnumIDWidget: FC<Props> = ({
           canScan={canScan}
           env={env}
           presentationRequestId={presentationRequest?.presentationRequest.id}
+          userCode={userCode}
         />
       )
       }
