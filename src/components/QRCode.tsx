@@ -20,7 +20,7 @@ interface Props {
   presentationRequestId?: string;
   env?: SaasEnvironment;
   userCode?: string;
-  notUsingUnumWebWalletHolderApp: boolean;
+  notUsingUnumWebWalletHolderApp?: boolean;
 }
 
 export const deepLinkAutoCloseTimer = 3;

@@ -14,7 +14,7 @@ export interface Props {
     presentationRequest?: PresentationRequestDto;
     createInitialPresentationRequest?: boolean;
     userCode?: string;
-    notUsingUnumWebWalletHolderApp: boolean;
+    notUsingUnumWebWalletHolderApp?: boolean;
 }
 /**
  * Our top-level component exported from this SDK.

@@ -10,7 +10,7 @@ export interface Props {
     env?: SaasEnvironment;
     presentationRequestId?: string;
     userCode?: string;
-    notUsingUnumWebWalletHolderApp: boolean;
+    notUsingUnumWebWalletHolderApp?: boolean;
 }
 /**
  * Component responsible for rendering a deep link referencing a PresentationRequest,

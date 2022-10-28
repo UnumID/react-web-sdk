@@ -16,7 +16,7 @@ export interface Props {
   env?: SaasEnvironment;
   presentationRequestId?: string;
   userCode?: string;
-  notUsingUnumWebWalletHolderApp: boolean;
+  notUsingUnumWebWalletHolderApp?: boolean;
 }
 
 /**
