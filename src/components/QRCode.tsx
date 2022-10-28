@@ -134,7 +134,11 @@ const QRCode: FunctionComponent<Props> = ({
         {qrCode ? renderQrCode() : <Spinner />}
       </div>
       {
-        (hasSupportedPlatformAuthenticator && walletHref && holderApp && notUsingUnumWebWalletHolderApp === false) && (
+        (hasSupportedPlatformAuthenticator
+          && walletHref
+          && holderApp
+          && notUsingUnumWebWalletHolderApp === false)
+          && (
           <DeeplinkButton
             target="_blank"
             href={walletHref}
@@ -143,7 +147,7 @@ const QRCode: FunctionComponent<Props> = ({
           >
             <img src={holderApp.deeplinkButtonImg} alt={`Verify with ${holderApp.name}`} />
           </DeeplinkButton>
-        )
+          )
       }
     </div>
   );

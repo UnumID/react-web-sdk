@@ -45,7 +45,7 @@ export interface Props {
   presentationRequest?: PresentationRequestDto;
   createInitialPresentationRequest?: boolean;
   userCode?: string;
-  notUsingUnumWebWalletHolderApp?: boolean; // to support the off chance that the holder app is not UnumID Web Wallet to not sure a button that would take them to the web wallet.
+  notUsingUnumWebWalletHolderApp?: boolean; // in the odd case the holder is not the Web Wallet.
 }
 
 /**

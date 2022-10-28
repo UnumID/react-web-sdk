@@ -7102,8 +7102,12 @@ var QRCode = function (_a) {
                 " app and click \"Scan a QR code\"."),
             React__default["default"].createElement("div", { className: "help-item" }, "3. Hover over the QR code."))),
         React__default["default"].createElement("div", { className: "qrcode-img-wrapper" }, qrCode ? renderQrCode() : React__default["default"].createElement(Spinner, null)),
-        (hasSupportedPlatformAuthenticator && walletHref && holderApp && notUsingUnumWebWalletHolderApp === false) && (React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: walletHref, className: "continue-under-qr", role: ContinueToWebWalletRole },
-            React__default["default"].createElement("img", { src: holderApp.deeplinkButtonImg, alt: "Verify with " + holderApp.name })))));
+        (hasSupportedPlatformAuthenticator
+            && walletHref
+            && holderApp
+            && notUsingUnumWebWalletHolderApp === false)
+            && (React__default["default"].createElement(DeeplinkButton, { target: "_blank", href: walletHref, className: "continue-under-qr", role: ContinueToWebWalletRole },
+                React__default["default"].createElement("img", { src: holderApp.deeplinkButtonImg, alt: "Verify with " + holderApp.name })))));
 };
 
 var css_248z$2 = ".deeplink-widget {\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  display: flex;\n}\n\n.deeplink-widget .error {\n  font-weight: 700;\n  color: #ff0000;\n}\n\n.deeplink-widget .deeplink-button-wrapper {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n";
